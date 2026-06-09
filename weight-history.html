@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GetFit AF – Weight History Form</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f0f4f0;
+      color: #333;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: #4a7c59;
+      color: white;
+      text-align: center;
+      padding: 32px 20px 24px;
+    }
+    .header h1 { font-size: 26px; letter-spacing: 1.5px; margin-bottom: 6px; }
+    .header p  { font-size: 15px; opacity: .85; }
+
+    /* ── Progress bar ── */
+    .progress-wrap {
+      background: #e0e8e2;
+      height: 6px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .progress-bar {
+      background: #4a7c59;
+      height: 6px;
+      width: 0%;
+      transition: width .3s ease;
+    }
+
+    /* ── Card wrapper ── */
+    .card {
+      max-width: 680px;
+      margin: 28px auto;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px rgba(0,0,0,.09);
+      padding: 32px 36px;
+    }
+    @media (max-width: 640px) { .card { padding: 22px 18px; margin: 16px; } }
+
+    /* ── Section heading ── */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #4a7c59;
+      border-left: 4px solid #4a7c59;
+      padding-left: 12px;
+      margin: 28px 0 18px;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    .section-desc {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* ── Field groups ── */
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 6px;
+    }
+    .field .sub-label {
+      display: block;
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+    .field input[type="text"],
+    .field input[type="number"],
+    .field input[type="email"],
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1.5px solid #d0d8d2;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 14px;
+      color: #333;
+      background: #fafafa;
+      transition: border-color .2s;
+      outline: none;
+      font-family: inherit;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus { border-color: #4a7c59; background: white; }
+    .field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+    /* ── Two-column grid ── */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 500px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Yes/No radio ── */
+    .yn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .yn-group label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 18px;
+      border: 1.5px solid #d0d8d2;
+      border-radius: 8px;
+      transition: all .15s;
+    }
+    .yn-group input[type="radio"] { accent-color: #4a7c59; width: 16px; height: 16px; cursor: pointer; }
+    .yn-group label:has(input:checked) {
+      border-color: #4a7c59;
+      background: #edf4ef;
+      color: #4a7c59;
+      font-weight: 700;
+    }
+
+    /* ── Conditional field (hidden by default) ── */
+    .conditional { display: none; margin-top: 12px; }
+    .conditional.visible { display: block; }
+
+    /* ── Slider ── */
+    .slider-wrap { display: flex; align-items: center; gap: 14px; }
+    .slider-wrap input[type="range"] {
+      flex: 1;
+      accent-color: #4a7c59;
+      height: 6px;
+      cursor: pointer;
+    }
+    .slider-value {
+      min-width: 38px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #4a7c59;
+    }
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 4px;
+      padding: 0 2px;
+    }
+
+    /* ── Checkbox group ── */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 8px;
+    }
+    .checkbox-grid label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 7px 12px;
+      border: 1.5px solid #d0d8d2;
+      border-radius: 8px;
+      transition: all .15s;
+    }
+    .checkbox-grid input[type="checkbox"] { accent-color: #4a7c59; width: 15px; height: 15px; cursor: pointer; }
+    .checkbox-grid label:has(input:checked) {
+      border-color: #4a7c59;
+      background: #edf4ef;
+      color: #4a7c59;
+    }
+
+    /* ── Intro client info card ── */
+    .intro-note {
+      background: #edf4ef;
+      border-radius: 10px;
+      padding: 16px 20px;
+      font-size: 13.5px;
+      color: #3a5c44;
+      line-height: 1.6;
+      margin-bottom: 24px;
+      border-left: 4px solid #4a7c59;
+    }
+
+    /* ── Submit button ── */
+    .submit-btn {
+      width: 100%;
+      background: #4a7c59;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: .5px;
+      transition: background .2s;
+      margin-top: 12px;
+    }
+    .submit-btn:hover:not(:disabled) { background: #3a6347; }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+    /* ── Thank you screen ── */
+    #thankYou {
+      display: none;
+      text-align: center;
+      padding: 48px 32px;
+    }
+    #thankYou .check-icon {
+      width: 72px; height: 72px;
+      background: #4a7c59;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 36px;
+      color: white;
+    }
+    #thankYou h2 { font-size: 22px; color: #4a7c59; margin-bottom: 12px; }
+    #thankYou p  { font-size: 14px; color: #666; line-height: 1.7; max-width: 460px; margin: 0 auto; }
+
+    /* ── Error message ── */
+    .error-msg {
+      color: #c0392b;
+      font-size: 13px;
+      margin-top: 6px;
+      display: none;
+    }
+    .field.invalid input,
+    .field.invalid select,
+    .field.invalid textarea { border-color: #c0392b; }
+    .field.invalid .error-msg { display: block; }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1.5px solid #eef2ee; margin: 28px 0; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>GetFit AF</h1>
+  <p>Weight History Form</p>
+</div>
+<div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+<div class="card" id="formCard">
+
+  <div class="intro-note">
+    This form helps your coach understand your full weight journey so they can design a plan that's truly personalised to you. Take your time — there are no right or wrong answers. Be as honest as you can. &#128170;
+  </div>
+
+  <form id="weightHistoryForm" novalidate>
+
+    <!-- ── YOUR DETAILS ── -->
+    <div class="section-title">Your Details</div>
+
+    <div class="grid-2">
+      <div class="field" id="field-name">
+        <label for="clientName">Full Name *</label>
+        <input type="text" id="clientName" name="clientName" placeholder="e.g. Priya Sharma" />
+        <span class="error-msg">Please enter your name.</span>
+      </div>
+      <div class="field" id="field-email">
+        <label for="clientEmail">Email Address *</label>
+        <input type="email" id="clientEmail" name="clientEmail" placeholder="e.g. priya@email.com" />
+        <span class="error-msg">Please enter a valid email.</span>
+      </div>
+    </div>
+
+    <div class="field" id="field-coach">
+      <label for="coachSelect">Your Coach *</label>
+      <select id="coachSelect" name="coachSelect">
+        <option value="">— Select your coach —</option>
+        <option>Kangna Saini</option>
+        <option>Janavi</option>
+        <option>Rishita</option>
+        <option>Naresh</option>
+        <option>Anmol</option>
+      </select>
+      <span class="error-msg">Please select your coach.</span>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ── SECTION 1: CURRENT STATUS ── -->
+    <div class="section-title">Section 1 — Current Status</div>
+    <p class="section-desc">Let's start with where you are right now.</p>
+
+    <div class="grid-2">
+      <div class="field" id="field-age">
+        <label for="age">Your Age *</label>
+        <input type="number" id="age" name="age" placeholder="e.g. 34" min="16" max="90" />
+        <span class="error-msg">Please enter your age.</span>
+      </div>
+      <div class="field">
+        <label for="gender">Gender *</label>
+        <select id="gender" name="gender">
+          <option value="">— Select —</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Prefer not to say</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field" id="field-currentWeight">
+        <label for="currentWeight">Current Weight (kg) *</label>
+        <input type="number" id="currentWeight" name="currentWeight" placeholder="e.g. 78" step="0.1" min="30" max="250" />
+        <span class="error-msg">Please enter your current weight.</span>
+      </div>
+      <div class="field" id="field-height">
+        <label for="height">Height (cm) *</label>
+        <input type="number" id="height" name="height" placeholder="e.g. 165" min="100" max="230" />
+        <span class="error-msg">Please enter your height.</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Do you weigh yourself regularly? *</label>
+      <div class="yn-group" id="yn-weighRegularly">
+        <label><input type="radio" name="weighRegularly" value="Yes" /> Yes</label>
+        <label><input type="radio" name="weighRegularly" value="No" /> No</label>
+      </div>
+      <div class="conditional" id="cond-weighFreq">
+        <label for="weighFreq">How often do you weigh yourself?</label>
+        <select id="weighFreq" name="weighFreq">
+          <option value="">— Select —</option>
+          <option>Daily</option>
+          <option>A few times a week</option>
+          <option>Once a week</option>
+          <option>Once a month</option>
+        </select>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ── SECTION 2: WEIGHT HISTORY ── -->
+    <div class="section-title">Section 2 — Your Weight History</div>
+    <p class="section-desc">Understanding where your weight has been helps us spot patterns.</p>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="highestWeight">Highest weight you've ever been as an adult (kg)</label>
+        <input type="number" id="highestWeight" name="highestWeight" placeholder="e.g. 92" step="0.1" min="30" max="300" />
+      </div>
+      <div class="field">
+        <label for="highestWeightAge">Approximately how old were you then?</label>
+        <input type="number" id="highestWeightAge" name="highestWeightAge" placeholder="e.g. 28" min="10" max="90" />
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="lowestWeight">Lowest weight as an adult that felt healthy (kg)</label>
+        <input type="number" id="lowestWeight" name="lowestWeight" placeholder="e.g. 60" step="0.1" min="30" max="200" />
+      </div>
+      <div class="field">
+        <label for="lowestWeightAge">Approximately how old were you then?</label>
+        <input type="number" id="lowestWeightAge" name="lowestWeightAge" placeholder="e.g. 22" min="10" max="90" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Has your weight fluctuated significantly over the years? *</label>
+      <div class="yn-group" id="yn-weightFluctuated">
+        <label><input type="radio" name="weightFluctuated" value="Yes" /> Yes</label>
+        <label><input type="radio" name="weightFluctuated" value="No" /> No</label>
+      </div>
+      <div class="conditional" id="cond-fluctuationPattern">
+        <label for="fluctuationPattern">Briefly describe the pattern — e.g. gained during pregnancy, lost weight then regained, steady increase after a certain age…</label>
+        <textarea id="fluctuationPattern" name="fluctuationPattern" placeholder="Describe your weight pattern here…"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Have you ever worked with a doctor, dietitian, or nutritionist specifically for weight management? *</label>
+      <div class="yn-group" id="yn-seenSpecialist">
+        <label><input type="radio" name="seenSpecialist" value="Yes" /> Yes</label>
+        <label><input type="radio" name="seenSpecialist" value="No" /> No</label>
+      </div>
+      <div class="conditional" id="cond-specialistDetails">
+        <label for="specialistDetails">What was recommended, and did it help?</label>
+        <textarea id="specialistDetails" name="specialistDetails" placeholder="e.g. Was put on a 1200-calorie plan — lost 5 kg but regained it after stopping…"></textarea>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ── SECTION 3: PAST APPROACHES ── -->
+    <div class="section-title">Section 3 — What You've Tried Before</div>
+    <p class="section-desc">This helps us avoid repeating what hasn't worked and build on what has.</p>
+
+    <div class="field">
+      <label>Which of the following have you tried for weight loss? (select all that apply)</label>
+      <div class="checkbox-grid" id="pastApproaches">
+        <label><input type="checkbox" name="pastApproach" value="Calorie counting" /> Calorie counting</label>
+        <label><input type="checkbox" name="pastApproach" value="Low-carb / Keto" /> Low-carb / Keto</label>
+        <label><input type="checkbox" name="pastApproach" value="Intermittent fasting" /> Intermittent fasting</label>
+        <label><input type="checkbox" name="pastApproach" value="Low-fat diet" /> Low-fat diet</label>
+        <label><input type="checkbox" name="pastApproach" value="Meal replacement shakes" /> Meal replacement shakes</label>
+        <label><input type="checkbox" name="pastApproach" value="Detox / juice cleanse" /> Detox / juice cleanse</label>
+        <label><input type="checkbox" name="pastApproach" value="Gym / exercise programme" /> Gym / exercise programme</label>
+        <label><input type="checkbox" name="pastApproach" value="Weight loss medication" /> Weight loss medication</label>
+        <label><input type="checkbox" name="pastApproach" value="High-protein diet" /> High-protein diet</label>
+        <label><input type="checkbox" name="pastApproach" value="None of the above" /> None of the above</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="whatWorkedBest">Of everything you've tried, what worked best for you — and why do you think it worked?</label>
+      <textarea id="whatWorkedBest" name="whatWorkedBest" placeholder="e.g. Intermittent fasting worked best because it kept me from snacking at night…"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Have you lost significant weight before and then regained it? *</label>
+      <div class="yn-group" id="yn-yoyoHistory">
+        <label><input type="radio" name="yoyoHistory" value="Yes" /> Yes</label>
+        <label><input type="radio" name="yoyoHistory" value="No" /> No</label>
+      </div>
+      <div class="conditional" id="cond-regainReason">
+        <label for="regainReason">What do you think caused the regain?</label>
+        <textarea id="regainReason" name="regainReason" placeholder="e.g. Went back to old eating habits after stopping the diet…"></textarea>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ── SECTION 4: GOALS & MOTIVATION ── -->
+    <div class="section-title">Section 4 — Your Goals &amp; Motivation</div>
+    <p class="section-desc">Understanding your goal and your mindset right now shapes the entire plan.</p>
+
+    <div class="grid-2">
+      <div class="field" id="field-goalWeight">
+        <label for="goalWeight">What is your target goal weight (kg)? *</label>
+        <input type="number" id="goalWeight" name="goalWeight" placeholder="e.g. 65" step="0.1" min="30" max="250" />
+        <span class="error-msg">Please enter your goal weight.</span>
+      </div>
+      <div class="field">
+        <label for="howLongTrying">How long have you been trying to reach this goal?</label>
+        <select id="howLongTrying" name="howLongTrying">
+          <option value="">— Select —</option>
+          <option>Less than 6 months</option>
+          <option>6–12 months</option>
+          <option>1–3 years</option>
+          <option>More than 3 years</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="motivationRating">On a scale of 1–10, how motivated are you RIGHT NOW to make changes? *</label>
+      <div class="slider-wrap">
+        <span style="font-size:13px;color:#aaa;">1</span>
+        <input type="range" id="motivationRating" name="motivationRating" min="1" max="10" value="5"
+               oninput="document.getElementById('motivationVal').textContent=this.value" />
+        <span style="font-size:13px;color:#aaa;">10</span>
+        <div class="slider-value" id="motivationVal">5</div>
+      </div>
+      <div class="slider-labels"><span>Not at all</span><span>Extremely motivated</span></div>
+    </div>
+
+    <div class="field">
+      <label for="confidenceRating">On a scale of 1–10, how confident are you that you can reach your goal? *</label>
+      <div class="slider-wrap">
+        <span style="font-size:13px;color:#aaa;">1</span>
+        <input type="range" id="confidenceRating" name="confidenceRating" min="1" max="10" value="5"
+               oninput="document.getElementById('confidenceVal').textContent=this.value" />
+        <span style="font-size:13px;color:#aaa;">10</span>
+        <div class="slider-value" id="confidenceVal">5</div>
+      </div>
+      <div class="slider-labels"><span>Not confident</span><span>Very confident</span></div>
+    </div>
+
+    <div class="field">
+      <label for="goalMeaning">What would reaching your goal weight mean for your life? What would change?</label>
+      <textarea id="goalMeaning" name="goalMeaning" placeholder="e.g. I'd have more energy for my kids, feel confident wearing what I want, not get tired climbing stairs…"></textarea>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ── SECTION 5: BEST PERIOD IN LIFE ── -->
+    <div class="section-title">Section 5 — Your Best Period</div>
+    <p class="section-desc">The habits that made you feel best before are often the starting point for your plan now.</p>
+
+    <div class="field">
+      <label for="bestPeriod">When in your life did you feel physically your best — most energetic, most like yourself? Describe that time. *</label>
+      <textarea id="bestPeriod" name="bestPeriod" placeholder="e.g. In my mid-20s before my second job — I was walking every evening and cooking at home…"></textarea>
+      <span class="error-msg" style="display:none;" id="err-bestPeriod">Please fill this in.</span>
+    </div>
+
+    <div class="grid-2">
+      <div class="field">
+        <label for="bestPeriodWeight">Approximately what did you weigh at that time (kg)?</label>
+        <input type="number" id="bestPeriodWeight" name="bestPeriodWeight" placeholder="e.g. 67" step="0.1" min="30" max="200" />
+      </div>
+      <div class="field">
+        <label for="bestPeriodAge">How old were you roughly?</label>
+        <input type="number" id="bestPeriodAge" name="bestPeriodAge" placeholder="e.g. 26" min="10" max="90" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="habitsInBestPeriod">What habits or lifestyle factors do you think contributed to feeling your best at that time?</label>
+      <textarea id="habitsInBestPeriod" name="habitsInBestPeriod" placeholder="e.g. Regular sleep schedule, home-cooked meals, walking to work, less stress…"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="habitToReintroduce">Is there one habit from that period you'd most like to bring back into your life?</label>
+      <textarea id="habitToReintroduce" name="habitToReintroduce" rows="2" placeholder="e.g. Cooking my own meals on weekdays instead of ordering out…"></textarea>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- ── SECTION 6: CURRENT BARRIERS & LIFE CONTEXT ── -->
+    <div class="section-title">Section 6 — Current Barriers &amp; Life Context</div>
+    <p class="section-desc">This helps your coach anticipate obstacles and work around them from day one.</p>
+
+    <div class="field" id="field-biggestObstacle">
+      <label for="biggestObstacle">What do you feel is your single biggest obstacle to losing weight right now? *</label>
+      <textarea id="biggestObstacle" name="biggestObstacle" placeholder="e.g. I travel constantly for work so I eat out almost every meal and can't control portions…"></textarea>
+      <span class="error-msg">Please fill this in.</span>
+    </div>
+
+    <div class="field">
+      <label>Have major life events — stress, job changes, relationships, health issues, pregnancy, bereavement — contributed to weight changes? *</label>
+      <div class="yn-group" id="yn-lifeEvents">
+        <label><input type="radio" name="lifeEvents" value="Yes" /> Yes</label>
+        <label><input type="radio" name="lifeEvents" value="No" /> No</label>
+      </div>
+      <div class="conditional" id="cond-lifeEventDetails">
+        <label for="lifeEventDetails">Tell us a bit about what happened and how it affected your weight:</label>
+        <textarea id="lifeEventDetails" name="lifeEventDetails" placeholder="e.g. Gained 12 kg after my father passed away — was stress eating and stopped exercising entirely…"></textarea>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="stressLevel">On a scale of 1–10, how would you rate your current stress level? *</label>
+      <div class="slider-wrap">
+        <span style="font-size:13px;color:#aaa;">1</span>
+        <input type="range" id="stressLevel" name="stressLevel" min="1" max="10" value="5"
+               oninput="document.getElementById('stressVal').textContent=this.value" />
+        <span style="font-size:13px;color:#aaa;">10</span>
+        <div class="slider-value" id="stressVal">5</div>
+      </div>
+      <div class="slider-labels"><span>Very low</span><span>Extremely high</span></div>
+    </div>
+
+    <div class="field">
+      <label for="sleepQuality">On a scale of 1–10, how would you rate your current sleep quality? *</label>
+      <div class="slider-wrap">
+        <span style="font-size:13px;color:#aaa;">1</span>
+        <input type="range" id="sleepQuality" name="sleepQuality" min="1" max="10" value="5"
+               oninput="document.getElementById('sleepVal').textContent=this.value" />
+        <span style="font-size:13px;color:#aaa;">10</span>
+        <div class="slider-value" id="sleepVal">5</div>
+      </div>
+      <div class="slider-labels"><span>Very poor</span><span>Excellent</span></div>
+    </div>
+
+    <div class="field">
+      <label for="dreamOutcome">In 6 months, what does your ideal outcome look like? Paint a picture — not just a number on the scale.</label>
+      <textarea id="dreamOutcome" name="dreamOutcome" placeholder="e.g. I want to be able to play cricket with my son without getting breathless, fit into my old jeans, and stop feeling tired all the time…"></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn" id="submitBtn">Submit My Weight History &#8594;</button>
+
+  </form>
+
+  <!-- ── Thank you screen ── -->
+  <div id="thankYou">
+    <div class="check-icon">&#10003;</div>
+    <h2>Thank You!</h2>
+    <p>
+      We've received your weight history. Your coach and Satish will review everything carefully before your next session.<br /><br />
+      This helps us build a plan that's truly designed around <em>your</em> story — not a generic programme. We're excited to work with you! &#127775;
+    </p>
+  </div>
+
+</div><!-- /card -->
+
+<script>
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstrC36HiFAPQCnMjj-zQs8ZdtZ1mcbL8FiOgtuyyE0qRwSTxWj0bUNK_N4Qy5GEU/exec';
+
+  // ── Progress bar ────────────────────────────────────────────
+  function updateProgress() {
+    const inputs = document.querySelectorAll('#weightHistoryForm input[required], #weightHistoryForm select[required], #weightHistoryForm textarea[required]');
+    const all    = document.querySelectorAll('#weightHistoryForm input:not([type="radio"]):not([type="checkbox"]):not([type="range"]), #weightHistoryForm select, #weightHistoryForm textarea');
+    let filled = 0;
+    all.forEach(el => { if (el.value.trim()) filled++; });
+    const pct = Math.min(100, Math.round((filled / all.length) * 100));
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+  document.getElementById('weightHistoryForm').addEventListener('input', updateProgress);
+
+  // ── Conditional fields ───────────────────────────────────────
+  function wireConditional(radioName, yesId) {
+    document.querySelectorAll(`input[name="${radioName}"]`).forEach(r => {
+      r.addEventListener('change', () => {
+        const el = document.getElementById(yesId);
+        if (r.value === 'Yes' && r.checked) el.classList.add('visible');
+        else if (r.value === 'No' && r.checked) el.classList.remove('visible');
+      });
+    });
+  }
+  wireConditional('weighRegularly',   'cond-weighFreq');
+  wireConditional('weightFluctuated', 'cond-fluctuationPattern');
+  wireConditional('seenSpecialist',   'cond-specialistDetails');
+  wireConditional('yoyoHistory',      'cond-regainReason');
+  wireConditional('lifeEvents',       'cond-lifeEventDetails');
+
+  // ── Validation ──────────────────────────────────────────────
+  function setInvalid(id, invalid) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (invalid) el.classList.add('invalid');
+    else         el.classList.remove('invalid');
+  }
+
+  function validateForm(data) {
+    let ok = true;
+
+    if (!data.name.trim())          { setInvalid('field-name', true);   ok = false; } else { setInvalid('field-name', false); }
+    if (!data.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) { setInvalid('field-email', true); ok = false; } else { setInvalid('field-email', false); }
+    if (!data.coach)                { setInvalid('field-coach', true);  ok = false; } else { setInvalid('field-coach', false); }
+    if (!data.age)                  { setInvalid('field-age', true);    ok = false; } else { setInvalid('field-age', false); }
+    if (!data.currentWeight)        { setInvalid('field-currentWeight', true); ok = false; } else { setInvalid('field-currentWeight', false); }
+    if (!data.height)               { setInvalid('field-height', true); ok = false; } else { setInvalid('field-height', false); }
+    if (!data.goalWeight)           { setInvalid('field-goalWeight', true); ok = false; } else { setInvalid('field-goalWeight', false); }
+
+    const bestPeriodVal = document.getElementById('bestPeriod').value.trim();
+    if (!bestPeriodVal) {
+      document.getElementById('err-bestPeriod').style.display = 'block';
+      ok = false;
+    } else {
+      document.getElementById('err-bestPeriod').style.display = 'none';
+    }
+
+    const obstacleVal = document.getElementById('biggestObstacle').value.trim();
+    if (!obstacleVal) { setInvalid('field-biggestObstacle', true); ok = false; } else { setInvalid('field-biggestObstacle', false); }
+
+    if (!ok) {
+      document.querySelector('.field.invalid')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return ok;
+  }
+
+  // ── Collect form data ────────────────────────────────────────
+  function collectData() {
+    const get = id => (document.getElementById(id)?.value || '').trim();
+    const getRadio = name => {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : 'Not answered';
+    };
+    const getCheckboxes = name => {
+      const checked = document.querySelectorAll(`input[name="${name}"]:checked`);
+      return checked.length ? Array.from(checked).map(c => c.value).join(', ') : 'None selected';
+    };
+
+    return {
+      formType:            'weighthistory',
+      name:                get('clientName'),
+      email:               get('clientEmail'),
+      coach:               get('coachSelect'),
+      // S1: Current Status
+      age:                 get('age'),
+      gender:              get('gender'),
+      currentWeight:       get('currentWeight'),
+      height:              get('height'),
+      weighRegularly:      getRadio('weighRegularly'),
+      weighFrequency:      get('weighFreq'),
+      // S2: Weight History
+      highestWeight:       get('highestWeight'),
+      highestWeightAge:    get('highestWeightAge'),
+      lowestWeight:        get('lowestWeight'),
+      lowestWeightAge:     get('lowestWeightAge'),
+      weightFluctuated:    getRadio('weightFluctuated'),
+      fluctuationPattern:  get('fluctuationPattern'),
+      seenSpecialist:      getRadio('seenSpecialist'),
+      specialistDetails:   get('specialistDetails'),
+      // S3: Past Approaches
+      pastApproaches:      getCheckboxes('pastApproach'),
+      whatWorkedBest:      get('whatWorkedBest'),
+      yoyoHistory:         getRadio('yoyoHistory'),
+      regainReason:        get('regainReason'),
+      // S4: Goals & Motivation
+      goalWeight:          get('goalWeight'),
+      howLongTrying:       get('howLongTrying'),
+      motivationRating:    get('motivationRating'),
+      confidenceRating:    get('confidenceRating'),
+      goalMeaning:         get('goalMeaning'),
+      // S5: Best Period
+      bestPeriod:          get('bestPeriod'),
+      bestPeriodWeight:    get('bestPeriodWeight'),
+      bestPeriodAge:       get('bestPeriodAge'),
+      habitsInBestPeriod:  get('habitsInBestPeriod'),
+      habitToReintroduce:  get('habitToReintroduce'),
+      // S6: Barriers & Context
+      biggestObstacle:     get('biggestObstacle'),
+      lifeEvents:          getRadio('lifeEvents'),
+      lifeEventDetails:    get('lifeEventDetails'),
+      stressLevel:         get('stressLevel'),
+      sleepQuality:        get('sleepQuality'),
+      dreamOutcome:        get('dreamOutcome')
+    };
+  }
+
+  // ── Submit ───────────────────────────────────────────────────
+  document.getElementById('weightHistoryForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const data = collectData();
+    if (!validateForm(data)) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method:  'POST',
+        mode:    'no-cors',
+        headers: { 'Content-Type': 'text/plain' },
+        body:    JSON.stringify(data)
+      });
+
+      document.getElementById('weightHistoryForm').style.display = 'none';
+      document.getElementById('thankYou').style.display = 'block';
+      document.getElementById('progressBar').style.width = '100%';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Submit My Weight History →';
+      alert('Something went wrong. Please try again or contact your coach.');
+    }
+  });
+</script>
+</body>
+</html>
