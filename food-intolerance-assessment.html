@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Intolerance Assessment – GetFit AF</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f4; color: #333; }
+
+  header {
+    background: #4a7c59; color: #fff; padding: 20px 24px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  header img { height: 42px; }
+  header h1 { font-size: 1.25rem; font-weight: 700; line-height: 1.2; }
+  header p  { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+
+  .container { max-width: 720px; margin: 32px auto; padding: 0 16px 60px; }
+
+  .intro-card {
+    background: #fff; border-radius: 10px; padding: 22px 24px;
+    border-left: 5px solid #4a7c59; margin-bottom: 28px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.07);
+  }
+  .intro-card h2 { font-size: 1rem; color: #4a7c59; margin-bottom: 8px; }
+  .intro-card p  { font-size: 0.88rem; line-height: 1.6; color: #555; }
+
+  .client-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media(max-width:520px){ .client-row { grid-template-columns: 1fr; } }
+
+  label.field-label { font-size: 0.82rem; font-weight: 600; color: #4a7c59; display: block; margin-bottom: 4px; }
+  input[type=text], input[type=date], select {
+    width: 100%; padding: 9px 12px; border: 1.5px solid #cdd9d4;
+    border-radius: 7px; font-size: 0.9rem; color: #333;
+    background: #fff; transition: border-color .2s;
+  }
+  input:focus, select:focus { outline: none; border-color: #4a7c59; }
+
+  .section-card {
+    background: #fff; border-radius: 10px; padding: 22px 24px;
+    margin-bottom: 22px; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+  }
+  .section-title {
+    font-size: 1rem; font-weight: 700; color: #4a7c59;
+    padding-bottom: 10px; border-bottom: 2px solid #e8f0eb;
+    margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .section-score-badge {
+    font-size: 0.78rem; font-weight: 600; background: #e8f0eb;
+    color: #4a7c59; padding: 3px 10px; border-radius: 20px;
+  }
+
+  .question-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0; gap: 12px;
+  }
+  .question-row:last-child { border-bottom: none; }
+  .question-text { font-size: 0.88rem; flex: 1; line-height: 1.5; }
+
+  .yn-group { display: flex; gap: 8px; flex-shrink: 0; }
+  .yn-group label {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer;
+    padding: 5px 12px; border-radius: 20px; border: 1.5px solid #cdd9d4;
+    transition: all .15s;
+  }
+  .yn-group input[type=radio] { display: none; }
+  .yn-group label.yes-label { color: #4a7c59; }
+  .yn-group label.no-label  { color: #888; }
+  .yn-group input[type=radio]:checked + label.yes-label { background: #4a7c59; color: #fff; border-color: #4a7c59; }
+  .yn-group input[type=radio]:checked + label.no-label  { background: #eee; color: #555; border-color: #bbb; }
+
+  .total-box {
+    background: #fff; border-radius: 10px; padding: 22px 24px;
+    margin-bottom: 22px; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+    text-align: center;
+  }
+  .total-box h3 { font-size: 1rem; color: #4a7c59; margin-bottom: 10px; }
+  .score-display {
+    font-size: 3rem; font-weight: 800; color: #4a7c59; line-height: 1;
+  }
+  .score-label {
+    font-size: 0.9rem; font-weight: 600; margin-top: 8px; color: #555;
+  }
+  .score-desc {
+    font-size: 0.83rem; color: #666; margin-top: 10px;
+    padding: 12px 16px; background: #f4f9f6; border-radius: 8px;
+    text-align: left; line-height: 1.6;
+  }
+
+  .submit-btn {
+    display: block; width: 100%; padding: 15px;
+    background: #4a7c59; color: #fff; border: none;
+    border-radius: 10px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; letter-spacing: .3px; transition: background .2s;
+  }
+  .submit-btn:hover  { background: #3a6348; }
+  .submit-btn:active { background: #2e4f39; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #333; color: #fff; padding: 12px 22px; border-radius: 8px;
+    font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity .3s;
+    z-index: 999; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  .band-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.82rem; }
+  .band-table th { background: #e8f0eb; color: #4a7c59; padding: 7px 10px; text-align: left; }
+  .band-table td { padding: 7px 10px; border-bottom: 1px solid #f0f4f0; }
+  .band-table tr:last-child td { border-bottom: none; }
+  .band-0  { color: #2a7a2a; font-weight: 600; }
+  .band-1  { color: #e6a817; font-weight: 600; }
+  .band-2  { color: #d9660c; font-weight: 600; }
+  .band-3  { color: #c0392b; font-weight: 600; }
+
+  @media(max-width:520px){
+    .question-row { flex-direction: column; align-items: flex-start; }
+    .yn-group { margin-top: 4px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>GetFit AF</h1>
+    <p>Food Intolerance Assessment</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="intro-card">
+    <h2>About This Assessment</h2>
+    <p>Answer each question honestly based on your regular experience over the past few weeks. Score 1 point for each "Yes" answer. Your coach will review your results and discuss what they mean for your nutrition plan.</p>
+  </div>
+
+  <!-- Client info -->
+  <div class="section-card">
+    <div class="section-title">Your Details</div>
+    <div class="client-row">
+      <div>
+        <label class="field-label" for="clientName">Full Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Priya Sharma" />
+      </div>
+      <div>
+        <label class="field-label" for="clientDate">Date</label>
+        <input type="date" id="clientDate" />
+      </div>
+      <div>
+        <label class="field-label" for="coachSelect">Your Coach</label>
+        <select id="coachSelect">
+          <option value="">— Select your coach —</option>
+          <option value="Satish">Satish</option>
+          <option value="Kangna Saini">Kangna Saini</option>
+          <option value="Janavi">Janavi</option>
+          <option value="Rishita">Rishita</option>
+          <option value="Naresh">Naresh</option>
+          <option value="Anmol">Anmol</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section A: Digestive Check -->
+  <div class="section-card">
+    <div class="section-title">
+      Section A — Digestive Check
+      <span class="section-score-badge" id="scoreA">0 / 7</span>
+    </div>
+
+    <div class="question-row" data-section="A">
+      <span class="question-text">1. Do you experience bloating 3 or more times per week?</span>
+      <div class="yn-group">
+        <input type="radio" name="q1" id="q1y" value="1"><label for="q1y" class="yes-label">Yes</label>
+        <input type="radio" name="q1" id="q1n" value="0"><label for="q1n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="A">
+      <span class="question-text">2. Do you experience loose stools 3 or more times per week?</span>
+      <div class="yn-group">
+        <input type="radio" name="q2" id="q2y" value="1"><label for="q2y" class="yes-label">Yes</label>
+        <input type="radio" name="q2" id="q2n" value="0"><label for="q2n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="A">
+      <span class="question-text">3. Do you experience constipation 3 or more times per week?</span>
+      <div class="yn-group">
+        <input type="radio" name="q3" id="q3y" value="1"><label for="q3y" class="yes-label">Yes</label>
+        <input type="radio" name="q3" id="q3n" value="0"><label for="q3n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="A">
+      <span class="question-text">4. Do you often burp or belch after meals?</span>
+      <div class="yn-group">
+        <input type="radio" name="q4" id="q4y" value="1"><label for="q4y" class="yes-label">Yes</label>
+        <input type="radio" name="q4" id="q4n" value="0"><label for="q4n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="A">
+      <span class="question-text">5. Do you frequently experience gas or flatulence?</span>
+      <div class="yn-group">
+        <input type="radio" name="q5" id="q5y" value="1"><label for="q5y" class="yes-label">Yes</label>
+        <input type="radio" name="q5" id="q5n" value="0"><label for="q5n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="A">
+      <span class="question-text">6. Do you experience abdominal pain or cramps 2 or more times per week?</span>
+      <div class="yn-group">
+        <input type="radio" name="q6" id="q6y" value="1"><label for="q6y" class="yes-label">Yes</label>
+        <input type="radio" name="q6" id="q6n" value="0"><label for="q6n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="A">
+      <span class="question-text">7. Do you experience indigestion or heartburn 2 or more times per week?</span>
+      <div class="yn-group">
+        <input type="radio" name="q7" id="q7y" value="1"><label for="q7y" class="yes-label">Yes</label>
+        <input type="radio" name="q7" id="q7n" value="0"><label for="q7n" class="no-label">No</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section B: Diet Check -->
+  <div class="section-card">
+    <div class="section-title">
+      Section B — Diet Check
+      <span class="section-score-badge" id="scoreB">0 / 7</span>
+    </div>
+
+    <div class="question-row" data-section="B">
+      <span class="question-text">8. Do you regularly consume sugar, white flour products, or dairy?</span>
+      <div class="yn-group">
+        <input type="radio" name="q8" id="q8y" value="1"><label for="q8y" class="yes-label">Yes</label>
+        <input type="radio" name="q8" id="q8n" value="0"><label for="q8n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="B">
+      <span class="question-text">9. If you go 1–2 days without bread, chocolate, or sugary foods, do you crave them?</span>
+      <div class="yn-group">
+        <input type="radio" name="q9" id="q9y" value="1"><label for="q9y" class="yes-label">Yes</label>
+        <input type="radio" name="q9" id="q9n" value="0"><label for="q9n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="B">
+      <span class="question-text">10. Do you feel foggy or drowsy after eating?</span>
+      <div class="yn-group">
+        <input type="radio" name="q10" id="q10y" value="1"><label for="q10y" class="yes-label">Yes</label>
+        <input type="radio" name="q10" id="q10n" value="0"><label for="q10n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="B">
+      <span class="question-text">11. Do you experience excessive appetite or intense sweet cravings?</span>
+      <div class="yn-group">
+        <input type="radio" name="q11" id="q11y" value="1"><label for="q11y" class="yes-label">Yes</label>
+        <input type="radio" name="q11" id="q11n" value="0"><label for="q11n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="B">
+      <span class="question-text">12. Have you ever gained 3–5 pounds in a single day?</span>
+      <div class="yn-group">
+        <input type="radio" name="q12" id="q12y" value="1"><label for="q12y" class="yes-label">Yes</label>
+        <input type="radio" name="q12" id="q12n" value="0"><label for="q12n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="B">
+      <span class="question-text">13. Do you experience mood swings, anxiety, or rapid heartbeat after eating?</span>
+      <div class="yn-group">
+        <input type="radio" name="q13" id="q13y" value="1"><label for="q13y" class="yes-label">Yes</label>
+        <input type="radio" name="q13" id="q13n" value="0"><label for="q13n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="B">
+      <span class="question-text">14. Do you get hungry quickly regardless of how much you have eaten?</span>
+      <div class="yn-group">
+        <input type="radio" name="q14" id="q14y" value="1"><label for="q14y" class="yes-label">Yes</label>
+        <input type="radio" name="q14" id="q14n" value="0"><label for="q14n" class="no-label">No</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section C: Symptoms Check -->
+  <div class="section-card">
+    <div class="section-title">
+      Section C — Symptoms Check
+      <span class="section-score-badge" id="scoreC">0 / 9</span>
+    </div>
+
+    <div class="question-row" data-section="C">
+      <span class="question-text">15. Do you wake up with puffy, itchy, or watery eyes?</span>
+      <div class="yn-group">
+        <input type="radio" name="q15" id="q15y" value="1"><label for="q15y" class="yes-label">Yes</label>
+        <input type="radio" name="q15" id="q15n" value="0"><label for="q15n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">16. Does your weight fluctuate significantly within the same week?</span>
+      <div class="yn-group">
+        <input type="radio" name="q16" id="q16y" value="1"><label for="q16y" class="yes-label">Yes</label>
+        <input type="radio" name="q16" id="q16n" value="0"><label for="q16n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">17. Do you develop a headache within 5 hours of eating certain foods?</span>
+      <div class="yn-group">
+        <input type="radio" name="q17" id="q17y" value="1"><label for="q17y" class="yes-label">Yes</label>
+        <input type="radio" name="q17" id="q17n" value="0"><label for="q17n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">18. Do you experience mucous congestion, sinus pain, or a runny nose within 5 hours of eating?</span>
+      <div class="yn-group">
+        <input type="radio" name="q18" id="q18y" value="1"><label for="q18y" class="yes-label">Yes</label>
+        <input type="radio" name="q18" id="q18n" value="0"><label for="q18n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">19. Do you develop skin rashes, spots, or cold sores within 48 hours of eating certain foods?</span>
+      <div class="yn-group">
+        <input type="radio" name="q19" id="q19y" value="1"><label for="q19y" class="yes-label">Yes</label>
+        <input type="radio" name="q19" id="q19n" value="0"><label for="q19n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">20. Do you experience itching in your ears, nose, or rectum?</span>
+      <div class="yn-group">
+        <input type="radio" name="q20" id="q20y" value="1"><label for="q20y" class="yes-label">Yes</label>
+        <input type="radio" name="q20" id="q20n" value="0"><label for="q20n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">21. Do you notice reddening around your mouth or nose after eating?</span>
+      <div class="yn-group">
+        <input type="radio" name="q21" id="q21y" value="1"><label for="q21y" class="yes-label">Yes</label>
+        <input type="radio" name="q21" id="q21n" value="0"><label for="q21n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">22. Do you experience a sore throat, mouth irritation, or coughing within 5 hours of eating?</span>
+      <div class="yn-group">
+        <input type="radio" name="q22" id="q22y" value="1"><label for="q22y" class="yes-label">Yes</label>
+        <input type="radio" name="q22" id="q22n" value="0"><label for="q22n" class="no-label">No</label>
+      </div>
+    </div>
+    <div class="question-row" data-section="C">
+      <span class="question-text">23. In the past year, have you had athlete's foot, dandruff, toenail fungus, or a parasitic infection?</span>
+      <div class="yn-group">
+        <input type="radio" name="q23" id="q23y" value="1"><label for="q23y" class="yes-label">Yes</label>
+        <input type="radio" name="q23" id="q23n" value="0"><label for="q23n" class="no-label">No</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Total Score -->
+  <div class="total-box">
+    <h3>Your Total Score</h3>
+    <div class="score-display" id="totalScore">0</div>
+    <div class="score-label" id="bandLabel">— answer questions above —</div>
+    <div class="score-desc" id="bandDesc"></div>
+
+    <table class="band-table" style="margin-top:18px;">
+      <thead>
+        <tr><th>Score</th><th>What it means</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="band-0">0 – 1</td><td>Ideal – no significant signs of food intolerance</td></tr>
+        <tr><td class="band-1">2 – 5</td><td>Tolerable – possible hidden intolerance worth monitoring</td></tr>
+        <tr><td class="band-2">6 – 19</td><td>Undesirable – likely intolerance; dietary review recommended</td></tr>
+        <tr><td class="band-3">20+</td><td>High-risk – consider speaking with a GP or allergist</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Submit -->
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit to My Coach</button>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstrC36HiFAPQCnMjj-zQs8ZdtZ1mcbL8FiOgtuyyE0qRwSTxWj0bUNK_N4Qy5GEU/exec';
+
+const COACH_EMAILS = {
+  'Satish': 'satishreddy814275@gmail.com',
+  'Kangna Saini': 'saini.kangna@gmail.com',
+  'Janavi':       'janavichaitanya@gmail.com',
+  'Rishita':      'rishita.fitness@gmail.com',
+  'Naresh':       'gaddamnaresh5567@gmail.com',
+  'Anmol':        'anmolelizer.chidri@gmail.com'
+};
+
+const BANDS = [
+  { max: 1,  label: 'Ideal',        cls: 'band-0', desc: 'Your score is in the ideal range — no significant signs of food intolerance detected. Keep maintaining your current dietary habits.' },
+  { max: 5,  label: 'Tolerable',    cls: 'band-1', desc: 'Your score suggests a possible hidden intolerance worth monitoring. Your coach may recommend tracking certain foods over the coming weeks.' },
+  { max: 19, label: 'Undesirable',  cls: 'band-2', desc: 'Your score indicates a likely food intolerance. Your coach will review your results and discuss a dietary adjustment plan with you.' },
+  { max: 999,label: 'High-Risk',    cls: 'band-3', desc: 'Your score is in the high-risk range. Please consider consulting a GP or allergist alongside your nutrition programme.' }
+];
+
+function getVal(name) {
+  const checked = document.querySelector(`input[name="${name}"]:checked`);
+  return checked ? parseInt(checked.value) : null;
+}
+
+function updateScores() {
+  const secMap = { A: [1,7], B: [8,14], C: [15,23] };
+  let total = 0;
+  for (const [sec, [from, to]] of Object.entries(secMap)) {
+    let s = 0;
+    for (let i = from; i <= to; i++) {
+      const v = getVal('q' + i);
+      if (v !== null) s += v;
+    }
+    document.getElementById('score' + sec).textContent = s + ' / ' + (to - from + 1);
+    total += s;
+  }
+  document.getElementById('totalScore').textContent = total;
+
+  const band = BANDS.find(b => total <= b.max);
+  const lbl = document.getElementById('bandLabel');
+  const dsc = document.getElementById('bandDesc');
+  lbl.textContent = band.label;
+  lbl.className = 'score-label ' + band.cls;
+  dsc.textContent = band.desc;
+  dsc.style.display = band.desc ? 'block' : 'none';
+}
+
+document.addEventListener('change', function(e) {
+  if (e.target.type === 'radio') updateScores();
+});
+
+// Set today's date
+document.getElementById('clientDate').valueAsDate = new Date();
+
+function showToast(msg, dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function collectAnswers() {
+  const answers = {};
+  for (let i = 1; i <= 23; i++) {
+    const v = getVal('q' + i);
+    answers['q' + i] = v !== null ? (v === 1 ? 'Yes' : 'No') : 'Unanswered';
+  }
+  return answers;
+}
+
+function submitForm() {
+  const name = document.getElementById('clientName').value.trim();
+  const date = document.getElementById('clientDate').value;
+  const coach = document.getElementById('coachSelect').value;
+
+  if (!name) { showToast('Please enter your name.'); return; }
+  if (!coach) { showToast('Please select your coach.'); return; }
+
+  // Check all 23 answered
+  for (let i = 1; i <= 23; i++) {
+    if (getVal('q' + i) === null) {
+      showToast(`Please answer question ${i}.`);
+      return;
+    }
+  }
+
+  const totalScore = parseInt(document.getElementById('totalScore').textContent);
+  const band = BANDS.find(b => totalScore <= b.max);
+
+  const secMap = { A: [1,7], B: [8,14], C: [15,23] };
+  const sectionScores = {};
+  for (const [sec, [from, to]] of Object.entries(secMap)) {
+    let s = 0;
+    for (let i = from; i <= to; i++) s += getVal('q' + i);
+    sectionScores['section' + sec] = s;
+  }
+
+  const payload = {
+    formType: 'foodIntoleranceAssessment',
+    clientName: name,
+    date,
+    coach,
+    coachEmail: COACH_EMAILS[coach] || '',
+    totalScore,
+    bandLabel: band.label,
+    bandDesc: band.desc,
+    sectionScores,
+    answers: collectAnswers()
+  };
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.text())
+  .then(() => {
+    btn.textContent = '✓ Submitted';
+    showToast('Results sent to your coach!', 4000);
+  })
+  .catch(() => {
+    btn.disabled = false;
+    btn.textContent = 'Submit to My Coach';
+    showToast('Error – please try again.', 4000);
+  });
+}
+</script>
+</body>
+</html>

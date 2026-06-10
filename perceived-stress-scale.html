@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perceived Stress Scale – GetFit AF</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f4; color: #333; }
+
+  header {
+    background: #4a7c59; color: #fff; padding: 20px 24px;
+  }
+  header h1 { font-size: 1.25rem; font-weight: 700; }
+  header p  { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+
+  .container { max-width: 720px; margin: 32px auto; padding: 0 16px 60px; }
+
+  .intro-card {
+    background: #fff; border-radius: 10px; padding: 22px 24px;
+    border-left: 5px solid #4a7c59; margin-bottom: 28px;
+    box-shadow: 0 2px 6px rgba(0,0,0,.07);
+  }
+  .intro-card h2 { font-size: 1rem; color: #4a7c59; margin-bottom: 8px; }
+  .intro-card p  { font-size: 0.88rem; line-height: 1.6; color: #555; }
+
+  .client-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    margin-bottom: 28px;
+  }
+  @media(max-width:520px){ .client-row { grid-template-columns: 1fr; } }
+
+  label.field-label { font-size: 0.82rem; font-weight: 600; color: #4a7c59; display: block; margin-bottom: 4px; }
+  input[type=text], input[type=date], select {
+    width: 100%; padding: 9px 12px; border: 1.5px solid #cdd9d4;
+    border-radius: 7px; font-size: 0.9rem; background: #fff; transition: border-color .2s;
+  }
+  input:focus, select:focus { outline: none; border-color: #4a7c59; }
+
+  .section-card {
+    background: #fff; border-radius: 10px; padding: 22px 24px;
+    margin-bottom: 22px; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+  }
+  .section-title {
+    font-size: 1rem; font-weight: 700; color: #4a7c59;
+    padding-bottom: 10px; border-bottom: 2px solid #e8f0eb; margin-bottom: 6px;
+  }
+  .section-subtitle {
+    font-size: 0.82rem; color: #777; margin-bottom: 18px;
+  }
+
+  /* Scale header */
+  .scale-header {
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 52px);
+    gap: 6px; align-items: center;
+    padding: 6px 0 10px;
+    border-bottom: 2px solid #e8f0eb;
+    margin-bottom: 4px;
+  }
+  .scale-header span { font-size: 0.7rem; font-weight: 700; color: #4a7c59; text-align: center; line-height: 1.3; }
+  .scale-header span:first-child { text-align: left; }
+
+  .question-row {
+    display: grid;
+    grid-template-columns: 1fr repeat(5, 52px);
+    gap: 6px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid #f0f0f0;
+  }
+  .question-row:last-child { border-bottom: none; }
+  .question-text {
+    font-size: 0.88rem; line-height: 1.5;
+    padding-right: 6px;
+  }
+  .question-text .rev-tag {
+    font-size: 0.7rem; background: #e8f0eb; color: #4a7c59;
+    padding: 2px 6px; border-radius: 10px; margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  .radio-cell { display: flex; justify-content: center; }
+  .radio-cell input[type=radio] { width: 18px; height: 18px; accent-color: #4a7c59; cursor: pointer; }
+
+  /* Total box */
+  .total-box {
+    background: #fff; border-radius: 10px; padding: 22px 24px;
+    margin-bottom: 22px; box-shadow: 0 2px 6px rgba(0,0,0,.07);
+    text-align: center;
+  }
+  .total-box h3 { font-size: 1rem; color: #4a7c59; margin-bottom: 10px; }
+  .score-display { font-size: 3rem; font-weight: 800; color: #4a7c59; line-height: 1; }
+  .score-label { font-size: 0.9rem; font-weight: 600; margin-top: 8px; color: #555; }
+  .score-desc {
+    font-size: 0.83rem; color: #666; margin-top: 10px;
+    padding: 12px 16px; background: #f4f9f6; border-radius: 8px;
+    text-align: left; line-height: 1.6;
+  }
+  .band-0 { color: #2a7a2a; font-weight: 600; }
+  .band-1 { color: #e6a817; font-weight: 600; }
+  .band-2 { color: #c0392b; font-weight: 600; }
+
+  .band-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 0.82rem; }
+  .band-table th { background: #e8f0eb; color: #4a7c59; padding: 7px 10px; text-align: left; }
+  .band-table td { padding: 7px 10px; border-bottom: 1px solid #f0f4f0; }
+  .band-table tr:last-child td { border-bottom: none; }
+
+  .submit-btn {
+    display: block; width: 100%; padding: 15px;
+    background: #4a7c59; color: #fff; border: none;
+    border-radius: 10px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; transition: background .2s;
+  }
+  .submit-btn:hover  { background: #3a6348; }
+  .submit-btn:active { background: #2e4f39; }
+
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: #333; color: #fff; padding: 12px 22px; border-radius: 8px;
+    font-size: 0.9rem; opacity: 0; pointer-events: none; transition: opacity .3s;
+    z-index: 999; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+
+  @media(max-width:560px){
+    .scale-header, .question-row { grid-template-columns: 1fr repeat(5, 36px); gap: 4px; }
+    .scale-header span { font-size: 0.62rem; }
+    .question-text { font-size: 0.82rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GetFit AF</h1>
+  <p>Perceived Stress Scale</p>
+</header>
+
+<div class="container">
+
+  <div class="intro-card">
+    <h2>About This Assessment</h2>
+    <p>The questions below ask about your feelings and thoughts during the <strong>last month</strong>. For each question, indicate how often you felt or thought a certain way. There are no right or wrong answers — be as honest as possible. Your coach will use the results to better support your programme.</p>
+  </div>
+
+  <!-- Client info -->
+  <div class="section-card">
+    <div class="section-title">Your Details</div>
+    <div class="client-row">
+      <div>
+        <label class="field-label" for="clientName">Full Name</label>
+        <input type="text" id="clientName" placeholder="e.g. Priya Sharma" />
+      </div>
+      <div>
+        <label class="field-label" for="clientDate">Date</label>
+        <input type="date" id="clientDate" />
+      </div>
+      <div>
+        <label class="field-label" for="coachSelect">Your Coach</label>
+        <select id="coachSelect">
+          <option value="">— Select your coach —</option>
+          <option value="Satish">Satish</option>
+          <option value="Kangna Saini">Kangna Saini</option>
+          <option value="Janavi">Janavi</option>
+          <option value="Rishita">Rishita</option>
+          <option value="Naresh">Naresh</option>
+          <option value="Anmol">Anmol</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Questions -->
+  <div class="section-card">
+    <div class="section-title">Questions — Last Month</div>
+    <div class="section-subtitle">Rate how often you felt this way: 0 = Never &nbsp;|&nbsp; 1 = Almost Never &nbsp;|&nbsp; 2 = Sometimes &nbsp;|&nbsp; 3 = Often &nbsp;|&nbsp; 4 = Almost Always</div>
+
+    <div class="scale-header">
+      <span></span>
+      <span>Never<br>0</span>
+      <span>Almost Never<br>1</span>
+      <span>Sometimes<br>2</span>
+      <span>Often<br>3</span>
+      <span>Almost Always<br>4</span>
+    </div>
+
+    <!-- Q1 normal -->
+    <div class="question-row">
+      <span class="question-text">1. How often have you been upset because of something that happened unexpectedly?</span>
+      <div class="radio-cell"><input type="radio" name="q1" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q1" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q1" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q1" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q1" value="4"></div>
+    </div>
+
+    <!-- Q2 normal -->
+    <div class="question-row">
+      <span class="question-text">2. How often have you felt unable to control the important things in your life?</span>
+      <div class="radio-cell"><input type="radio" name="q2" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q2" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q2" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q2" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q2" value="4"></div>
+    </div>
+
+    <!-- Q3 normal -->
+    <div class="question-row">
+      <span class="question-text">3. How often have you felt nervous and stressed?</span>
+      <div class="radio-cell"><input type="radio" name="q3" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q3" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q3" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q3" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q3" value="4"></div>
+    </div>
+
+    <!-- Q4 REVERSED -->
+    <div class="question-row">
+      <span class="question-text">4. How often have you felt confident about your ability to handle your personal problems? <span class="rev-tag">reversed</span></span>
+      <div class="radio-cell"><input type="radio" name="q4" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q4" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q4" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q4" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q4" value="4"></div>
+    </div>
+
+    <!-- Q5 REVERSED -->
+    <div class="question-row">
+      <span class="question-text">5. How often have you felt that things were going your way? <span class="rev-tag">reversed</span></span>
+      <div class="radio-cell"><input type="radio" name="q5" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q5" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q5" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q5" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q5" value="4"></div>
+    </div>
+
+    <!-- Q6 normal -->
+    <div class="question-row">
+      <span class="question-text">6. How often have you felt that you could not cope with all the things you had to do?</span>
+      <div class="radio-cell"><input type="radio" name="q6" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q6" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q6" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q6" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q6" value="4"></div>
+    </div>
+
+    <!-- Q7 REVERSED -->
+    <div class="question-row">
+      <span class="question-text">7. How often have you been able to control irritations in your life? <span class="rev-tag">reversed</span></span>
+      <div class="radio-cell"><input type="radio" name="q7" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q7" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q7" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q7" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q7" value="4"></div>
+    </div>
+
+    <!-- Q8 REVERSED -->
+    <div class="question-row">
+      <span class="question-text">8. How often have you felt that you were on top of things? <span class="rev-tag">reversed</span></span>
+      <div class="radio-cell"><input type="radio" name="q8" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q8" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q8" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q8" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q8" value="4"></div>
+    </div>
+
+    <!-- Q9 normal -->
+    <div class="question-row">
+      <span class="question-text">9. How often have you been angered because of things that were outside your control?</span>
+      <div class="radio-cell"><input type="radio" name="q9" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q9" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q9" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q9" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q9" value="4"></div>
+    </div>
+
+    <!-- Q10 normal -->
+    <div class="question-row">
+      <span class="question-text">10. How often have you felt difficulties were piling up so high that you could not overcome them?</span>
+      <div class="radio-cell"><input type="radio" name="q10" value="0"></div>
+      <div class="radio-cell"><input type="radio" name="q10" value="1"></div>
+      <div class="radio-cell"><input type="radio" name="q10" value="2"></div>
+      <div class="radio-cell"><input type="radio" name="q10" value="3"></div>
+      <div class="radio-cell"><input type="radio" name="q10" value="4"></div>
+    </div>
+  </div>
+
+  <!-- Total score -->
+  <div class="total-box">
+    <h3>Your Stress Score</h3>
+    <div class="score-display" id="totalScore">—</div>
+    <div class="score-label" id="bandLabel">Complete all questions above</div>
+    <div class="score-desc" id="bandDesc" style="display:none;"></div>
+
+    <table class="band-table" style="margin-top:18px;">
+      <thead>
+        <tr><th>Score</th><th>Stress Level</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="band-0">0 – 13</td><td>Low to Moderate Stress</td></tr>
+        <tr><td class="band-1">14 – 19</td><td>High Stress</td></tr>
+        <tr><td class="band-2">20 – 40</td><td>Very High Stress</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit to My Coach</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstrC36HiFAPQCnMjj-zQs8ZdtZ1mcbL8FiOgtuyyE0qRwSTxWj0bUNK_N4Qy5GEU/exec';
+
+const COACH_EMAILS = {
+  'Satish': 'satishreddy814275@gmail.com',
+  'Kangna Saini': 'saini.kangna@gmail.com',
+  'Janavi':       'janavichaitanya@gmail.com',
+  'Rishita':      'rishita.fitness@gmail.com',
+  'Naresh':       'gaddamnaresh5567@gmail.com',
+  'Anmol':        'anmolelizer.chidri@gmail.com'
+};
+
+// Questions 4,5,7,8 are reversed
+const REVERSED = new Set([4, 5, 7, 8]);
+
+const LABELS = ['Never','Almost Never','Sometimes','Often','Almost Always'];
+
+const BANDS = [
+  { max: 13, label: 'Low to Moderate Stress', cls: 'band-0', desc: 'Your stress levels are manageable. Continue maintaining healthy coping strategies and sleep habits as part of your programme.' },
+  { max: 19, label: 'High Stress',            cls: 'band-1', desc: 'Your score indicates high stress. Stress can significantly impact weight loss and food choices. Your coach will work with you on strategies to reduce it.' },
+  { max: 40, label: 'Very High Stress',        cls: 'band-2', desc: 'Your score indicates very high stress. This level of stress can directly affect your hormones, sleep, and weight loss progress. Your coach will prioritise stress management as part of your plan.' }
+];
+
+function getVal(name) {
+  const checked = document.querySelector(`input[name="${name}"]:checked`);
+  return checked ? parseInt(checked.value) : null;
+}
+
+function calcScore() {
+  let total = 0, allAnswered = true;
+  for (let i = 1; i <= 10; i++) {
+    const raw = getVal('q' + i);
+    if (raw === null) { allAnswered = false; continue; }
+    const score = REVERSED.has(i) ? (4 - raw) : raw;
+    total += score;
+  }
+  return allAnswered ? total : null;
+}
+
+function updateDisplay() {
+  const score = calcScore();
+  const el = document.getElementById('totalScore');
+  const lbl = document.getElementById('bandLabel');
+  const dsc = document.getElementById('bandDesc');
+
+  if (score === null) {
+    el.textContent = '—';
+    lbl.textContent = 'Complete all questions above';
+    lbl.className = 'score-label';
+    dsc.style.display = 'none';
+    return;
+  }
+  el.textContent = score;
+  const band = BANDS.find(b => score <= b.max);
+  lbl.textContent = band.label;
+  lbl.className = 'score-label ' + band.cls;
+  dsc.textContent = band.desc;
+  dsc.style.display = 'block';
+}
+
+document.addEventListener('change', e => { if (e.target.type === 'radio') updateDisplay(); });
+document.getElementById('clientDate').valueAsDate = new Date();
+
+function showToast(msg, dur=3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function submitForm() {
+  const name  = document.getElementById('clientName').value.trim();
+  const date  = document.getElementById('clientDate').value;
+  const coach = document.getElementById('coachSelect').value;
+
+  if (!name)  { showToast('Please enter your name.'); return; }
+  if (!coach) { showToast('Please select your coach.'); return; }
+
+  for (let i = 1; i <= 10; i++) {
+    if (getVal('q' + i) === null) { showToast(`Please answer question ${i}.`); return; }
+  }
+
+  const score = calcScore();
+  const band  = BANDS.find(b => score <= b.max);
+
+  // Build answer details
+  const answers = {};
+  for (let i = 1; i <= 10; i++) {
+    const raw = getVal('q' + i);
+    const scored = REVERSED.has(i) ? (4 - raw) : raw;
+    answers['q' + i] = {
+      response: LABELS[raw],
+      rawValue: raw,
+      scoredValue: scored,
+      reversed: REVERSED.has(i)
+    };
+  }
+
+  const payload = {
+    formType: 'perceivedStressScale',
+    clientName: name,
+    date,
+    coach,
+    coachEmail: COACH_EMAILS[coach] || '',
+    totalScore: score,
+    bandLabel: band.label,
+    bandDesc: band.desc,
+    answers
+  };
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true; btn.textContent = 'Sending…';
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(payload)
+  })
+  .then(r => r.text())
+  .then(() => {
+    btn.textContent = '✓ Submitted';
+    showToast('Results sent to your coach!', 4000);
+  })
+  .catch(() => {
+    btn.disabled = false; btn.textContent = 'Submit to My Coach';
+    showToast('Error – please try again.', 4000);
+  });
+}
+</script>
+</body>
+</html>
