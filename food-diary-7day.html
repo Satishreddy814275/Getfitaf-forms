@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>7-Day Food Diary – GetFit AF</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7f5; color: #2c2c2c; min-height: 100vh; }
+
+  .header { background: #4a7c59; padding: 24px 32px; display: flex; align-items: center; gap: 16px; }
+  .header h1 { color: #fff; font-size: 1.4rem; font-weight: 700; }
+  .header p { color: rgba(255,255,255,0.8); font-size: 0.85rem; margin-top: 3px; }
+  .logo { width: 48px; height: 48px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+
+  .container { max-width: 900px; margin: 32px auto; padding: 0 16px 60px; }
+
+  .card { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .card-title { font-size: 1rem; font-weight: 700; color: #4a7c59; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-sub { font-size: 0.85rem; color: #666; margin-bottom: 16px; line-height: 1.5; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.4px; }
+  .field input, .field select {
+    padding: 10px 14px; border: 1.5px solid #dde3e0; border-radius: 8px;
+    font-size: 0.92rem; color: #2c2c2c; background: #fafafa; transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: #4a7c59; background: #fff; }
+
+  /* Welcome back banner */
+  .restore-banner {
+    background: #eaf7ee; border: 1.5px solid #4a7c59; border-radius: 10px;
+    padding: 16px 20px; margin-bottom: 20px; display: none;
+  }
+  .restore-banner.visible { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .restore-banner-text { font-size: 0.88rem; color: #2c5e3a; line-height: 1.5; }
+  .restore-banner-text strong { font-weight: 700; }
+  .restore-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .restore-btn {
+    padding: 8px 16px; border-radius: 8px; font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; border: none; transition: all 0.2s;
+  }
+  .restore-btn.primary { background: #4a7c59; color: #fff; }
+  .restore-btn.primary:hover { background: #3d6b4a; }
+  .restore-btn.secondary { background: transparent; color: #4a7c59; border: 1.5px solid #4a7c59; }
+  .restore-btn.secondary:hover { background: #f0f7f2; }
+
+  /* Autosave indicator */
+  .autosave-indicator {
+    font-size: 0.75rem; color: #888; text-align: right; margin-top: -10px;
+    margin-bottom: 16px; min-height: 18px; transition: color 0.3s;
+  }
+  .autosave-indicator.saving { color: #4a7c59; }
+
+  /* Day Tabs */
+  .day-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .day-tab {
+    padding: 8px 16px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; border: 2px solid #dde3e0; background: #fff; color: #666;
+    transition: all 0.2s; position: relative;
+  }
+  .day-tab.active { background: #4a7c59; border-color: #4a7c59; color: #fff; }
+  .day-tab.has-data { border-color: #4a7c59; color: #4a7c59; }
+  .day-tab.has-data.active { background: #4a7c59; color: #fff; }
+  .day-tab.sent { border-color: #4a7c59; }
+  .sent-dot {
+    display: none; position: absolute; top: -4px; right: -4px;
+    width: 10px; height: 10px; background: #4a7c59; border-radius: 50%;
+    border: 2px solid #f5f7f5;
+  }
+  .day-tab.sent .sent-dot { display: block; }
+
+  /* Day Panel */
+  .day-panel { display: none; }
+  .day-panel.active { display: block; }
+
+  .day-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .day-label { font-size: 1rem; font-weight: 700; color: #4a7c59; }
+  .day-date-input {
+    padding: 6px 12px; border: 1.5px solid #dde3e0; border-radius: 8px;
+    font-size: 0.85rem; background: #fafafa; color: #2c2c2c;
+  }
+  .day-date-input:focus { outline: none; border-color: #4a7c59; }
+
+  /* Log Table */
+  .log-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+  .log-table thead tr { background: #4a7c59; }
+  .log-table thead th {
+    color: #fff; font-weight: 600; padding: 9px 6px; text-align: center;
+    font-size: 0.72rem; letter-spacing: 0.3px; white-space: nowrap;
+  }
+  .log-table thead th.left { text-align: left; padding-left: 10px; }
+  .log-table thead th.wide { min-width: 140px; }
+  .log-table tbody tr { border-bottom: 1px solid #eef1ee; }
+  .log-table tbody tr:nth-child(even) { background: #fafcfa; }
+  .log-table tbody tr:hover { background: #f5f9f6; }
+  .log-table td { padding: 6px 4px; }
+
+  .cell-input {
+    width: 100%; padding: 6px 8px; border: 1px solid #e0e5e2; border-radius: 6px;
+    font-size: 0.8rem; background: transparent; color: #2c2c2c; text-align: center;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .cell-input:focus { outline: none; border-color: #4a7c59; background: #fff; }
+  .cell-input.wide-input { text-align: left; }
+  .cell-input.time-input { max-width: 70px; }
+
+  .totals-row td { background: #eaf2ec; font-weight: 700; font-size: 0.8rem; padding: 8px 4px; text-align: center; }
+  .totals-row td.label-cell { padding-left: 10px; color: #4a7c59; font-size: 0.78rem; text-align: left; }
+  .targets-row td { background: #4a7c59; color: #fff; font-size: 0.75rem; padding: 8px 4px; text-align: center; }
+  .targets-row td.label-cell { padding-left: 10px; font-weight: 600; font-size: 0.78rem; text-align: left; }
+
+  .add-row-btn {
+    margin-top: 10px; padding: 8px 16px; background: transparent; border: 1.5px dashed #4a7c59;
+    border-radius: 8px; color: #4a7c59; font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s; width: 100%;
+  }
+  .add-row-btn:hover { background: #f5f9f6; }
+
+  .day-notes {
+    width: 100%; padding: 10px 14px; border: 1.5px solid #dde3e0; border-radius: 8px;
+    font-size: 0.85rem; background: #fafafa; resize: vertical; min-height: 56px;
+    margin-top: 14px; color: #2c2c2c;
+  }
+  .day-notes:focus { outline: none; border-color: #4a7c59; background: #fff; }
+  .notes-label { font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 14px; margin-bottom: 6px; display: block; }
+
+  /* Per-day send */
+  .day-send-wrap { margin-top: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .day-send-btn {
+    padding: 11px 24px; background: #4a7c59; color: #fff;
+    border: none; border-radius: 10px; font-size: 0.9rem; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px; transition: background 0.2s; white-space: nowrap;
+  }
+  .day-send-btn:hover { background: #3d6b4a; }
+  .day-send-btn:disabled { background: #9cb8a5; cursor: not-allowed; }
+  .day-send-btn.sent-state { background: #2e7d46; }
+  .day-send-status { font-size: 0.83rem; }
+  .day-send-status.success { color: #2e7d46; font-weight: 600; }
+  .day-send-status.error { color: #c0392b; }
+  .day-send-hint { font-size: 0.78rem; color: #888; margin-top: 6px; line-height: 1.5; }
+
+  .note-box { background: #f5f9f6; border-left: 4px solid #4a7c59; border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 20px; }
+  .note-box p { font-size: 0.85rem; color: #555; line-height: 1.6; }
+
+  @media (max-width: 600px) {
+    .field-row { grid-template-columns: 1fr 1fr; }
+    .log-table { font-size: 0.7rem; }
+    .cell-input { font-size: 0.72rem; padding: 4px 4px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">📋</div>
+  <div>
+    <h1>7-Day Food Diary</h1>
+    <p>GetFit AF — Daily Nutrition Tracker</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="note-box">
+    <p>Log everything you eat and drink each day. For each item, add a count in the matching food group column. Hit <strong>Send Day X to Coach</strong> at the end of each day — your coach will receive everything logged so far. <strong>Use the same device all week</strong> and your diary will save automatically.</p>
+  </div>
+
+  <!-- Restore banner -->
+  <div class="restore-banner" id="restoreBanner">
+    <div class="restore-banner-text">
+      <strong id="restoreTitle">Welcome back!</strong><br>
+      <span id="restoreSubtitle">You have a saved diary. Want to pick up where you left off?</span>
+    </div>
+    <div class="restore-actions">
+      <button class="restore-btn primary" onclick="restoreDiary()">Restore My Diary</button>
+      <button class="restore-btn secondary" onclick="dismissRestore()">Start Fresh</button>
+    </div>
+  </div>
+
+  <!-- Client Info -->
+  <div class="card">
+    <div class="card-title">Your Details</div>
+    <div class="field-row">
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="clientName" placeholder="Your name" oninput="onDetailsChange()" />
+      </div>
+      <div class="field">
+        <label>Your Coach</label>
+        <select id="coachName" onchange="onDetailsChange()">
+          <option value="">Select coach</option>
+          <option>Satish</option>
+          <option>Kangna Saini</option>
+          <option>Janavi</option>
+          <option>Rishita</option>
+          <option>Naresh</option>
+          <option>Anmol</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Diary Start Date</label>
+        <input type="date" id="startDate" onchange="onDetailsChange()" />
+      </div>
+    </div>
+    <div class="autosave-indicator" id="autosaveIndicator"></div>
+  </div>
+
+  <!-- Day Tabs -->
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <!-- Day Panels -->
+  <div id="dayPanels"></div>
+
+  <!-- Bottom hint -->
+  <div class="note-box" style="margin-top:0">
+    <p>Your diary saves automatically as you type. Come back tomorrow on the same device and everything will still be here.</p>
+  </div>
+
+</div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstrC36HiFAPQCnMjj-zQs8ZdtZ1mcbL8FiOgtuyyE0qRwSTxWj0bUNK_N4Qy5GEU/exec';
+const STORAGE_KEY = 'getfitaf_diary_v1';
+
+const COACH_EMAILS = {
+  'Satish':       'satishreddy814275@gmail.com',
+  'Kangna Saini': 'saini.kangna@gmail.com',
+  'Janavi':       'janavichaitanya@gmail.com',
+  'Rishita':      'rishita.fitness@gmail.com',
+  'Naresh':       'gaddamnaresh5567@gmail.com',
+  'Anmol':        'anmolelizer.chidri@gmail.com'
+};
+
+const GROUPS = [
+  { key: 'fluids',   label: 'Fluids',   emoji: '💧', target: '2L+' },
+  { key: 'veg',      label: 'Veg',      emoji: '🥦', target: '3–6' },
+  { key: 'fruit',    label: 'Fruit',    emoji: '🍎', target: '2–4' },
+  { key: 'protein',  label: 'Protein',  emoji: '🍗', target: '2–4' },
+  { key: 'calcium',  label: 'Calcium',  emoji: '🥛', target: '1–2' },
+  { key: 'starches', label: 'Starches', emoji: '🍚', target: '1–2' },
+  { key: 'fats',     label: 'Fats',     emoji: '🥑', target: 'Max 1' },
+  { key: 'extras',   label: 'Extras',   emoji: '🍪', target: 'Min' }
+];
+
+const DAYS = ['Day 1','Day 2','Day 3','Day 4','Day 5','Day 6','Day 7'];
+const ROWS_PER_DAY = 8;
+let saveTimer = null;
+let pendingRestore = null;
+
+// ── Build UI ──────────────────────────────────────────────────────────────────
+
+const tabsEl   = document.getElementById('dayTabs');
+const panelsEl = document.getElementById('dayPanels');
+
+DAYS.forEach((day, di) => {
+  // Tab
+  const tab = document.createElement('div');
+  tab.className = 'day-tab' + (di === 0 ? ' active' : '');
+  tab.dataset.day = di;
+  tab.innerHTML = `${day}<span class="sent-dot"></span>`;
+  tab.onclick = () => switchDay(di);
+  tabsEl.appendChild(tab);
+
+  // Panel
+  const panel = document.createElement('div');
+  panel.className = 'day-panel card' + (di === 0 ? ' active' : '');
+  panel.id = `panel-${di}`;
+  panel.innerHTML = buildDayPanel(di);
+  panelsEl.appendChild(panel);
+});
+
+function buildDayPanel(di) {
+  const groupCols = GROUPS.map(g => `<th>${g.emoji}<br>${g.label}</th>`).join('');
+
+  let rows = '';
+  for (let r = 0; r < ROWS_PER_DAY; r++) {
+    rows += buildRow(di, r);
+  }
+
+  const targetCells = GROUPS.map(g => `<td>${g.target}</td>`).join('');
+  const totalCells  = GROUPS.map(g => `<td id="d${di}_total_${g.key}">0</td>`).join('');
+
+  return `
+    <div class="day-header">
+      <span class="day-label">${DAYS[di]}</span>
+      <input class="day-date-input" type="date" id="d${di}_date" oninput="schedSave()" />
+    </div>
+    <div style="overflow-x:auto">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th class="left" style="min-width:70px">Time</th>
+            <th class="left wide">What did you eat or drink?</th>
+            ${groupCols}
+          </tr>
+        </thead>
+        <tbody id="tbody-${di}">${rows}</tbody>
+        <tfoot>
+          <tr class="totals-row">
+            <td class="label-cell" colspan="2">My Total Today</td>
+            ${totalCells}
+          </tr>
+          <tr class="targets-row">
+            <td class="label-cell" colspan="2">Daily Target</td>
+            ${targetCells}
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <button class="add-row-btn" onclick="addRow(${di})">+ Add more rows</button>
+    <span class="notes-label">Notes for today (hunger, energy, how you felt)</span>
+    <textarea class="day-notes" id="d${di}_notes" placeholder="Optional — any observations about today..." oninput="schedSave()"></textarea>
+    <div class="day-send-wrap">
+      <button class="day-send-btn" id="sendBtn-${di}" onclick="sendDayUpdate(${di})">Send Day ${di + 1} to Coach</button>
+      <span class="day-send-status" id="sendStatus-${di}"></span>
+    </div>
+    <div class="day-send-hint">Your coach will receive all days logged so far, not just today — so each update gives them the full picture.</div>
+  `;
+}
+
+function buildRow(di, r) {
+  const groupInputs = GROUPS.map(g =>
+    `<td><input class="cell-input" type="number" min="0" step="0.5" id="d${di}_r${r}_${g.key}" oninput="updateTotals(${di});schedSave()" /></td>`
+  ).join('');
+  return `
+    <tr id="row-${di}-${r}">
+      <td><input class="cell-input time-input" type="time" id="d${di}_r${r}_time" oninput="schedSave()" /></td>
+      <td><input class="cell-input wide-input" type="text" id="d${di}_r${r}_food" placeholder="What did you eat or drink?" style="min-width:150px" oninput="schedSave()" /></td>
+      ${groupInputs}
+    </tr>`;
+}
+
+// ── Date auto-fill ─────────────────────────────────────────────────────────────
+
+const today = new Date();
+document.getElementById('startDate').value = today.toISOString().split('T')[0];
+updateDayDates();
+
+document.getElementById('startDate').addEventListener('change', updateDayDates);
+
+function updateDayDates() {
+  const start = new Date(document.getElementById('startDate').value);
+  if (isNaN(start)) return;
+  DAYS.forEach((_, di) => {
+    const d = new Date(start);
+    d.setDate(d.getDate() + di);
+    const el = document.getElementById(`d${di}_date`);
+    if (el) el.value = d.toISOString().split('T')[0];
+  });
+}
+
+// ── Tab switching ──────────────────────────────────────────────────────────────
+
+function switchDay(di) {
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.day-tab[data-day="${di}"]`).classList.add('active');
+  document.getElementById(`panel-${di}`).classList.add('active');
+}
+
+// ── Add rows ───────────────────────────────────────────────────────────────────
+
+function addRow(di) {
+  const tbody = document.getElementById(`tbody-${di}`);
+  const r = tbody.querySelectorAll('tr').length;
+  tbody.insertAdjacentHTML('beforeend', buildRow(di, r));
+  markTabHasData(di);
+}
+
+// ── Totals ────────────────────────────────────────────────────────────────────
+
+function updateTotals(di) {
+  const tbody = document.getElementById(`tbody-${di}`);
+  const rowCount = tbody.querySelectorAll('tr').length;
+  GROUPS.forEach(g => {
+    let total = 0;
+    for (let r = 0; r < rowCount; r++) {
+      const el = document.getElementById(`d${di}_r${r}_${g.key}`);
+      if (el && el.value) total += parseFloat(el.value) || 0;
+    }
+    const el = document.getElementById(`d${di}_total_${g.key}`);
+    if (el) el.textContent = total % 1 === 0 ? total : total.toFixed(1);
+  });
+  markTabHasData(di);
+}
+
+function markTabHasData(di) {
+  document.querySelector(`.day-tab[data-day="${di}"]`).classList.add('has-data');
+}
+
+// ── localStorage: Save ────────────────────────────────────────────────────────
+
+function schedSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveToStorage, 600);
+}
+
+function onDetailsChange() {
+  updateDayDates();
+  schedSave();
+}
+
+function saveToStorage() {
+  const state = captureState();
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const ind = document.getElementById('autosaveIndicator');
+    ind.textContent = 'Diary saved automatically';
+    ind.className = 'autosave-indicator saving';
+    setTimeout(() => {
+      ind.textContent = '';
+      ind.className = 'autosave-indicator';
+    }, 2000);
+  } catch(e) {
+    // localStorage unavailable — silently ignore
+  }
+}
+
+function captureState() {
+  const days = DAYS.map((_, di) => {
+    const tbody = document.getElementById(`tbody-${di}`);
+    const rowCount = tbody ? tbody.querySelectorAll('tr').length : ROWS_PER_DAY;
+    const rows = [];
+    for (let r = 0; r < rowCount; r++) {
+      const row = { time: '', food: '' };
+      GROUPS.forEach(g => { row[g.key] = ''; });
+      const tEl = document.getElementById(`d${di}_r${r}_time`);
+      const fEl = document.getElementById(`d${di}_r${r}_food`);
+      if (tEl) row.time = tEl.value;
+      if (fEl) row.food = fEl.value;
+      GROUPS.forEach(g => {
+        const el = document.getElementById(`d${di}_r${r}_${g.key}`);
+        if (el) row[g.key] = el.value;
+      });
+      rows.push(row);
+    }
+    return {
+      date:  document.getElementById(`d${di}_date`)?.value || '',
+      notes: document.getElementById(`d${di}_notes`)?.value || '',
+      rows
+    };
+  });
+
+  return {
+    name:      document.getElementById('clientName').value,
+    coach:     document.getElementById('coachName').value,
+    startDate: document.getElementById('startDate').value,
+    savedAt:   new Date().toISOString(),
+    days
+  };
+}
+
+// ── localStorage: Restore ─────────────────────────────────────────────────────
+
+function checkForSavedDiary() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (!saved || !saved.name) return;
+
+    pendingRestore = saved;
+
+    const savedDate = new Date(saved.savedAt);
+    const dateStr = savedDate.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+
+    document.getElementById('restoreTitle').textContent = `Welcome back, ${saved.name}!`;
+    document.getElementById('restoreSubtitle').textContent =
+      `You have a saved diary from ${dateStr}. Want to pick up where you left off?`;
+    document.getElementById('restoreBanner').classList.add('visible');
+  } catch(e) {}
+}
+
+function restoreDiary() {
+  if (!pendingRestore) return;
+  const saved = pendingRestore;
+
+  document.getElementById('clientName').value  = saved.name  || '';
+  document.getElementById('coachName').value   = saved.coach || '';
+  document.getElementById('startDate').value   = saved.startDate || '';
+
+  saved.days.forEach((dayData, di) => {
+    const dateEl = document.getElementById(`d${di}_date`);
+    if (dateEl) dateEl.value = dayData.date || '';
+
+    const notesEl = document.getElementById(`d${di}_notes`);
+    if (notesEl) notesEl.value = dayData.notes || '';
+
+    const tbody = document.getElementById(`tbody-${di}`);
+    if (!tbody) return;
+
+    // Add extra rows if needed
+    const existingRows = tbody.querySelectorAll('tr').length;
+    for (let r = existingRows; r < dayData.rows.length; r++) {
+      tbody.insertAdjacentHTML('beforeend', buildRow(di, r));
+    }
+
+    // Populate rows
+    dayData.rows.forEach((row, r) => {
+      const tEl = document.getElementById(`d${di}_r${r}_time`);
+      const fEl = document.getElementById(`d${di}_r${r}_food`);
+      if (tEl) tEl.value = row.time || '';
+      if (fEl) fEl.value = row.food || '';
+      GROUPS.forEach(g => {
+        const el = document.getElementById(`d${di}_r${r}_${g.key}`);
+        if (el) el.value = row[g.key] || '';
+      });
+      if (row.food || row.time) markTabHasData(di);
+    });
+
+    updateTotals(di);
+  });
+
+  document.getElementById('restoreBanner').classList.remove('visible');
+  showAutosaveMsg('Diary restored');
+  pendingRestore = null;
+}
+
+function dismissRestore() {
+  document.getElementById('restoreBanner').classList.remove('visible');
+  pendingRestore = null;
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+}
+
+function showAutosaveMsg(msg) {
+  const ind = document.getElementById('autosaveIndicator');
+  ind.textContent = msg;
+  ind.className = 'autosave-indicator saving';
+  setTimeout(() => { ind.textContent = ''; ind.className = 'autosave-indicator'; }, 2500);
+}
+
+// ── Collect day data for submission ───────────────────────────────────────────
+
+function collectDayData(di) {
+  const tbody = document.getElementById(`tbody-${di}`);
+  const rowCount = tbody ? tbody.querySelectorAll('tr').length : ROWS_PER_DAY;
+  const rows = [];
+  for (let r = 0; r < rowCount; r++) {
+    const time = document.getElementById(`d${di}_r${r}_time`)?.value || '';
+    const food = document.getElementById(`d${di}_r${r}_food`)?.value || '';
+    if (!time && !food) continue;
+    const groups = {};
+    GROUPS.forEach(g => { groups[g.key] = document.getElementById(`d${di}_r${r}_${g.key}`)?.value || ''; });
+    rows.push({ time, food, ...groups });
+  }
+  const totals = {};
+  GROUPS.forEach(g => {
+    totals[g.key] = document.getElementById(`d${di}_total_${g.key}`)?.textContent || '0';
+  });
+  return {
+    dayLabel: DAYS[di],
+    date:     document.getElementById(`d${di}_date`)?.value || '',
+    notes:    document.getElementById(`d${di}_notes`)?.value || '',
+    rows,
+    totals
+  };
+}
+
+// ── Send cumulative update ────────────────────────────────────────────────────
+
+function sendDayUpdate(currentDay) {
+  const name  = document.getElementById('clientName').value.trim();
+  const coach = document.getElementById('coachName').value;
+
+  if (!name)  { setDayStatus(currentDay, 'Please enter your name above first.', 'error'); return; }
+  if (!coach) { setDayStatus(currentDay, 'Please select your coach above first.', 'error'); return; }
+
+  // Collect all days from Day 1 up to and including the current day
+  const allDaysSoFar = [];
+  for (let di = 0; di <= currentDay; di++) {
+    allDaysSoFar.push(collectDayData(di));
+  }
+
+  // Label for coach's email subject — shows cumulative context
+  const coachLabel = currentDay === 0
+    ? 'Day 1 of 7'
+    : `Days 1–${currentDay + 1} of 7`;
+
+  const data = {
+    formType:   'foodDiary7Day',
+    name,
+    coach,
+    coachEmail: COACH_EMAILS[coach] || '',
+    startDate:  document.getElementById('startDate').value,
+    coachLabel,          // used in email subject/body for coach
+    daysCount:  currentDay + 1,
+    days:       allDaysSoFar
+  };
+
+  const btn = document.getElementById(`sendBtn-${currentDay}`);
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  setDayStatus(currentDay, '', '');
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.status === 'success') {
+      btn.textContent = 'Sent!';
+      btn.classList.add('sent-state');
+      setDayStatus(currentDay, `Day ${currentDay + 1} sent to your coach.`, 'success');
+      document.querySelector(`.day-tab[data-day="${currentDay}"]`).classList.add('sent');
+      // Save the sent state to localStorage too
+      saveToStorage();
+    } else throw new Error();
+  })
+  .catch(() => {
+    setDayStatus(currentDay, 'Something went wrong — screenshot and send to your coach directly.', 'error');
+    btn.disabled = false;
+    btn.textContent = `Send Day ${currentDay + 1} to Coach`;
+  });
+}
+
+function setDayStatus(di, msg, type) {
+  const el = document.getElementById(`sendStatus-${di}`);
+  if (!el) return;
+  el.textContent = msg;
+  el.className = 'day-send-status ' + type;
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+
+checkForSavedDiary();
+</script>
+</body>
+</html>

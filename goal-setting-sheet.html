@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal Setting Sheet – GetFit AF</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7f5; color: #2c2c2c; min-height: 100vh; }
+
+  .header { background: #4a7c59; padding: 24px 32px; display: flex; align-items: center; gap: 16px; }
+  .header h1 { color: #fff; font-size: 1.4rem; font-weight: 700; }
+  .header p { color: rgba(255,255,255,0.8); font-size: 0.85rem; margin-top: 3px; }
+  .logo { width: 48px; height: 48px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+
+  .container { max-width: 680px; margin: 32px auto; padding: 0 16px 60px; }
+
+  .card { background: #fff; border-radius: 12px; padding: 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+  .card-title { font-size: 1rem; font-weight: 700; color: #4a7c59; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card-sub { font-size: 0.85rem; color: #666; margin-bottom: 20px; line-height: 1.5; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { font-size: 0.8rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.4px; }
+  .field input, .field select, .field textarea {
+    padding: 10px 14px; border: 1.5px solid #dde3e0; border-radius: 8px;
+    font-size: 0.92rem; color: #2c2c2c; background: #fafafa; transition: border-color 0.2s;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    outline: none; border-color: #4a7c59; background: #fff;
+  }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  /* Goal Cards */
+  .goal-block {
+    border-left: 4px solid #4a7c59; padding: 18px 20px; border-radius: 0 10px 10px 0;
+    background: #f8fbf9; margin-bottom: 16px;
+  }
+  .goal-block.medium { border-color: #6ba37a; background: #f5f9f6; }
+  .goal-block.long { border-color: #3d6b4a; background: #f0f6f2; }
+
+  .goal-horizon { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+  .horizon-badge {
+    font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 12px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-short { background: #4a7c59; color: #fff; }
+  .badge-medium { background: #6ba37a; color: #fff; }
+  .badge-long { background: #3d6b4a; color: #fff; }
+  .horizon-label { font-size: 0.85rem; color: #888; }
+
+  .goal-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .goal-field:last-child { margin-bottom: 0; }
+  .goal-field label { font-size: 0.78rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.4px; }
+  .goal-field textarea, .goal-field input {
+    padding: 10px 14px; border: 1.5px solid #dde3e0; border-radius: 8px;
+    font-size: 0.9rem; color: #2c2c2c; background: #fff; transition: border-color 0.2s; resize: vertical;
+  }
+  .goal-field textarea { min-height: 70px; }
+  .goal-field textarea:focus, .goal-field input:focus { outline: none; border-color: #4a7c59; }
+
+  /* Food changes */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .change-block { border-radius: 10px; padding: 18px; }
+  .change-block.more { background: #eaf7ee; border: 1.5px solid #b2ddbf; }
+  .change-block.less { background: #fdf2f0; border: 1.5px solid #f0c4bb; }
+  .change-title { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 10px; }
+  .change-title.more { color: #2e7d46; }
+  .change-title.less { color: #c0392b; }
+
+  .change-input {
+    width: 100%; padding: 9px 12px; border: 1.5px solid transparent; border-radius: 8px;
+    font-size: 0.88rem; color: #2c2c2c; margin-bottom: 8px; transition: border-color 0.2s;
+  }
+  .change-block.more .change-input { background: #fff; border-color: #b2ddbf; }
+  .change-block.more .change-input:focus { outline: none; border-color: #2e7d46; }
+  .change-block.less .change-input { background: #fff; border-color: #f0c4bb; }
+  .change-block.less .change-input:focus { outline: none; border-color: #c0392b; }
+
+  .add-item-btn {
+    background: none; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 4px 0;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  .change-block.more .add-item-btn { color: #2e7d46; }
+  .change-block.less .add-item-btn { color: #c0392b; }
+
+  /* Commitment */
+  .commit-block { background: #f5f9f6; border: 1.5px solid #c5dece; border-radius: 10px; padding: 18px 20px; }
+  .commit-title { font-size: 0.85rem; font-weight: 700; color: #4a7c59; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 14px; }
+
+  .scale-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .scale-label { font-size: 0.82rem; color: #555; flex: 1; }
+  .scale-options { display: flex; gap: 6px; }
+  .scale-btn {
+    width: 36px; height: 36px; border-radius: 50%; border: 2px solid #dde3e0;
+    background: #fff; font-size: 0.82rem; font-weight: 700; cursor: pointer;
+    transition: all 0.15s; color: #888;
+  }
+  .scale-btn:hover { border-color: #4a7c59; color: #4a7c59; }
+  .scale-btn.selected { background: #4a7c59; border-color: #4a7c59; color: #fff; }
+
+  /* Submit */
+  .submit-btn {
+    width: 100%; padding: 15px; background: #4a7c59; color: #fff;
+    border: none; border-radius: 10px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.3px; transition: background 0.2s; margin-top: 8px;
+  }
+  .submit-btn:hover { background: #3d6b4a; }
+  .submit-btn:disabled { background: #9cb8a5; cursor: not-allowed; }
+
+  .status-msg { text-align: center; font-size: 0.88rem; margin-top: 12px; min-height: 20px; }
+  .status-msg.success { color: #4a7c59; font-weight: 600; }
+  .status-msg.error { color: #c0392b; }
+
+  .note-box { background: #f5f9f6; border-left: 4px solid #4a7c59; border-radius: 0 8px 8px 0; padding: 14px 16px; margin-bottom: 20px; }
+  .note-box p { font-size: 0.85rem; color: #555; line-height: 1.6; }
+
+  @media (max-width: 500px) {
+    .field-row, .two-col { grid-template-columns: 1fr; }
+    .scale-options { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">🎯</div>
+  <div>
+    <h1>Goal Setting Sheet</h1>
+    <p>GetFit AF — After Your 7-Day Diary Review</p>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="note-box">
+    <p>Complete this after reviewing your 7-day diary with your coach. These goals will become your reference point for all future check-ins — be specific and realistic.</p>
+  </div>
+
+  <!-- Details -->
+  <div class="card">
+    <div class="card-title">Your Details</div>
+    <div class="field-row">
+      <div class="field" style="margin-bottom:0">
+        <label>Full Name</label>
+        <input type="text" id="clientName" placeholder="Your name" />
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Date</label>
+        <input type="date" id="clientDate" />
+      </div>
+    </div>
+    <div style="height:16px"></div>
+    <div class="field-row">
+      <div class="field" style="margin-bottom:0">
+        <label>Your Coach</label>
+        <select id="coachName">
+          <option value="">Select your coach</option>
+          <option>Satish</option>
+          <option>Kangna Saini</option>
+          <option>Janavi</option>
+          <option>Rishita</option>
+          <option>Naresh</option>
+          <option>Anmol</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label>Current Weight (optional)</label>
+        <input type="text" id="currentWeight" placeholder="e.g. 72 kg" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Goals -->
+  <div class="card">
+    <div class="card-title">My Goals</div>
+    <div class="card-sub">Set one clear goal for each time horizon. The more specific, the more useful it is for your coach.</div>
+
+    <!-- Short Term -->
+    <div class="goal-block short">
+      <div class="goal-horizon">
+        <span class="horizon-badge badge-short">This Week</span>
+        <span class="horizon-label">Short-term goal (next 7 days)</span>
+      </div>
+      <div class="goal-field">
+        <label>What do you want to achieve this week?</label>
+        <textarea id="goal_short" placeholder="e.g. Drink at least 2 litres of water every day. Hit my protein target at least 5 out of 7 days."></textarea>
+      </div>
+      <div class="goal-field">
+        <label>One specific action you'll take to make it happen</label>
+        <input type="text" id="action_short" placeholder="e.g. Prepare my protein source the night before." />
+      </div>
+    </div>
+
+    <!-- Medium Term -->
+    <div class="goal-block medium">
+      <div class="goal-horizon">
+        <span class="horizon-badge badge-medium">Next 4 Weeks</span>
+        <span class="horizon-label">Medium-term goal</span>
+      </div>
+      <div class="goal-field">
+        <label>What do you want to achieve in the next 4 weeks?</label>
+        <textarea id="goal_medium" placeholder="e.g. Lose 2 kg and reduce my starch portions to 1–2 per day consistently."></textarea>
+      </div>
+      <div class="goal-field">
+        <label>How will you measure whether you've achieved this?</label>
+        <input type="text" id="measure_medium" placeholder="e.g. Weigh myself every Monday morning and track my diary." />
+      </div>
+    </div>
+
+    <!-- Long Term -->
+    <div class="goal-block long">
+      <div class="goal-horizon">
+        <span class="horizon-badge badge-long">3–6 Months</span>
+        <span class="horizon-label">Long-term goal</span>
+      </div>
+      <div class="goal-field">
+        <label>What is your big goal for the next 3–6 months?</label>
+        <textarea id="goal_long" placeholder="e.g. Reach 65 kg and feel energetic every day. Be able to fit into my old clothes."></textarea>
+      </div>
+      <div class="goal-field">
+        <label>Why does this goal matter to you personally?</label>
+        <textarea id="why_long" placeholder="e.g. I want to have enough energy to keep up with my kids. I want to feel confident in my own skin." style="min-height:60px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Food Changes -->
+  <div class="card">
+    <div class="card-title">My Food Changes</div>
+    <div class="card-sub">Based on your diary and your conversation with your coach, what will you specifically add or reduce?</div>
+    <div class="two-col">
+      <div class="change-block more">
+        <div class="change-title more">I Will Eat More Of...</div>
+        <input class="change-input" type="text" id="more1" placeholder="e.g. Vegetables at lunch" />
+        <input class="change-input" type="text" id="more2" placeholder="e.g. Water between meals" />
+        <input class="change-input" type="text" id="more3" placeholder="e.g. Protein at breakfast" />
+        <button class="add-item-btn" onclick="addMoreRow()">+ Add another</button>
+      </div>
+      <div class="change-block less">
+        <div class="change-title less">I Will Eat Less Of...</div>
+        <input class="change-input" type="text" id="less1" placeholder="e.g. Rice at dinner" />
+        <input class="change-input" type="text" id="less2" placeholder="e.g. Chai with sugar" />
+        <input class="change-input" type="text" id="less3" placeholder="e.g. Evening snacks" />
+        <button class="add-item-btn" onclick="addLessRow()">+ Add another</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Commitment -->
+  <div class="card">
+    <div class="card-title">My Commitment Level</div>
+    <div class="card-sub">Honest self-assessment helps your coach know where to focus support.</div>
+
+    <div class="commit-block">
+      <div class="commit-title">On a scale of 1–10, how confident are you that you'll hit your weekly goal?</div>
+      <div class="scale-row">
+        <span class="scale-label">1 = Not confident at all &nbsp;|&nbsp; 10 = Fully committed</span>
+        <div class="scale-options" id="confidenceScale">
+          <!-- Built by JS -->
+        </div>
+      </div>
+      <div class="goal-field" style="margin-top:8px">
+        <label>What might get in the way this week?</label>
+        <textarea id="obstacles" placeholder="e.g. Work travel Thursday–Friday. Social dinner on Saturday." style="min-height:60px"></textarea>
+      </div>
+      <div class="goal-field">
+        <label>How will you handle it if that happens?</label>
+        <textarea id="planB" placeholder="e.g. I'll focus on protein and skip extras. I'll allow one treat meal but stay on track the rest of the day." style="min-height:60px"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <div class="card">
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">Send Goals to My Coach</button>
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+</div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxstrC36HiFAPQCnMjj-zQs8ZdtZ1mcbL8FiOgtuyyE0qRwSTxWj0bUNK_N4Qy5GEU/exec';
+const COACH_EMAILS = {
+  'Satish': 'satishreddy814275@gmail.com',
+  'Kangna Saini': 'saini.kangna@gmail.com',
+  'Janavi': 'janavichaitanya@gmail.com',
+  'Rishita': 'rishita.fitness@gmail.com',
+  'Naresh': 'gaddamnaresh5567@gmail.com',
+  'Anmol': 'anmolelizer.chidri@gmail.com'
+};
+
+// Set today's date
+document.getElementById('clientDate').value = new Date().toISOString().split('T')[0];
+
+// Build confidence scale
+let selectedConfidence = 0;
+const scaleEl = document.getElementById('confidenceScale');
+for (let i = 1; i <= 10; i++) {
+  const btn = document.createElement('button');
+  btn.className = 'scale-btn';
+  btn.textContent = i;
+  btn.onclick = () => {
+    selectedConfidence = i;
+    document.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+  };
+  scaleEl.appendChild(btn);
+}
+
+// Dynamic more/less rows
+let moreCount = 3, lessCount = 3;
+function addMoreRow() {
+  moreCount++;
+  const el = document.createElement('input');
+  el.className = 'change-input';
+  el.type = 'text';
+  el.id = `more${moreCount}`;
+  el.placeholder = 'Add another...';
+  document.querySelector('.change-block.more .add-item-btn').before(el);
+}
+function addLessRow() {
+  lessCount++;
+  const el = document.createElement('input');
+  el.className = 'change-input';
+  el.type = 'text';
+  el.id = `less${lessCount}`;
+  el.placeholder = 'Add another...';
+  document.querySelector('.change-block.less .add-item-btn').before(el);
+}
+
+function getMoreItems() {
+  const items = [];
+  for (let i = 1; i <= moreCount; i++) {
+    const v = document.getElementById(`more${i}`)?.value.trim();
+    if (v) items.push(v);
+  }
+  return items;
+}
+function getLessItems() {
+  const items = [];
+  for (let i = 1; i <= lessCount; i++) {
+    const v = document.getElementById(`less${i}`)?.value.trim();
+    if (v) items.push(v);
+  }
+  return items;
+}
+
+function submitForm() {
+  const name = document.getElementById('clientName').value.trim();
+  const coach = document.getElementById('coachName').value;
+  if (!name) { showStatus('Please enter your name.', 'error'); return; }
+  if (!coach) { showStatus('Please select your coach.', 'error'); return; }
+
+  const data = {
+    formType: 'goalSettingSheet',
+    name,
+    date: document.getElementById('clientDate').value,
+    coach,
+    coachEmail: COACH_EMAILS[coach] || '',
+    currentWeight: document.getElementById('currentWeight').value.trim(),
+    goals: {
+      short: {
+        goal: document.getElementById('goal_short').value.trim(),
+        action: document.getElementById('action_short').value.trim()
+      },
+      medium: {
+        goal: document.getElementById('goal_medium').value.trim(),
+        measure: document.getElementById('measure_medium').value.trim()
+      },
+      long: {
+        goal: document.getElementById('goal_long').value.trim(),
+        why: document.getElementById('why_long').value.trim()
+      }
+    },
+    foodChanges: {
+      more: getMoreItems(),
+      less: getLessItems()
+    },
+    commitment: {
+      confidence: selectedConfidence,
+      obstacles: document.getElementById('obstacles').value.trim(),
+      planB: document.getElementById('planB').value.trim()
+    }
+  };
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => {
+    if (res.status === 'success') {
+      showStatus('Goals sent! Your coach will reference these in every check-in going forward.', 'success');
+      btn.textContent = 'Goals Sent';
+    } else throw new Error();
+  })
+  .catch(() => {
+    showStatus('Something went wrong — please screenshot this form and send to your coach directly.', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Send Goals to My Coach';
+  });
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = 'status-msg ' + type;
+}
+</script>
+</body>
+</html>
