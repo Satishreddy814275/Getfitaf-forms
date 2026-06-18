@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GetFitAF — Supplement Programme Questionnaire</title>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  :root {
+    --green: #6b8f6b;
+    --green-light: #a8c5a0;
+    --green-dark: #4a6741;
+    --bg: #f5f7f4;
+    --white: #ffffff;
+    --text: #2d2d2d;
+    --text-light: #666;
+    --border: #d0dece;
+    --red: #c0392b;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* HEADER */
+  header { background: var(--green-dark); color: white; padding: 24px 32px; text-align: center; }
+  header h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: 1px; }
+  header p { font-size: 0.95rem; opacity: 0.85; margin-top: 4px; }
+
+  /* PROGRESS BAR */
+  #progress-container { background: var(--green-light); padding: 0; height: 6px; }
+  #progress-bar { height: 6px; background: var(--green-dark); width: 0%; transition: width 0.4s ease; }
+
+  /* STEPS */
+  .step { display: none; max-width: 780px; margin: 32px auto; padding: 0 16px; }
+  .step.active { display: block; }
+
+  .card { background: var(--white); border-radius: 12px; box-shadow: var(--shadow); padding: 32px; margin-bottom: 24px; }
+  .card h2 { color: var(--green-dark); font-size: 1.35rem; margin-bottom: 6px; }
+  .card .subtitle { color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+
+  /* SECTION LABEL */
+  .section-label { background: var(--green); color: white; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; display: inline-block; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* NUTRIENT BLOCK */
+  .nutrient-block { margin-bottom: 28px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .nutrient-header { background: #f0f4ef; padding: 10px 16px; font-weight: 700; color: var(--green-dark); font-size: 0.95rem; border-bottom: 1px solid var(--border); }
+  .symptom-list { padding: 12px 16px; }
+  .symptom-item { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+  .symptom-item:last-child { border-bottom: none; }
+  .symptom-item input[type="checkbox"] { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--green-dark); flex-shrink: 0; cursor: pointer; }
+  .symptom-item label { font-size: 0.92rem; cursor: pointer; }
+  .symptom-item label.bold { font-weight: 700; color: var(--green-dark); }
+  .symptom-item label .badge { background: var(--green); color: white; font-size: 0.7rem; padding: 1px 6px; border-radius: 10px; margin-left: 6px; font-weight: 600; }
+
+  /* EVALUATION BLOCK */
+  .eval-block { margin-bottom: 24px; }
+  .eval-title { font-weight: 700; color: var(--green-dark); font-size: 1rem; margin-bottom: 12px; padding: 8px 0; border-bottom: 2px solid var(--green-light); }
+  .eval-note { font-size: 0.82rem; color: var(--red); font-weight: 600; margin-bottom: 10px; }
+  .eval-item { display: flex; align-items: flex-start; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer; }
+  .eval-item:last-child { border-bottom: none; }
+  .eval-item input[type="checkbox"] { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--green-dark); flex-shrink: 0; cursor: pointer; }
+  .eval-item label { font-size: 0.92rem; cursor: pointer; }
+
+  /* RADIO GROUP */
+  .radio-group { display: flex; gap: 20px; margin: 8px 0 16px 0; }
+  .radio-group label { display: flex; align-items: center; gap: 6px; font-size: 0.92rem; cursor: pointer; }
+  .radio-group input[type="radio"] { accent-color: var(--green-dark); width: 16px; height: 16px; }
+
+  /* CLIENT INFO */
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width: 540px) { .form-row { grid-template-columns: 1fr; } }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 0.88rem; font-weight: 600; color: var(--text-light); }
+  .form-group input, .form-group select { padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; transition: border 0.2s; }
+  .form-group input:focus, .form-group select:focus { border-color: var(--green); }
+
+  /* BUTTONS */
+  .btn-row { display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px; }
+  .btn { padding: 12px 28px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.2s; }
+  .btn-primary { background: var(--green-dark); color: white; }
+  .btn-primary:hover { background: var(--green); }
+  .btn-secondary { background: white; color: var(--green-dark); border: 2px solid var(--green-dark); }
+  .btn-secondary:hover { background: var(--bg); }
+
+  /* DISCLAIMER */
+  .disclaimer { background: #fff8e1; border-left: 4px solid #f5c518; padding: 14px 18px; border-radius: 0 8px 8px 0; font-size: 0.88rem; color: #5a4a00; margin-bottom: 20px; }
+
+  /* RESULTS */
+  #results-section { max-width: 780px; margin: 32px auto; padding: 0 16px; display: none; }
+  .results-header { background: var(--green-dark); color: white; padding: 28px 32px; border-radius: 12px 12px 0 0; }
+  .results-header h2 { font-size: 1.4rem; }
+  .results-header p { opacity: 0.85; font-size: 0.9rem; margin-top: 4px; }
+  .results-body { background: white; border-radius: 0 0 12px 12px; box-shadow: var(--shadow); padding: 28px 32px; }
+
+  .results-table { width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 0.9rem; }
+  .results-table th { background: var(--green-dark); color: white; padding: 10px 14px; text-align: left; }
+  .results-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .results-table tr:last-child td { border-bottom: none; }
+  .results-table tr:nth-child(even) td { background: #f8faf8; }
+
+  .dosage-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.82rem; font-weight: 700; }
+  .dosage-0 { background: #e8f5e9; color: #2e7d32; }
+  .dosage-1 { background: #fff9c4; color: #f57f17; }
+  .dosage-2 { background: #ffe0b2; color: #e65100; }
+  .dosage-3 { background: #fce4ec; color: #c62828; }
+
+  .score-pill { display: inline-block; background: var(--green-light); color: var(--green-dark); padding: 2px 10px; border-radius: 12px; font-weight: 700; font-size: 0.85rem; }
+
+  .section-divider { margin: 24px 0 16px; font-weight: 700; color: var(--green-dark); font-size: 1rem; border-bottom: 2px solid var(--green-light); padding-bottom: 8px; }
+
+  .sending-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center; flex-direction: column; color: white; font-size: 1.1rem; gap: 16px; }
+  .sending-overlay.active { display: flex; }
+  .spinner { width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .alert { padding: 14px 18px; border-radius: 8px; margin-bottom: 16px; font-size: 0.92rem; }
+  .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .alert-error { background: #fce4ec; color: #c62828; border: 1px solid #ef9a9a; }
+
+  /* STEP INDICATOR */
+  .step-indicator { display: flex; justify-content: center; gap: 8px; padding: 20px 16px 0; flex-wrap: wrap; }
+  .step-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
+  .step-dot.active { background: var(--green-dark); }
+  .step-dot.done { background: var(--green-light); }
+
+  .intro-icon { font-size: 3rem; text-align: center; margin-bottom: 12px; }
+  .intro-list { list-style: none; padding: 0; }
+  .intro-list li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.93rem; display: flex; gap: 10px; align-items: flex-start; }
+  .intro-list li:last-child { border-bottom: none; }
+  .intro-list li::before { content: '✓'; color: var(--green); font-weight: 700; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GetFitAF</h1>
+  <p>Personalised Supplement Programme Assessment</p>
+</header>
+
+<div id="progress-container"><div id="progress-bar"></div></div>
+<div class="step-indicator" id="step-indicator"></div>
+
+<div class="sending-overlay" id="sending-overlay">
+  <div class="spinner"></div>
+  <span>Sending your results...</span>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 0: INTRO -->
+<div class="step active" id="step-0">
+  <div class="card">
+    <div class="intro-icon">💊</div>
+    <h2 style="text-align:center">Welcome to Your Supplement Assessment</h2>
+    <p class="subtitle" style="text-align:center">This questionnaire will help us identify your personalised nutrient needs</p>
+    <div class="disclaimer">
+      <strong>Important:</strong> This questionnaire is not meant to diagnose an ailment or disease, nor to prescribe treatment or replace medical advice. If you have significant symptoms, please consult a medical doctor.
+    </div>
+    <ul class="intro-list">
+      <li>Takes approximately 10–15 minutes to complete</li>
+      <li>Covers vitamins, minerals, essential fatty acids and lifestyle factors</li>
+      <li>Only tick symptoms you experience <strong>regularly</strong> — not isolated one-off occurrences</li>
+      <li>If you're unsure about a question, leave it blank</li>
+      <li>Your personalised supplement plan will be emailed to you at the end</li>
+    </ul>
+    <div class="form-row" style="margin-top:24px">
+      <div class="form-group">
+        <label>Your Full Name *</label>
+        <input type="text" id="client-name" placeholder="Jane Smith" required>
+      </div>
+      <div class="form-group">
+        <label>Your Email *</label>
+        <input type="email" id="client-email" placeholder="jane@example.com" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Age</label>
+        <input type="number" id="client-age" placeholder="35" min="5" max="120">
+      </div>
+      <div class="form-group">
+        <label>Sex</label>
+        <select id="client-sex">
+          <option value="">Select...</option>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="other">Prefer not to say</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="goToStep(1)">Start Assessment →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 1: VITAMINS A-E -->
+<div class="step" id="step-1">
+  <div class="card">
+    <div class="section-label">Part 1 — Symptom Analysis</div>
+    <h2>Vitamin Profile</h2>
+    <p class="subtitle">Tick each symptom you experience on a regular basis. <strong>Bold symptoms</strong> score 2 points; others score 1 point.</p>
+
+    <!-- VITAMIN A -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin A</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vA1" data-nutrient="A" data-pts="2"><label for="vA1" class="bold">Mouth ulcers or cold sores <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA2" data-nutrient="A" data-pts="1"><label for="vA2">Reduced night vision</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA3" data-nutrient="A" data-pts="1"><label for="vA3">Acne, rashes, or skin infections</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA4" data-nutrient="A" data-pts="2"><label for="vA4" class="bold">Frequent colds or infections <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA5" data-nutrient="A" data-pts="1"><label for="vA5">Dry, flaky or itching skin</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA6" data-nutrient="A" data-pts="1"><label for="vA6">Dandruff or dry scalp</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA7" data-nutrient="A" data-pts="1"><label for="vA7">Thrush or cystitis</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA8" data-nutrient="A" data-pts="1"><label for="vA8">Diarrhoea or mushy, watery stools</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA9" data-nutrient="A" data-pts="1"><label for="vA9">Athlete's foot</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA10" data-nutrient="A" data-pts="1"><label for="vA10">Poor memory</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA11" data-nutrient="A" data-pts="1"><label for="vA11">Sub-fertility</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vA12" data-nutrient="A" data-pts="1"><label for="vA12">Anaemia</label></div>
+      </div>
+    </div>
+
+    <!-- VITAMIN D -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin D</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vD1" data-nutrient="D" data-pts="1"><label for="vD1">Back or neck pains</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD2" data-nutrient="D" data-pts="1"><label for="vD2">Tooth decay</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD3" data-nutrient="D" data-pts="1"><label for="vD3">Hair loss</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD4" data-nutrient="D" data-pts="2"><label for="vD4" class="bold">Muscle twitching or spasms <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD5" data-nutrient="D" data-pts="2"><label for="vD5" class="bold">Joint pain or stiffness <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD6" data-nutrient="D" data-pts="1"><label for="vD6">Weak or brittle bones or fractures</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD7" data-nutrient="D" data-pts="2"><label for="vD7" class="bold">Arthritis or osteoporosis <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD8" data-nutrient="D" data-pts="1"><label for="vD8">Frequent colds or infections</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD9" data-nutrient="D" data-pts="1"><label for="vD9">Poor memory</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vD10" data-nutrient="D" data-pts="1"><label for="vD10">Insufficient or short sleep</label></div>
+      </div>
+    </div>
+
+    <!-- VITAMIN E -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin E</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vE1" data-nutrient="E" data-pts="2"><label for="vE1" class="bold">Exhaustion after light exercise <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE2" data-nutrient="E" data-pts="2"><label for="vE2" class="bold">Easy bruising <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE3" data-nutrient="E" data-pts="1"><label for="vE3">Slow wound healing</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE4" data-nutrient="E" data-pts="1"><label for="vE4">Varicose veins</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE5" data-nutrient="E" data-pts="1"><label for="vE5">Poor skin elasticity</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE6" data-nutrient="E" data-pts="1"><label for="vE6">Loss of muscle tone</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE7" data-nutrient="E" data-pts="1"><label for="vE7">Lack of sex drive</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE8" data-nutrient="E" data-pts="1"><label for="vE8">Infertility or sub-fertility</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE9" data-nutrient="E" data-pts="1"><label for="vE9">Loss of voluntary coordination and movement of muscles (ataxia)</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vE10" data-nutrient="E" data-pts="1"><label for="vE10">Blurry vision</label></div>
+      </div>
+    </div>
+
+    <!-- VITAMIN C -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin C</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vC1" data-nutrient="C" data-pts="2"><label for="vC1" class="bold">Frequent colds <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC2" data-nutrient="C" data-pts="1"><label for="vC2">Lack of energy</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC3" data-nutrient="C" data-pts="2"><label for="vC3" class="bold">Frequent infections <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC4" data-nutrient="C" data-pts="1"><label for="vC4">Bleeding or tender gums</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC5" data-nutrient="C" data-pts="1"><label for="vC5">Easy bruising</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC6" data-nutrient="C" data-pts="1"><label for="vC6">Nosebleeds</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC7" data-nutrient="C" data-pts="1"><label for="vC7">Slow wound healing</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC8" data-nutrient="C" data-pts="1"><label for="vC8">Red pimples on skin</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vC9" data-nutrient="C" data-pts="1"><label for="vC9">Excess weight gain or body fat accumulation</label></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(0)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(2)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 2: B VITAMINS -->
+<div class="step" id="step-2">
+  <div class="card">
+    <div class="section-label">Part 1 — Symptom Analysis</div>
+    <h2>B Vitamins Profile</h2>
+    <p class="subtitle">Tick each symptom you experience regularly.</p>
+
+    <!-- B1 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin B1 (Thiamine)</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vB1a" data-nutrient="B1" data-pts="1"><label for="vB1a">Unusually tender muscles</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1b" data-nutrient="B1" data-pts="1"><label for="vB1b">Blurry vision or eyeball soreness</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1c" data-nutrient="B1" data-pts="1"><label for="vB1c">Irritability</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1d" data-nutrient="B1" data-pts="1"><label for="vB1d">Difficulty concentrating</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1e" data-nutrient="B1" data-pts="1"><label for="vB1e">Numb, prickly, or tingling legs</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1f" data-nutrient="B1" data-pts="1"><label for="vB1f">Poor memory</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1g" data-nutrient="B1" data-pts="1"><label for="vB1g">Stomach pains</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1h" data-nutrient="B1" data-pts="1"><label for="vB1h">Nausea</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1i" data-nutrient="B1" data-pts="1"><label for="vB1i">Extreme vomiting</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1j" data-nutrient="B1" data-pts="1"><label for="vB1j">Constipation</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1k" data-nutrient="B1" data-pts="1"><label for="vB1k">Tingling hands</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1l" data-nutrient="B1" data-pts="1"><label for="vB1l">Rapid heartbeat</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB1m" data-nutrient="B1" data-pts="1"><label for="vB1m">Disordered or poor sleep</label></div>
+      </div>
+    </div>
+
+    <!-- B2 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin B2 (Riboflavin)</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vB2a" data-nutrient="B2" data-pts="2"><label for="vB2a" class="bold">Sensitivity to bright lights <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2b" data-nutrient="B2" data-pts="2"><label for="vB2b" class="bold">Bloodshot, burning, or gritty eyes <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2c" data-nutrient="B2" data-pts="1"><label for="vB2c">Eye cataracts</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2d" data-nutrient="B2" data-pts="1"><label for="vB2d">Sore tongue</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2e" data-nutrient="B2" data-pts="1"><label for="vB2e">Sore throat</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2f" data-nutrient="B2" data-pts="1"><label for="vB2f">Dull or oily hair</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2g" data-nutrient="B2" data-pts="1"><label for="vB2g">Hair loss</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2h" data-nutrient="B2" data-pts="1"><label for="vB2h">Eczema or dermatitis</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2i" data-nutrient="B2" data-pts="1"><label for="vB2i">Split nails</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2j" data-nutrient="B2" data-pts="1"><label for="vB2j">Cracked lips</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2k" data-nutrient="B2" data-pts="1"><label for="vB2k">Fatigue or lethargy</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2l" data-nutrient="B2" data-pts="1"><label for="vB2l">Migraines</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2m" data-nutrient="B2" data-pts="1"><label for="vB2m">Mild anaemia</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB2n" data-nutrient="B2" data-pts="1"><label for="vB2n">Depression</label></div>
+      </div>
+    </div>
+
+    <!-- B3 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin B3 (Niacin)</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vB3a" data-nutrient="B3" data-pts="1"><label for="vB3a">Lack of energy</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3b" data-nutrient="B3" data-pts="1"><label for="vB3b">Diarrhoea</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3c" data-nutrient="B3" data-pts="1"><label for="vB3c">Disordered or poor sleep, insomnia</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3d" data-nutrient="B3" data-pts="1"><label for="vB3d">Headaches or migraines</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3e" data-nutrient="B3" data-pts="1"><label for="vB3e">Poor memory</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3f" data-nutrient="B3" data-pts="1"><label for="vB3f">Anxiety or tension</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3g" data-nutrient="B3" data-pts="1"><label for="vB3g">Depression</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3h" data-nutrient="B3" data-pts="1"><label for="vB3h">Irritability</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3i" data-nutrient="B3" data-pts="1"><label for="vB3i">Excess weight gain or body fat accumulation</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3j" data-nutrient="B3" data-pts="1"><label for="vB3j">Dermatitis or skin lesions (especially the neck)</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB3k" data-nutrient="B3" data-pts="1"><label for="vB3k">Decreased tolerance to cold temperatures</label></div>
+      </div>
+    </div>
+
+    <!-- B5 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin B5 (Pantothenic Acid)</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vB5a" data-nutrient="B5" data-pts="1"><label for="vB5a">Muscle tremors, cramps, or spasms</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5b" data-nutrient="B5" data-pts="1"><label for="vB5b">Lethargy</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5c" data-nutrient="B5" data-pts="1"><label for="vB5c">Poor concentration</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5d" data-nutrient="B5" data-pts="2"><label for="vB5d" class="bold">Burning feet or tender heels <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5e" data-nutrient="B5" data-pts="1"><label for="vB5e">Nausea or vomiting</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5f" data-nutrient="B5" data-pts="1"><label for="vB5f">Lack of energy</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5g" data-nutrient="B5" data-pts="1"><label for="vB5g">Exhaustion after light exercise</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5h" data-nutrient="B5" data-pts="1"><label for="vB5h">Anxiety or tension</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5i" data-nutrient="B5" data-pts="1"><label for="vB5i">Depression</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5j" data-nutrient="B5" data-pts="1"><label for="vB5j">Teeth-grinding</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB5k" data-nutrient="B5" data-pts="1"><label for="vB5k">Disordered or poor sleep</label></div>
+      </div>
+    </div>
+
+    <!-- B6 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin B6 (Pyridoxine)</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vB6a" data-nutrient="B6" data-pts="2"><label for="vB6a" class="bold">Water retention <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6b" data-nutrient="B6" data-pts="2"><label for="vB6b" class="bold">Infrequent dream recall <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6c" data-nutrient="B6" data-pts="1"><label for="vB6c">Tingling hands</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6d" data-nutrient="B6" data-pts="1"><label for="vB6d">Depression or nervousness</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6e" data-nutrient="B6" data-pts="1"><label for="vB6e">Irritability or bad temper</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6f" data-nutrient="B6" data-pts="1"><label for="vB6f">Muscle tremors, cramps, or spasms</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6g" data-nutrient="B6" data-pts="2"><label for="vB6g" class="bold">Lack of energy <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6h" data-nutrient="B6" data-pts="1"><label for="vB6h">Excess weight gain or body fat accumulation</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6i" data-nutrient="B6" data-pts="1"><label for="vB6i">Severe diarrhoea</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB6j" data-nutrient="B6" data-pts="1"><label for="vB6j">Disordered or poor sleep</label></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(3)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 3: B12, FOLATE, BIOTIN, OMEGA -->
+<div class="step" id="step-3">
+  <div class="card">
+    <div class="section-label">Part 1 — Symptom Analysis</div>
+    <h2>B12, Folic Acid, Biotin &amp; Essential Fatty Acids</h2>
+    <p class="subtitle">Tick each symptom you experience regularly.</p>
+
+    <!-- B12 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Vitamin B12</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vB12a" data-nutrient="B12" data-pts="1"><label for="vB12a">Poor hair condition</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12b" data-nutrient="B12" data-pts="1"><label for="vB12b">Eczema or dermatitis</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12c" data-nutrient="B12" data-pts="1"><label for="vB12c">Mouth over-sensitive to heat or cold</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12d" data-nutrient="B12" data-pts="1"><label for="vB12d">Irritability</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12e" data-nutrient="B12" data-pts="1"><label for="vB12e">Anxiety or tension</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12f" data-nutrient="B12" data-pts="1"><label for="vB12f">Depression</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12g" data-nutrient="B12" data-pts="2"><label for="vB12g" class="bold">Lack of energy <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12h" data-nutrient="B12" data-pts="1"><label for="vB12h">Constipation</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12i" data-nutrient="B12" data-pts="1"><label for="vB12i">Tender or sore muscles</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12j" data-nutrient="B12" data-pts="1"><label for="vB12j">Pale skin</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12k" data-nutrient="B12" data-pts="1"><label for="vB12k">Loss of vision</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vB12l" data-nutrient="B12" data-pts="1"><label for="vB12l">Disordered or poor sleep</label></div>
+      </div>
+    </div>
+
+    <!-- FOLIC ACID -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Folic Acid / Folate</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vFA1" data-nutrient="FOLIC" data-pts="1"><label for="vFA1">Eczema</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA2" data-nutrient="FOLIC" data-pts="1"><label for="vFA2">Cracked lips</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA3" data-nutrient="FOLIC" data-pts="1"><label for="vFA3">Prematurely greying hair</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA4" data-nutrient="FOLIC" data-pts="1"><label for="vFA4">Anxiety or tension</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA5" data-nutrient="FOLIC" data-pts="1"><label for="vFA5">Poor memory</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA6" data-nutrient="FOLIC" data-pts="2"><label for="vFA6" class="bold">Lack of energy <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA7" data-nutrient="FOLIC" data-pts="1"><label for="vFA7">Depression</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA8" data-nutrient="FOLIC" data-pts="1"><label for="vFA8">Poor appetite</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA9" data-nutrient="FOLIC" data-pts="1"><label for="vFA9">Reduced sense of taste</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA10" data-nutrient="FOLIC" data-pts="1"><label for="vFA10">Stomach pains</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA11" data-nutrient="FOLIC" data-pts="1"><label for="vFA11">Migraines</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA12" data-nutrient="FOLIC" data-pts="1"><label for="vFA12">Diarrhoea</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA13" data-nutrient="FOLIC" data-pts="1"><label for="vFA13">Tingling in hands or feet</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vFA14" data-nutrient="FOLIC" data-pts="1"><label for="vFA14">Muscle weakness</label></div>
+      </div>
+    </div>
+
+    <!-- BIOTIN -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Biotin</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vBio1" data-nutrient="BIOTIN" data-pts="2"><label for="vBio1" class="bold">Dermatitis or dry skin <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vBio2" data-nutrient="BIOTIN" data-pts="1"><label for="vBio2">Scaly, red rash around the eyes, nose, mouth, or genital area</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vBio3" data-nutrient="BIOTIN" data-pts="2"><label for="vBio3" class="bold">Poor hair condition <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vBio4" data-nutrient="BIOTIN" data-pts="2"><label for="vBio4" class="bold">Prematurely greying hair <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vBio5" data-nutrient="BIOTIN" data-pts="2"><label for="vBio5" class="bold">Tender or sore muscles <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vBio6" data-nutrient="BIOTIN" data-pts="2"><label for="vBio6" class="bold">Poor appetite or nausea <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vBio7" data-nutrient="BIOTIN" data-pts="1"><label for="vBio7">Tingling hands or feet</label></div>
+      </div>
+    </div>
+
+    <!-- OMEGA 3/6 -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Omega 3 / Omega 6 (Essential Fatty Acids)</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="vO1" data-nutrient="OMEGA" data-pts="2"><label for="vO1" class="bold">Dry skin or eczema <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO2" data-nutrient="OMEGA" data-pts="1"><label for="vO2">Raised bumps on the skin</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO3" data-nutrient="OMEGA" data-pts="1"><label for="vO3">Dry hair or dandruff</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO4" data-nutrient="OMEGA" data-pts="1"><label for="vO4">Excessive thirst or sweating</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO5" data-nutrient="OMEGA" data-pts="1"><label for="vO5">PMS or breast pain</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO6" data-nutrient="OMEGA" data-pts="1"><label for="vO6">Water retention</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO7" data-nutrient="OMEGA" data-pts="1"><label for="vO7">Frequent infections</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO8" data-nutrient="OMEGA" data-pts="1"><label for="vO8">Poor memory or learning difficulties</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO9" data-nutrient="OMEGA" data-pts="1"><label for="vO9">High blood pressure or high blood lipids</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO10" data-nutrient="OMEGA" data-pts="1"><label for="vO10">Inflammatory problems (e.g. joint inflammation)</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO11" data-nutrient="OMEGA" data-pts="1"><label for="vO11">Frequent urination</label></div>
+        <div class="symptom-item"><input type="checkbox" id="vO12" data-nutrient="OMEGA" data-pts="1"><label for="vO12">Weak or brittle nails</label></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(4)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 4: MINERALS -->
+<div class="step" id="step-4">
+  <div class="card">
+    <div class="section-label">Part 1 — Symptom Analysis</div>
+    <h2>Mineral Profile</h2>
+    <p class="subtitle">Tick each symptom you experience regularly.</p>
+
+    <!-- CALCIUM -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Calcium</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mCa1" data-nutrient="CAL" data-pts="2"><label for="mCa1" class="bold">Muscle cramps, tremors, or spasms <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa2" data-nutrient="CAL" data-pts="2"><label for="mCa2" class="bold">Insomnia or nervousness <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa3" data-nutrient="CAL" data-pts="2"><label for="mCa3" class="bold">High blood pressure <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa4" data-nutrient="CAL" data-pts="2"><label for="mCa4" class="bold">Tooth decay <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa5" data-nutrient="CAL" data-pts="2"><label for="mCa5" class="bold">Joint pain, joint inflammation, or arthritis <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa6" data-nutrient="CAL" data-pts="1"><label for="mCa6">Weak or brittle bones or fractures</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa7" data-nutrient="CAL" data-pts="1"><label for="mCa7">Weak or brittle nails</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa8" data-nutrient="CAL" data-pts="1"><label for="mCa8">Tingling hands or feet</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCa9" data-nutrient="CAL" data-pts="1"><label for="mCa9">Fatigue or lethargy</label></div>
+      </div>
+    </div>
+
+    <!-- MAGNESIUM -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Magnesium</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mMg1" data-nutrient="MAG" data-pts="2"><label for="mMg1" class="bold">Muscle cramps, tremors, or spasms <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg2" data-nutrient="MAG" data-pts="1"><label for="mMg2">Muscle weakness</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg3" data-nutrient="MAG" data-pts="1"><label for="mMg3">Insomnia or trouble falling asleep</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg4" data-nutrient="MAG" data-pts="1"><label for="mMg4">Nervousness or anxiety</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg5" data-nutrient="MAG" data-pts="1"><label for="mMg5">Hyperactivity</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg6" data-nutrient="MAG" data-pts="1"><label for="mMg6">High blood pressure</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg7" data-nutrient="MAG" data-pts="1"><label for="mMg7">Irregular or rapid heartbeat</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg8" data-nutrient="MAG" data-pts="1"><label for="mMg8">Constipation</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg9" data-nutrient="MAG" data-pts="1"><label for="mMg9">Breast tenderness or water retention</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg10" data-nutrient="MAG" data-pts="1"><label for="mMg10">Anxiety, depression, or confusion</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg11" data-nutrient="MAG" data-pts="1"><label for="mMg11">Weak or brittle bones or fractures</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMg12" data-nutrient="MAG" data-pts="1"><label for="mMg12">Migraines</label></div>
+      </div>
+    </div>
+
+    <!-- IRON -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Iron</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mFe1" data-nutrient="IRON" data-pts="2"><label for="mFe1" class="bold">Pale skin <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe2" data-nutrient="IRON" data-pts="2"><label for="mFe2" class="bold">Sore tongue <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe3" data-nutrient="IRON" data-pts="2"><label for="mFe3" class="bold">Fatigue, lethargy, or weakness <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe4" data-nutrient="IRON" data-pts="2"><label for="mFe4" class="bold">Loss of appetite or nausea <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe5" data-nutrient="IRON" data-pts="2"><label for="mFe5" class="bold">Heavy periods or blood loss <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe6" data-nutrient="IRON" data-pts="1"><label for="mFe6">Hair loss or brittle nails</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe7" data-nutrient="IRON" data-pts="1"><label for="mFe7">Low immunity or anaemia</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe8" data-nutrient="IRON" data-pts="1"><label for="mFe8">Frequent infections</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe9" data-nutrient="IRON" data-pts="1"><label for="mFe9">Migraines</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mFe10" data-nutrient="IRON" data-pts="1"><label for="mFe10">Cold hands or feet</label></div>
+      </div>
+    </div>
+
+    <!-- ZINC -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Zinc</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mZn1" data-nutrient="ZINC" data-pts="2"><label for="mZn1" class="bold">Frequent infections <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn2" data-nutrient="ZINC" data-pts="2"><label for="mZn2" class="bold">Stretch marks <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn3" data-nutrient="ZINC" data-pts="2"><label for="mZn3" class="bold">Acne or greasy skin <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn4" data-nutrient="ZINC" data-pts="2"><label for="mZn4" class="bold">Desensitisation to pungent smells <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn5" data-nutrient="ZINC" data-pts="2"><label for="mZn5" class="bold">Need for extreme sweetness, saltiness, or spiciness — bland foods unappetising <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn6" data-nutrient="ZINC" data-pts="2"><label for="mZn6" class="bold">White marks on more than two fingernails <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn7" data-nutrient="ZINC" data-pts="1"><label for="mZn7">Intense food cravings</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn8" data-nutrient="ZINC" data-pts="1"><label for="mZn8">Excess weight gain or body fat accumulation</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn9" data-nutrient="ZINC" data-pts="1"><label for="mZn9">Diarrhoea</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mZn10" data-nutrient="ZINC" data-pts="1"><label for="mZn10">Hair loss</label></div>
+      </div>
+    </div>
+
+    <!-- MANGANESE -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Manganese</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mMn1" data-nutrient="MAN" data-pts="2"><label for="mMn1" class="bold">Joint pains <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn2" data-nutrient="MAN" data-pts="2"><label for="mMn2" class="bold">Sore knees <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn3" data-nutrient="MAN" data-pts="2"><label for="mMn3" class="bold">Muscle twitches or ticks <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn4" data-nutrient="MAN" data-pts="2"><label for="mMn4" class="bold">Dizziness or poor sense of balance <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn5" data-nutrient="MAN" data-pts="2"><label for="mMn5" class="bold">Fits, convulsions, or history of epilepsy <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn6" data-nutrient="MAN" data-pts="1"><label for="mMn6">Sub-fertility</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn7" data-nutrient="MAN" data-pts="1"><label for="mMn7">Slow wound healing</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mMn8" data-nutrient="MAN" data-pts="1"><label for="mMn8">Skin rash</label></div>
+      </div>
+    </div>
+
+    <!-- SELENIUM -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Selenium</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mSe1" data-nutrient="SEL" data-pts="2"><label for="mSe1" class="bold">Frequent infections <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe2" data-nutrient="SEL" data-pts="2"><label for="mSe2" class="bold">High blood pressure <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe3" data-nutrient="SEL" data-pts="2"><label for="mSe3" class="bold">Signs of premature ageing <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe4" data-nutrient="SEL" data-pts="2"><label for="mSe4" class="bold">Eye cataracts <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe5" data-nutrient="SEL" data-pts="2"><label for="mSe5" class="bold">Family history of cancer <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe6" data-nutrient="SEL" data-pts="1"><label for="mSe6">Infertility or sub-fertility</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe7" data-nutrient="SEL" data-pts="1"><label for="mSe7">Muscle weakness</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe8" data-nutrient="SEL" data-pts="1"><label for="mSe8">Fatigue or lethargy</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe9" data-nutrient="SEL" data-pts="1"><label for="mSe9">Hair loss</label></div>
+        <div class="symptom-item"><input type="checkbox" id="mSe10" data-nutrient="SEL" data-pts="1"><label for="mSe10">Mental "fog" (confusion, disorientation)</label></div>
+      </div>
+    </div>
+
+    <!-- CHROMIUM -->
+    <div class="nutrient-block">
+      <div class="nutrient-header">Chromium</div>
+      <div class="symptom-list">
+        <div class="symptom-item"><input type="checkbox" id="mCr1" data-nutrient="CHRO" data-pts="2"><label for="mCr1" class="bold">Excessive or cold sweats <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCr2" data-nutrient="CHRO" data-pts="2"><label for="mCr2" class="bold">Cold hands <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCr3" data-nutrient="CHRO" data-pts="2"><label for="mCr3" class="bold">Need for frequent meals <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCr4" data-nutrient="CHRO" data-pts="2"><label for="mCr4" class="bold">Frequent carbohydrate cravings <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCr5" data-nutrient="CHRO" data-pts="2"><label for="mCr5" class="bold">Dizziness or irritability after 6 hours without food <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCr6" data-nutrient="CHRO" data-pts="2"><label for="mCr6" class="bold">Need for excessive sleep or lethargy during the day <span class="badge">2pts</span></label></div>
+        <div class="symptom-item"><input type="checkbox" id="mCr7" data-nutrient="CHRO" data-pts="1"><label for="mCr7">Depression</label></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(5)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 5: WELLNESS EVAL 1-4 -->
+<div class="step" id="step-5">
+  <div class="card">
+    <div class="section-label">Part 2 — Wellness Analysis</div>
+    <h2>Energy, Stress, Exercise &amp; Immune</h2>
+    <p class="subtitle">Answer Yes/No to each question. A score of 5+ in any category adds bonus points to your nutrient needs.</p>
+
+    <!-- ENERGY -->
+    <div class="eval-block">
+      <div class="eval-title">1. Energy Evaluation</div>
+      <div class="eval-item"><input type="checkbox" id="eEn1" data-eval="ENERGY"><label for="eEn1">Do you usually wake up exhausted in the mornings and wish you could get at least 8 hours' sleep?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn2" data-eval="ENERGY"><label for="eEn2">Do you rarely feel wide awake and ready to go within twenty minutes of rising?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn3" data-eval="ENERGY"><label for="eEn3">Do you need something to get you going in the morning (tea, coffee, cigarette)?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn4" data-eval="ENERGY"><label for="eEn4">Do you have tea, coffee, sugar-containing foods/drinks, or smoke cigarettes at regular intervals during the day?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn5" data-eval="ENERGY"><label for="eEn5">Do you often feel lethargic or sleepy during the day, or after meals?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn6" data-eval="ENERGY"><label for="eEn6">Do you get dizzy or irritable if you haven't eaten for 6 hours?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn7" data-eval="ENERGY"><label for="eEn7">Do you avoid exercise because you don't have the energy?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn8" data-eval="ENERGY"><label for="eEn8">Do you sweat a lot during the night or day, or get excessively thirsty?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn9" data-eval="ENERGY"><label for="eEn9">Do you sometimes lose concentration or does your mind occasionally go blank?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEn10" data-eval="ENERGY"><label for="eEn10">Do you have less energy now than you used to?</label></div>
+    </div>
+
+    <!-- STRESS -->
+    <div class="eval-block">
+      <div class="eval-title">2. Stress Evaluation</div>
+      <div class="eval-item"><input type="checkbox" id="eSt1" data-eval="STRESS"><label for="eSt1">Do you get impatient if people or things hold you up?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt2" data-eval="STRESS"><label for="eSt2">Do you worry a lot, thrive for perfection, or have a persistent need for recognition or achievement?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt3" data-eval="STRESS"><label for="eSt3">Do you feel guilty or uneasy when relaxing?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt4" data-eval="STRESS"><label for="eSt4">Do you work harder than most people?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt5" data-eval="STRESS"><label for="eSt5">Are you especially competitive?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt6" data-eval="STRESS"><label for="eSt6">Are you unclear about your goals in life, or uncertain about your future?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt7" data-eval="STRESS"><label for="eSt7">Do you easily get angry, even if you don't show it?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt8" data-eval="STRESS"><label for="eSt8">Do you often try to complete two or three tasks simultaneously?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eSt9" data-eval="STRESS"><label for="eSt9">Do you have difficulty getting to sleep, sleep restlessly, or wake up with your mind racing?</label></div>
+    </div>
+
+    <!-- EXERCISE -->
+    <div class="eval-block">
+      <div class="eval-title">3. Exercise Evaluation</div>
+      <div class="eval-note">Each YES answer scores 2 points</div>
+      <div class="eval-item"><input type="checkbox" id="eEx1" data-eval="EXERCISE" data-pts="2"><label for="eEx1">Does your job involve lots of walking, lifting, pulling, or any other vigorous activity?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEx2" data-eval="EXERCISE" data-pts="2"><label for="eEx2">Do you regularly do a sport (football, tennis, rowing, martial arts, etc.)?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEx3" data-eval="EXERCISE" data-pts="2"><label for="eEx3">Do you run, train at the gym, or take exercise that noticeably raises your heartbeat for at least 20 minutes more than 3 times a week?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEx4" data-eval="EXERCISE" data-pts="2"><label for="eEx4">Do you have any physically tiring hobbies (gardening, carpentry, trekking, etc.)?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEx5" data-eval="EXERCISE" data-pts="2"><label for="eEx5">Are you in serious training for an athletic event?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eEx6" data-eval="EXERCISE" data-pts="2"><label for="eEx6">Do you consider yourself strong and fit?</label></div>
+    </div>
+
+    <!-- IMMUNE -->
+    <div class="eval-block">
+      <div class="eval-title">4. Immune Evaluation</div>
+      <div class="eval-item"><input type="checkbox" id="eIm1" data-eval="IMMUNE"><label for="eIm1">Do you get more than three colds a year?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm2" data-eval="IMMUNE"><label for="eIm2">Do you find it hard to shift an infection (cold or otherwise)?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm3" data-eval="IMMUNE"><label for="eIm3">Do you generally take antibiotics twice or more each year?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm4" data-eval="IMMUNE"><label for="eIm4">Do you suffer from hay fever?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm5" data-eval="IMMUNE"><label for="eIm5">Do you suffer from allergy problems?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm6" data-eval="IMMUNE"><label for="eIm6">Are you prone to thrush or cystitis?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm7" data-eval="IMMUNE"><label for="eIm7">Have you experienced a major personal loss in the last year?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm8" data-eval="IMMUNE"><label for="eIm8">Do you know of any history of cancer in your family?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm9" data-eval="IMMUNE"><label for="eIm9">Have you ever had any growths or lumps removed or biopsied?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eIm10" data-eval="IMMUNE"><label for="eIm10">Do you have an inflammatory disease such as eczema, asthma, or arthritis?</label></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(4)">← Back</button>
+      <button class="btn btn-primary" onclick="goToStep(6)">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ STEP 6: WELLNESS EVAL 5-8 -->
+<div class="step" id="step-6">
+  <div class="card">
+    <div class="section-label">Part 2 — Wellness Analysis</div>
+    <h2>Pollution, Cardiovascular, Female Health &amp; Age</h2>
+    <p class="subtitle">Answer Yes/No to each question.</p>
+
+    <!-- POLLUTION -->
+    <div class="eval-block">
+      <div class="eval-title">5. Pollution / Environmental Load</div>
+      <div class="eval-item"><input type="checkbox" id="ePo1" data-eval="POLL"><label for="ePo1">Do you live or work in a city or by a busy road?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo2" data-eval="POLL"><label for="ePo2">Do you commute by underground rail or spend more than two hours a week in heavy traffic?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo3" data-eval="POLL"><label for="ePo3">Do you walk, cycle, exercise, or play sports by busy roads?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo4" data-eval="POLL"><label for="ePo4">Do you live or work in a smoky atmosphere?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo5" data-eval="POLL"><label for="ePo5">Do you buy foods exposed to exhaust fumes from busy roads?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo6" data-eval="POLL"><label for="ePo6">Do you generally eat non-organic produce?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo7" data-eval="POLL"><label for="ePo7">Do you smoke more than 5 cigarettes a day?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo8" data-eval="POLL"><label for="ePo8">Do you drink more than 1 unit of alcohol a day?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo9" data-eval="POLL"><label for="ePo9">Do you usually drink unfiltered tap water?</label></div>
+      <div class="eval-item"><input type="checkbox" id="ePo10" data-eval="POLL"><label for="ePo10">Do you spend considerable time in front of a TV, computer screen, tablet, or phone?</label></div>
+    </div>
+
+    <!-- CARDIOVASCULAR -->
+    <div class="eval-block">
+      <div class="eval-title">6. Cardiovascular Evaluation</div>
+      <div class="eval-item"><input type="checkbox" id="eCv1" data-eval="CARDIO"><label for="eCv1">Are you more than 14lb (7kg) over your ideal weight?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv2" data-eval="CARDIO"><label for="eCv2">Is your blood pressure above 140/90?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv3" data-eval="CARDIO"><label for="eCv3">Is your pulse rate after 15 minutes' rest above 75?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv4" data-eval="CARDIO"><label for="eCv4">Do you smoke more than 5 cigarettes a day?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv5" data-eval="CARDIO"><label for="eCv5">Do you do less than 2 hours of vigorous exercise a week?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv6" data-eval="CARDIO"><label for="eCv6">Do you eat more than one tablespoon of sugar each day, or consume sugary foods and drinks?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv7" data-eval="CARDIO"><label for="eCv7">Do you eat red meat more than five times a week?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv8" data-eval="CARDIO"><label for="eCv8">Do you usually add a large amount of salt to your food?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv9" data-eval="CARDIO"><label for="eCv9">Do you have more than two alcoholic drinks a day?</label></div>
+      <div class="eval-item"><input type="checkbox" id="eCv10" data-eval="CARDIO"><label for="eCv10">Is there a history of heart disease or diabetes in your family?</label></div>
+    </div>
+
+    <!-- FEMALE HEALTH -->
+    <div class="eval-block" id="female-section">
+      <div class="eval-title">7. Female Health Check <span style="font-size:0.8rem;font-weight:400;color:var(--text-light)">(skip if male)</span></div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.92rem;margin-bottom:8px">Do you regularly suffer from premenstrual syndrome (PMS) or have painful tender breasts?</div>
+        <div class="radio-group">
+          <label><input type="radio" name="pms" value="yes"> Yes</label>
+          <label><input type="radio" name="pms" value="no" checked> No</label>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.92rem;margin-bottom:8px">Are you pregnant or trying to get pregnant?</div>
+        <div class="radio-group">
+          <label><input type="radio" name="pregnant" value="yes"> Yes</label>
+          <label><input type="radio" name="pregnant" value="no" checked> No</label>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.92rem;margin-bottom:8px">Are you breastfeeding?</div>
+        <div class="radio-group">
+          <label><input type="radio" name="breastfeeding" value="yes"> Yes</label>
+          <label><input type="radio" name="breastfeeding" value="no" checked> No</label>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.92rem;margin-bottom:8px">Do you have menopausal symptoms or are you postmenopausal?</div>
+        <div class="radio-group">
+          <label><input type="radio" name="menopause" value="yes"> Yes</label>
+          <label><input type="radio" name="menopause" value="no" checked> No</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGE CHECK -->
+    <div class="eval-block">
+      <div class="eval-title">8. Age Check</div>
+      <div style="margin-bottom:12px">
+        <div style="font-size:0.92rem;margin-bottom:8px">Are you 11–16 years old?</div>
+        <div class="radio-group">
+          <label><input type="radio" name="age1416" value="yes"> Yes</label>
+          <label><input type="radio" name="age1416" value="no" checked> No</label>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.92rem;margin-bottom:8px">Are you over 50?</div>
+        <div class="radio-group">
+          <label><input type="radio" name="ageover50" value="yes"> Yes</label>
+          <label><input type="radio" name="ageover50" value="no" checked> No</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" onclick="goToStep(5)">← Back</button>
+      <button class="btn btn-primary" onclick="calculateAndShowResults()">Calculate My Plan →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ RESULTS -->
+<div id="results-section">
+  <div class="results-header">
+    <h2>Your Personalised Supplement Plan</h2>
+    <p id="results-client-name"></p>
+  </div>
+  <div class="results-body">
+    <div id="email-status"></div>
+    <p style="font-size:0.9rem;color:var(--text-light);margin-bottom:20px">
+      Based on your symptom analysis and wellness evaluation, here are your estimated daily supplement needs. These are supplementary needs only — a good diet remains essential.
+    </p>
+    <div class="section-divider">Vitamins</div>
+    <table class="results-table" id="results-vitamins"></table>
+    <div class="section-divider" style="margin-top:24px">Minerals &amp; Essential Fatty Acids</div>
+    <table class="results-table" id="results-minerals"></table>
+    <div style="margin-top:24px;padding:16px;background:#f8faf8;border-radius:8px;font-size:0.88rem;color:var(--text-light)">
+      <strong>Note:</strong> A score of 0–4 suggests needs can be met through a good daily multivitamin. Scores of 5+ indicate targeted supplementation may be beneficial. Always consult your healthcare provider before starting any supplement regime.
+    </div>
+    <div class="btn-row" style="margin-top:24px">
+      <button class="btn btn-secondary" onclick="window.print()">🖨 Print Plan</button>
+      <button class="btn btn-primary" onclick="location.reload()">Start New Assessment</button>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:32px 16px;color:var(--text-light);font-size:0.82rem">
+  © GetFitAF — For educational purposes only. Not a substitute for medical advice.
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// SCORING DATA: Supplementary Program Card
+// Columns: [0-4, 5-6, 7-8, 9+]
+// ═══════════════════════════════════════
+const DOSAGE_TABLE = {
+  A:      { name: 'Vitamin A (beta-carotene)', unit: 'mcg', doses: [1000, 2000, 2500, 3000] },
+  D:      { name: 'Vitamin D', unit: 'mcg', doses: [3, 4, 5, 5] },
+  E:      { name: 'Vitamin E', unit: 'mg', doses: [150, 200, 300, 400] },
+  C:      { name: 'Vitamin C', unit: 'mg', doses: [800, 1600, 2000, 2800] },
+  B1:     { name: 'Vitamin B1', unit: 'mg', doses: [15, 25, 35, 45] },
+  B2:     { name: 'Vitamin B2', unit: 'mg', doses: [15, 25, 35, 45] },
+  B3:     { name: 'Vitamin B3 (Niacin)', unit: 'mg', doses: [25, 30, 40, 50] },
+  B5:     { name: 'Vitamin B5', unit: 'mg', doses: [30, 50, 100, 130] },
+  B6:     { name: 'Vitamin B6', unit: 'mg', doses: [45, 60, 75, 95] },
+  B12:    { name: 'Vitamin B12', unit: 'mcg', doses: [10, 20, 30, 40] },
+  FOLIC:  { name: 'Folic Acid', unit: 'mcg', doses: [200, 350, 500, 600] },
+  BIOTIN: { name: 'Biotin', unit: 'mcg', doses: [30, 60, 120, 180] },
+  OMEGA:  { name: 'Omega 6 (GLA)', unit: 'mg', doses: [110, 150, 200, 260] },
+  OMEGA3: { name: 'Omega 3 (EPA/DHA)', unit: 'mg', doses: [250, 500, 700, 1050] },
+  CAL:    { name: 'Calcium', unit: 'mg', doses: [0, 200, 300, 400] },
+  MAG:    { name: 'Magnesium', unit: 'mg', doses: [50, 100, 200, 250] },
+  IRON:   { name: 'Iron', unit: 'mg', doses: [5, 7, 9, 15] },
+  ZINC:   { name: 'Zinc', unit: 'mg', doses: [5, 10, 15, 20] },
+  MAN:    { name: 'Manganese', unit: 'mg', doses: [1, 3, 6, 9] },
+  SEL:    { name: 'Selenium', unit: 'mcg', doses: [25, 75, 100, 150] },
+  CHRO:   { name: 'Chromium', unit: 'mcg', doses: [25, 50, 100, 200] },
+};
+
+// Eval bonus points per nutrient (when eval scores 5+)
+// Format: { nutrientKey: points }
+const EVAL_BONUSES = {
+  ENERGY: { B1:1, B2:1, B3:1, B5:2, B6:1, B12:1, MAG:1, MAN:1, CHRO:2 },
+  STRESS: { B1:2, B2:2, B3:2, B5:2, B6:2, B12:2, MAG:1, MAN:1, CHRO:1 },
+  EXERCISE: { C:1, B1:1, B2:1, B3:1, B5:1, B6:1, B12:1, MAG:1, IRON:1 },
+  IMMUNE: { D:2, C:1, B1:1, B12:1, MAG:1, IRON:1, ZINC:2, SEL:1 },
+  POLL: { E:1, C:1, B1:1, B2:2, MAG:2, ZINC:2, SEL:1 },
+  CARDIO: { C:1, B1:1, B6:1, MAN:1 },
+  PREG: { E:1, B12:1, FOLIC:2, BIOTIN:2, OMEGA:1, OMEGA3:2, CAL:2, MAG:2, ZINC:2 },
+  PMS: { B6:2, OMEGA:2, MAG:2, ZINC:2 },
+  MENO: { E:1, C:1, OMEGA:1, CAL:1 },
+  AGE1416: { D:1, E:1, B12:1, BIOTIN:1, OMEGA:1, CAL:1, MAN:1 },
+  AGEOVER50: { E:1, CAL:1, MAG:1, IRON:1, MAN:1, SEL:1, CHRO:1 },
+};
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+const TOTAL_STEPS = 7; // 0-6
+
+function goToStep(n) {
+  if (n === 1) {
+    const name = document.getElementById('client-name').value.trim();
+    const email = document.getElementById('client-email').value.trim();
+    if (!name || !email) { alert('Please enter your name and email to continue.'); return; }
+  }
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-' + n).classList.add('active');
+  updateProgress(n);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateProgress(step) {
+  const pct = (step / (TOTAL_STEPS - 1)) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  const dots = document.getElementById('step-indicator');
+  dots.innerHTML = '';
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i === step ? ' active' : i < step ? ' done' : '');
+    dots.appendChild(d);
+  }
+}
+
+// ═══════════════════════════════════════
+// SCORING
+// ═══════════════════════════════════════
+function getSymptomScores() {
+  const scores = {};
+  Object.keys(DOSAGE_TABLE).forEach(k => scores[k] = 0);
+  // OMEGA3 mirrors OMEGA for symptom section
+  document.querySelectorAll('[data-nutrient]').forEach(cb => {
+    if (cb.checked) {
+      const n = cb.dataset.nutrient;
+      const pts = parseInt(cb.dataset.pts || 1);
+      if (scores[n] !== undefined) scores[n] += pts;
+      if (n === 'OMEGA') scores['OMEGA3'] = (scores['OMEGA3'] || 0) + pts;
+    }
+  });
+  return scores;
+}
+
+function getEvalScores() {
+  const evalScores = { ENERGY:0, STRESS:0, EXERCISE:0, IMMUNE:0, POLL:0, CARDIO:0 };
+  document.querySelectorAll('[data-eval]').forEach(cb => {
+    if (cb.checked) {
+      const e = cb.dataset.eval;
+      const pts = parseInt(cb.dataset.pts || 1);
+      evalScores[e] = (evalScores[e] || 0) + pts;
+    }
+  });
+  return evalScores;
+}
+
+function getSpecialFlags() {
+  return {
+    pms: document.querySelector('[name="pms"]:checked')?.value === 'yes',
+    pregnant: document.querySelector('[name="pregnant"]:checked')?.value === 'yes',
+    breastfeeding: document.querySelector('[name="breastfeeding"]:checked')?.value === 'yes',
+    menopause: document.querySelector('[name="menopause"]:checked')?.value === 'yes',
+    age1416: document.querySelector('[name="age1416"]:checked')?.value === 'yes',
+    ageover50: document.querySelector('[name="ageover50"]:checked')?.value === 'yes',
+  };
+}
+
+function getTotalScores() {
+  const symptom = getSymptomScores();
+  const evals = getEvalScores();
+  const flags = getSpecialFlags();
+  const total = { ...symptom };
+
+  // Add eval bonuses (score 5+)
+  ['ENERGY','STRESS','EXERCISE','IMMUNE','POLL','CARDIO'].forEach(ev => {
+    if (evals[ev] >= 5) {
+      const bonuses = EVAL_BONUSES[ev] || {};
+      Object.entries(bonuses).forEach(([n, pts]) => {
+        if (total[n] !== undefined) total[n] += pts;
+      });
+    }
+  });
+
+  // Special flags
+  if (flags.pms) {
+    const b = EVAL_BONUSES.PMS;
+    Object.entries(b).forEach(([n, pts]) => { if (total[n] !== undefined) total[n] += pts; });
+  }
+  if (flags.pregnant || flags.breastfeeding) {
+    const b = EVAL_BONUSES.PREG;
+    Object.entries(b).forEach(([n, pts]) => { if (total[n] !== undefined) total[n] += pts; });
+  }
+  if (flags.menopause) {
+    const b = EVAL_BONUSES.MENO;
+    Object.entries(b).forEach(([n, pts]) => { if (total[n] !== undefined) total[n] += pts; });
+  }
+  if (flags.age1416) {
+    const b = EVAL_BONUSES.AGE1416;
+    Object.entries(b).forEach(([n, pts]) => { if (total[n] !== undefined) total[n] += pts; });
+  }
+  if (flags.ageover50) {
+    const b = EVAL_BONUSES.AGEOVER50;
+    Object.entries(b).forEach(([n, pts]) => { if (total[n] !== undefined) total[n] += pts; });
+  }
+
+  return total;
+}
+
+function getDoseIndex(score) {
+  if (score <= 4) return 0;
+  if (score <= 6) return 1;
+  if (score <= 8) return 2;
+  return 3;
+}
+
+function getDosageTier(score) {
+  if (score <= 4) return { label: 'Basic (0–4)', cls: 'dosage-0' };
+  if (score <= 6) return { label: 'Moderate (5–6)', cls: 'dosage-1' };
+  if (score <= 8) return { label: 'Elevated (7–8)', cls: 'dosage-2' };
+  return { label: 'High (9+)', cls: 'dosage-3' };
+}
+
+// ═══════════════════════════════════════
+// RENDER RESULTS
+// ═══════════════════════════════════════
+function renderTable(tableId, keys) {
+  const scores = getTotalScores();
+  const table = document.getElementById(tableId);
+  table.innerHTML = `<tr>
+    <th>Nutrient</th>
+    <th>Score</th>
+    <th>Priority</th>
+    <th>Daily Dose</th>
+  </tr>`;
+  keys.forEach(k => {
+    const info = DOSAGE_TABLE[k];
+    const score = scores[k] || 0;
+    const idx = getDoseIndex(score);
+    const tier = getDosageTier(score);
+    const dose = info.doses[idx];
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${info.name}</td>
+      <td><span class="score-pill">${score}</span></td>
+      <td><span class="dosage-badge ${tier.cls}">${tier.label}</span></td>
+      <td><strong>${dose > 0 ? dose + ' ' + info.unit : 'Multivitamin'}</strong></td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+function buildEmailBody(scores) {
+  const name = document.getElementById('client-name').value;
+  const date = new Date().toLocaleDateString('en-GB');
+
+  function getRowBackground(score) {
+    if (score <= 4) return '#e8f5e9';
+    if (score <= 6) return '#fffde7';
+    if (score <= 8) return '#ffe0b2';
+    return '#ffcdd2';
+  }
+
+  function buildRows(keys) {
+    return keys.map(k => {
+      const info = DOSAGE_TABLE[k];
+      const score = scores[k] || 0;
+      const idx = getDoseIndex(score);
+      const dose = info.doses[idx];
+      const bgColor = getRowBackground(score);
+      return `
+        <tr style="background-color:${bgColor};">
+          <td style="padding:12px 14px;border-bottom:1px solid #ddd;font-size:14px;">${info.name}</td>
+          <td style="padding:12px 14px;border-bottom:1px solid #ddd;text-align:center;font-size:14px;font-weight:700;">${score}</td>
+          <td style="padding:12px 14px;border-bottom:1px solid #ddd;text-align:center;font-size:14px;">${dose > 0 ? dose + ' ' + info.unit : 'Multivitamin'}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  const vitaminKeys = ['A','D','E','C','B1','B2','B3','B5','B6','B12','FOLIC','BIOTIN','OMEGA','OMEGA3'];
+  const mineralKeys = ['CAL','MAG','IRON','ZINC','MAN','SEL','CHRO'];
+
+  return `
+<div style="font-size:14px;color:#333;">
+  <p style="margin:0 0 8px;"><strong>Client:</strong> ${name} &nbsp;|&nbsp; <strong>Date:</strong> ${date}</p>
+  <p style="margin:0 0 20px;font-size:13px;color:#555;">Based on your symptom and wellness analysis, here are your estimated daily supplement needs. Scores of 0–4 can typically be met with a good multivitamin; scores of 5+ suggest targeted supplementation.</p>
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:13px;margin-bottom:24px;">
+    <tr style="background:#4a6741;color:white;">
+      <th style="padding:10px 12px;text-align:left;">Nutrient</th>
+      <th style="padding:10px 12px;text-align:center;width:60px;">Score</th>
+      <th style="padding:10px 12px;text-align:center;width:120px;">Daily Dose</th>
+    </tr>
+    ${buildRows(vitaminKeys.concat(mineralKeys))}
+  </table>
+
+  <p style="font-size:12px;color:#999;border-top:1px solid #eee;padding-top:12px;margin:0;">
+    <strong>Disclaimer:</strong> These are supplementary needs only and do not replace medical advice. Please consult your healthcare provider before starting any supplement regime.
+  </p>
+</div>`;
+}
+
+function calculateAndShowResults() {
+  const name = document.getElementById('client-name').value;
+  const scores = getTotalScores();
+
+  // Hide steps, show results
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step-indicator').style.display = 'none';
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('results-section').style.display = 'block';
+  document.getElementById('results-client-name').textContent = 'Client: ' + name + ' | Date: ' + new Date().toLocaleDateString('en-GB');
+
+  renderTable('results-vitamins', ['A','D','E','C','B1','B2','B3','B5','B6','B12','FOLIC','BIOTIN','OMEGA','OMEGA3']);
+  renderTable('results-minerals', ['CAL','MAG','IRON','ZINC','MAN','SEL','CHRO']);
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  sendEmails(scores);
+}
+
+// ═══════════════════════════════════════
+// EMAIL (EmailJS)
+// ═══════════════════════════════════════
+// SETUP INSTRUCTIONS (one-time):
+// 1. Go to https://www.emailjs.com and create a free account
+// 2. Add an Email Service (Gmail works) → copy the Service ID
+// 3. Create an Email Template with variables: {{to_name}}, {{to_email}}, {{message}}, {{reply_to}}
+// 4. Copy your Template ID and Public Key
+// 5. Replace the placeholders below
+
+const EMAILJS_PUBLIC_KEY = 'YMd5wzc_jkrtx2oZG';
+const EMAILJS_SERVICE_ID = 'service_z20y2gd';
+const EMAILJS_TEMPLATE_ID = 'template_6uwvr7c';
+const PRACTITIONER_EMAIL = 'satishreddy814275@gmail.com';
+
+function sendEmails(scores) {
+  const name = document.getElementById('client-name').value;
+  const clientEmail = document.getElementById('client-email').value;
+  const body = buildEmailBody(scores);
+
+  // If EmailJS not configured yet, skip silently
+  if (EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+    document.getElementById('email-status').innerHTML =
+      '<div class="alert alert-success">✅ Your plan has been calculated! To enable automatic email delivery, set up EmailJS using the instructions in the HTML file.</div>';
+    return;
+  }
+
+  document.getElementById('sending-overlay').classList.add('active');
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+
+  const promises = [
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_name: 'Satish (GetFitAF)',
+      to_email: PRACTITIONER_EMAIL,
+      reply_to: clientEmail,
+      message: body,
+    }),
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+      to_name: name,
+      to_email: clientEmail,
+      reply_to: PRACTITIONER_EMAIL,
+      message: body,
+    })
+  ];
+
+  Promise.all(promises)
+    .then(() => {
+      document.getElementById('sending-overlay').classList.remove('active');
+      document.getElementById('email-status').innerHTML =
+        '<div class="alert alert-success">✅ Your supplement plan has been emailed to you and your practitioner.</div>';
+    })
+    .catch(() => {
+      document.getElementById('sending-overlay').classList.remove('active');
+      document.getElementById('email-status').innerHTML =
+        '<div class="alert alert-error">⚠️ Results calculated successfully. Email could not be sent — please screenshot or print this page.</div>';
+    });
+}
+
+// Init progress
+updateProgress(0);
+</script>
+</body>
+</html>
