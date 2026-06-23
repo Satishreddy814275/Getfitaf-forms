@@ -378,7 +378,7 @@ async function doCoach() {
   setFb('coach', '', '');
 
   try {
-    await callScript('onboard', {
+    const data = await callScript('onboard', {
       clientName:  val('f-name'),
       clientEmail: val('f-email'),
       clientPhone: val('f-phone'),
