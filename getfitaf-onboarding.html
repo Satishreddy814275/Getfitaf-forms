@@ -373,25 +373,44 @@ async function doCoach() {
   if (!require(['name', 'phone', 'coach'], 'coach')) return;
 
   const [coachName, coachPhone] = val('f-coach').split('|');
+  const name    = val('f-name');
+  const phone   = val('f-phone');
+  const email   = val('f-email');
+  const program = val('f-program');
 
-  setBtn('coach', 'Sending…', 'c-blue', true);
+  // Build the coach notification message
+  const coachMsg =
+    'Hey ' + coachName + ', can we get the onboarding process started for the following client?\n\n'
+    + '👤 Name: '     + name              + '\n'
+    + '📧 Email: '    + (email || '—')    + '\n'
+    + '📱 WhatsApp: ' + phone             + '\n'
+    + '📌 Program: '  + (program || '—')  + '\n\n'
+    + '— Satish | GetFit AF';
+
+  setBtn('coach', 'Copying…', 'c-blue', true);
   setFb('coach', '', '');
 
-  try {
-    const data = await callScript('onboard', {
-      clientName:  val('f-name'),
-      clientEmail: val('f-email'),
-      clientPhone: val('f-phone'),
-      coachName,
-      coachPhone,
-      program: val('f-program'),
-    });
-    setBtn('coach', '✓ Sent', 'c-done', false);
-    setFb('coach', 'ok', data.fallback ? '✅ Sent!' : '✅ Coach notified + email sent!');
-  } catch (e) {
-    setBtn('coach', 'Retry', 'c-blue', false);
-    setFb('coach', 'err', '⚠️ ' + e.message);
-  }
+  // Copy message to clipboard
+  const copyMsg = () => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(coachMsg);
+    }
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = coachMsg; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(_) {}
+    document.body.removeChild(ta);
+    return Promise.resolve();
+  };
+
+  copyMsg().finally(() => {
+    setBtn('coach', '✓ Copied', 'c-done', false);
+    setFb('coach', 'ok', '✅ Message copied — paste in coach group.');
+  });
+
+  // Also fire API in background (will work once Meta is set up properly)
+  callScript('onboard', { clientName: name, clientEmail: email, clientPhone: phone, coachName, coachPhone, program }).catch(() => {});
 }
 
 // ── 3. Drip Sequence ──────────────────────────────────────────────────────────
