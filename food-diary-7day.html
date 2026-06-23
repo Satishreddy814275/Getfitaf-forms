@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>7-Day Food Diary – GetFit AF</title>
+<title>7-Day Food Diary - GetFit AF</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7f5; color: #2c2c2c; min-height: 100vh; }
@@ -157,17 +157,17 @@
   <div class="logo">📋</div>
   <div>
     <h1>7-Day Food Diary</h1>
-    <p>GetFit AF — Daily Nutrition Tracker</p>
+    <p>GetFit AF - Daily Nutrition Tracker</p>
   </div>
 </div>
 
 <div class="container">
 
   <div class="note-box">
-    <p>Log everything you eat and drink each day. For each item, add a count in the matching food group column. Hit <strong>Send Day X to Coach</strong> at the end of each day — your coach will receive everything logged so far. <strong>Use the same device all week</strong> and your diary will save automatically.</p>
+    <p>Log everything you eat and drink each day. For each item, add a count in the matching food group column. Hit <strong>Send Day X to Coach</strong> at the end of each day - your coach will receive everything logged so far. <strong>Use the same device all week</strong> and your diary will save automatically.</p>
   </div>
 
-  <!-- Restore banner -->
+  <!- Restore banner ->
   <div class="restore-banner" id="restoreBanner">
     <div class="restore-banner-text">
       <strong id="restoreTitle">Welcome back!</strong><br>
@@ -179,7 +179,7 @@
     </div>
   </div>
 
-  <!-- Client Info -->
+  <!- Client Info ->
   <div class="card">
     <div class="card-title">Your Details</div>
     <div class="field-row">
@@ -207,13 +207,13 @@
     <div class="autosave-indicator" id="autosaveIndicator"></div>
   </div>
 
-  <!-- Day Tabs -->
+  <!- Day Tabs ->
   <div class="day-tabs" id="dayTabs"></div>
 
-  <!-- Day Panels -->
+  <!- Day Panels ->
   <div id="dayPanels"></div>
 
-  <!-- Bottom hint -->
+  <!- Bottom hint ->
   <div class="note-box" style="margin-top:0">
     <p>Your diary saves automatically as you type. Come back tomorrow on the same device and everything will still be here.</p>
   </div>
@@ -235,11 +235,11 @@ const COACH_EMAILS = {
 
 const GROUPS = [
   { key: 'fluids',   label: 'Fluids',   emoji: '💧', target: '2L+' },
-  { key: 'veg',      label: 'Veg',      emoji: '🥦', target: '3–6' },
-  { key: 'fruit',    label: 'Fruit',    emoji: '🍎', target: '2–4' },
-  { key: 'protein',  label: 'Protein',  emoji: '🍗', target: '2–4' },
-  { key: 'calcium',  label: 'Calcium',  emoji: '🥛', target: '1–2' },
-  { key: 'starches', label: 'Starches', emoji: '🍚', target: '1–2' },
+  { key: 'veg',      label: 'Veg',      emoji: '🥦', target: '3-6' },
+  { key: 'fruit',    label: 'Fruit',    emoji: '🍎', target: '2-4' },
+  { key: 'protein',  label: 'Protein',  emoji: '🍗', target: '2-4' },
+  { key: 'calcium',  label: 'Calcium',  emoji: '🥛', target: '1-2' },
+  { key: 'starches', label: 'Starches', emoji: '🍚', target: '1-2' },
   { key: 'fats',     label: 'Fats',     emoji: '🥑', target: 'Max 1' },
   { key: 'extras',   label: 'Extras',   emoji: '🍪', target: 'Min' }
 ];
@@ -311,12 +311,12 @@ function buildDayPanel(di) {
     </div>
     <button class="add-row-btn" onclick="addRow(${di})">+ Add more rows</button>
     <span class="notes-label">Notes for today (hunger, energy, how you felt)</span>
-    <textarea class="day-notes" id="d${di}_notes" placeholder="Optional — any observations about today..." oninput="schedSave()"></textarea>
+    <textarea class="day-notes" id="d${di}_notes" placeholder="Optional - any observations about today..." oninput="schedSave()"></textarea>
     <div class="day-send-wrap">
       <button class="day-send-btn" id="sendBtn-${di}" onclick="sendDayUpdate(${di})">Send Day ${di + 1} to Coach</button>
       <span class="day-send-status" id="sendStatus-${di}"></span>
     </div>
-    <div class="day-send-hint">Your coach will receive all days logged so far, not just today — so each update gives them the full picture.</div>
+    <div class="day-send-hint">Your coach will receive all days logged so far, not just today - so each update gives them the full picture.</div>
   `;
 }
 
@@ -414,7 +414,7 @@ function saveToStorage() {
       ind.className = 'autosave-indicator';
     }, 2000);
   } catch(e) {
-    // localStorage unavailable — silently ignore
+    // localStorage unavailable - silently ignore
   }
 }
 
@@ -573,10 +573,10 @@ function sendDayUpdate(currentDay) {
     allDaysSoFar.push(collectDayData(di));
   }
 
-  // Label for coach's email subject — shows cumulative context
+  // Label for coach's email subject - shows cumulative context
   const coachLabel = currentDay === 0
     ? 'Day 1 of 7'
-    : `Days 1–${currentDay + 1} of 7`;
+    : `Days 1-${currentDay + 1} of 7`;
 
   const data = {
     formType:   'foodDiary7Day',
@@ -611,7 +611,7 @@ function sendDayUpdate(currentDay) {
     } else throw new Error();
   })
   .catch(() => {
-    setDayStatus(currentDay, 'Something went wrong — screenshot and send to your coach directly.', 'error');
+    setDayStatus(currentDay, 'Something went wrong - screenshot and send to your coach directly.', 'error');
     btn.disabled = false;
     btn.textContent = `Send Day ${currentDay + 1} to Coach`;
   });
@@ -628,5 +628,28 @@ function setDayStatus(di, msg, type) {
 
 checkForSavedDiary();
 </script>
+  <script>
+  // Pre-fill from portal URL params
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var name  = p.get('name');
+    var email = p.get('email');
+    function fill(ids, val) {
+      if (!val) return;
+      ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = val;
+          el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      fill(['clientName', 'client-name', 'name-input', 'send-name'], name);
+      fill(['clientEmail', 'client-email', 'email-input', 'send-email'], email);
+    });
+  })();
+  </script>
 </body>
 </html>

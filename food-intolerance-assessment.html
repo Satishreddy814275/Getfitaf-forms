@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Food Intolerance Assessment – GetFit AF</title>
+<title>Food Intolerance Assessment - GetFit AF</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f4; color: #333; }
@@ -140,7 +140,7 @@
     <p>Answer each question honestly based on your regular experience over the past few weeks. Score 1 point for each "Yes" answer. Your coach will review your results and discuss what they mean for your nutrition plan.</p>
   </div>
 
-  <!-- Client info -->
+  <!- Client info ->
   <div class="section-card">
     <div class="section-title">Your Details</div>
     <div class="client-row">
@@ -155,7 +155,7 @@
       <div>
         <label class="field-label" for="coachSelect">Your Coach</label>
         <select id="coachSelect">
-          <option value="">— Select your coach —</option>
+          <option value="">- Select your coach -</option>
           <option value="Satish">Satish</option>
           <option value="Kangna Saini">Kangna Saini</option>
           <option value="Janavi">Janavi</option>
@@ -167,10 +167,10 @@
     </div>
   </div>
 
-  <!-- Section A: Digestive Check -->
+  <!- Section A: Digestive Check ->
   <div class="section-card">
     <div class="section-title">
-      Section A — Digestive Check
+      Section A - Digestive Check
       <span class="section-score-badge" id="scoreA">0 / 7</span>
     </div>
 
@@ -225,10 +225,10 @@
     </div>
   </div>
 
-  <!-- Section B: Diet Check -->
+  <!- Section B: Diet Check ->
   <div class="section-card">
     <div class="section-title">
-      Section B — Diet Check
+      Section B - Diet Check
       <span class="section-score-badge" id="scoreB">0 / 7</span>
     </div>
 
@@ -240,7 +240,7 @@
       </div>
     </div>
     <div class="question-row" data-section="B">
-      <span class="question-text">9. If you go 1–2 days without bread, chocolate, or sugary foods, do you crave them?</span>
+      <span class="question-text">9. If you go 1-2 days without bread, chocolate, or sugary foods, do you crave them?</span>
       <div class="yn-group">
         <input type="radio" name="q9" id="q9y" value="1"><label for="q9y" class="yes-label">Yes</label>
         <input type="radio" name="q9" id="q9n" value="0"><label for="q9n" class="no-label">No</label>
@@ -261,7 +261,7 @@
       </div>
     </div>
     <div class="question-row" data-section="B">
-      <span class="question-text">12. Have you ever gained 3–5 pounds in a single day?</span>
+      <span class="question-text">12. Have you ever gained 3-5 pounds in a single day?</span>
       <div class="yn-group">
         <input type="radio" name="q12" id="q12y" value="1"><label for="q12y" class="yes-label">Yes</label>
         <input type="radio" name="q12" id="q12n" value="0"><label for="q12n" class="no-label">No</label>
@@ -283,10 +283,10 @@
     </div>
   </div>
 
-  <!-- Section C: Symptoms Check -->
+  <!- Section C: Symptoms Check ->
   <div class="section-card">
     <div class="section-title">
-      Section C — Symptoms Check
+      Section C - Symptoms Check
       <span class="section-score-badge" id="scoreC">0 / 9</span>
     </div>
 
@@ -355,11 +355,11 @@
     </div>
   </div>
 
-  <!-- Total Score -->
+  <!- Total Score ->
   <div class="total-box">
     <h3>Your Total Score</h3>
     <div class="score-display" id="totalScore">0</div>
-    <div class="score-label" id="bandLabel">— answer questions above —</div>
+    <div class="score-label" id="bandLabel">- answer questions above -</div>
     <div class="score-desc" id="bandDesc"></div>
 
     <table class="band-table" style="margin-top:18px;">
@@ -367,15 +367,15 @@
         <tr><th>Score</th><th>What it means</th></tr>
       </thead>
       <tbody>
-        <tr><td class="band-0">0 – 1</td><td>Ideal – no significant signs of food intolerance</td></tr>
-        <tr><td class="band-1">2 – 5</td><td>Tolerable – possible hidden intolerance worth monitoring</td></tr>
-        <tr><td class="band-2">6 – 19</td><td>Undesirable – likely intolerance; dietary review recommended</td></tr>
-        <tr><td class="band-3">20+</td><td>High-risk – consider speaking with a GP or allergist</td></tr>
+        <tr><td class="band-0">0 - 1</td><td>Ideal - no significant signs of food intolerance</td></tr>
+        <tr><td class="band-1">2 - 5</td><td>Tolerable - possible hidden intolerance worth monitoring</td></tr>
+        <tr><td class="band-2">6 - 19</td><td>Undesirable - likely intolerance; dietary review recommended</td></tr>
+        <tr><td class="band-3">20+</td><td>High-risk - consider speaking with a GP or allergist</td></tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Submit -->
+  <!- Submit ->
   <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit to My Coach</button>
 
 </div>
@@ -395,7 +395,7 @@ const COACH_EMAILS = {
 };
 
 const BANDS = [
-  { max: 1,  label: 'Ideal',        cls: 'band-0', desc: 'Your score is in the ideal range — no significant signs of food intolerance detected. Keep maintaining your current dietary habits.' },
+  { max: 1,  label: 'Ideal',        cls: 'band-0', desc: 'Your score is in the ideal range - no significant signs of food intolerance detected. Keep maintaining your current dietary habits.' },
   { max: 5,  label: 'Tolerable',    cls: 'band-1', desc: 'Your score suggests a possible hidden intolerance worth monitoring. Your coach may recommend tracking certain foods over the coming weeks.' },
   { max: 19, label: 'Undesirable',  cls: 'band-2', desc: 'Your score indicates a likely food intolerance. Your coach will review your results and discuss a dietary adjustment plan with you.' },
   { max: 999,label: 'High-Risk',    cls: 'band-3', desc: 'Your score is in the high-risk range. Please consider consulting a GP or allergist alongside your nutrition programme.' }
@@ -508,9 +508,32 @@ function submitForm() {
   .catch(() => {
     btn.disabled = false;
     btn.textContent = 'Submit to My Coach';
-    showToast('Error – please try again.', 4000);
+    showToast('Error - please try again.', 4000);
   });
 }
 </script>
+  <script>
+  // Pre-fill from portal URL params
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var name  = p.get('name');
+    var email = p.get('email');
+    function fill(ids, val) {
+      if (!val) return;
+      ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = val;
+          el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      fill(['clientName', 'client-name', 'name-input', 'send-name'], name);
+      fill(['clientEmail', 'client-email', 'email-input', 'send-email'], email);
+    });
+  })();
+  </script>
 </body>
 </html>

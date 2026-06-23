@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sleep-Wake Cycle Questionnaire – GetFit AF</title>
+<title>Sleep-Wake Cycle Questionnaire - GetFit AF</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f4; color: #333; }
@@ -130,10 +130,10 @@
 
   <div class="intro-card">
     <h2>About This Assessment</h2>
-    <p>Score 1 point for every "Yes" answer. A perfect score is 0. A score of 5 or more means your sleep-wake cycle may need some adjustments to better support your weight loss goals. Each "Yes" answer highlights a habit worth addressing — aim to get your score below 5 within the next 4 weeks.</p>
+    <p>Score 1 point for every "Yes" answer. A perfect score is 0. A score of 5 or more means your sleep-wake cycle may need some adjustments to better support your weight loss goals. Each "Yes" answer highlights a habit worth addressing - aim to get your score below 5 within the next 4 weeks.</p>
   </div>
 
-  <!-- Client info -->
+  <!- Client info ->
   <div class="section-card">
     <div class="section-title">Your Details</div>
     <div class="client-row">
@@ -148,7 +148,7 @@
       <div>
         <label class="field-label" for="coachSelect">Your Coach</label>
         <select id="coachSelect">
-          <option value="">— Select your coach —</option>
+          <option value="">- Select your coach -</option>
           <option value="Satish">Satish</option>
           <option value="Kangna Saini">Kangna Saini</option>
           <option value="Janavi">Janavi</option>
@@ -160,7 +160,7 @@
     </div>
   </div>
 
-  <!-- Questions -->
+  <!- Questions ->
   <div class="section-card">
     <div class="section-title">
       Questions
@@ -246,11 +246,11 @@
     </div>
   </div>
 
-  <!-- Score display -->
+  <!- Score display ->
   <div class="total-box">
     <h3>Your Score</h3>
     <div class="score-display" id="totalScore">0</div>
-    <div class="score-label" id="bandLabel" class="band-good">— answer questions above —</div>
+    <div class="score-label" id="bandLabel" class="band-good">- answer questions above -</div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="progressBar" style="width:0%;"></div>
     </div>
@@ -297,18 +297,18 @@ function updateDisplay() {
   const lbl = document.getElementById('bandLabel');
   const dsc = document.getElementById('bandDesc');
   if (answered === 0) {
-    lbl.textContent = '— answer questions above —';
+    lbl.textContent = '- answer questions above -';
     lbl.className = 'score-label';
     dsc.style.display = 'none';
   } else if (total === 0) {
     lbl.textContent = 'Perfect score! Great sleep habits.';
     lbl.className = 'score-label band-good';
-    dsc.textContent = 'Your sleep-wake cycle looks well-balanced. Keep up these healthy habits — good sleep is a powerful weight loss tool.';
+    dsc.textContent = 'Your sleep-wake cycle looks well-balanced. Keep up these healthy habits - good sleep is a powerful weight loss tool.';
     dsc.style.display = 'block';
   } else if (total < 5) {
-    lbl.textContent = 'Good — a few areas to watch';
+    lbl.textContent = 'Good - a few areas to watch';
     lbl.className = 'score-label band-good';
-    dsc.textContent = 'Your score is below 5 — your sleep-wake cycle is generally on track. Each "Yes" answer is still worth addressing with your coach to optimise your progress.';
+    dsc.textContent = 'Your score is below 5 - your sleep-wake cycle is generally on track. Each "Yes" answer is still worth addressing with your coach to optimise your progress.';
     dsc.style.display = 'block';
   } else {
     lbl.textContent = 'Your sleep-wake cycle needs attention';
@@ -375,9 +375,32 @@ function submitForm() {
   })
   .catch(() => {
     btn.disabled = false; btn.textContent = 'Submit to My Coach';
-    showToast('Error – please try again.', 4000);
+    showToast('Error - please try again.', 4000);
   });
 }
 </script>
+  <script>
+  // Pre-fill from portal URL params
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var name  = p.get('name');
+    var email = p.get('email');
+    function fill(ids, val) {
+      if (!val) return;
+      ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = val;
+          el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      fill(['clientName', 'client-name', 'name-input', 'send-name'], name);
+      fill(['clientEmail', 'client-email', 'email-input', 'send-email'], email);
+    });
+  })();
+  </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Goal Setting Sheet – GetFit AF</title>
+<title>Goal Setting Sheet - GetFit AF</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7f5; color: #2c2c2c; min-height: 100vh; }
@@ -129,17 +129,17 @@
   <div class="logo">🎯</div>
   <div>
     <h1>Goal Setting Sheet</h1>
-    <p>GetFit AF — After Your 7-Day Diary Review</p>
+    <p>GetFit AF - After Your 7-Day Diary Review</p>
   </div>
 </div>
 
 <div class="container">
 
   <div class="note-box">
-    <p>Complete this after reviewing your 7-day diary with your coach. These goals will become your reference point for all future check-ins — be specific and realistic.</p>
+    <p>Complete this after reviewing your 7-day diary with your coach. These goals will become your reference point for all future check-ins - be specific and realistic.</p>
   </div>
 
-  <!-- Details -->
+  <!- Details ->
   <div class="card">
     <div class="card-title">Your Details</div>
     <div class="field-row">
@@ -173,12 +173,12 @@
     </div>
   </div>
 
-  <!-- Goals -->
+  <!- Goals ->
   <div class="card">
     <div class="card-title">My Goals</div>
     <div class="card-sub">Set one clear goal for each time horizon. The more specific, the more useful it is for your coach.</div>
 
-    <!-- Short Term -->
+    <!- Short Term ->
     <div class="goal-block short">
       <div class="goal-horizon">
         <span class="horizon-badge badge-short">This Week</span>
@@ -194,7 +194,7 @@
       </div>
     </div>
 
-    <!-- Medium Term -->
+    <!- Medium Term ->
     <div class="goal-block medium">
       <div class="goal-horizon">
         <span class="horizon-badge badge-medium">Next 4 Weeks</span>
@@ -202,7 +202,7 @@
       </div>
       <div class="goal-field">
         <label>What do you want to achieve in the next 4 weeks?</label>
-        <textarea id="goal_medium" placeholder="e.g. Lose 2 kg and reduce my starch portions to 1–2 per day consistently."></textarea>
+        <textarea id="goal_medium" placeholder="e.g. Lose 2 kg and reduce my starch portions to 1-2 per day consistently."></textarea>
       </div>
       <div class="goal-field">
         <label>How will you measure whether you've achieved this?</label>
@@ -210,14 +210,14 @@
       </div>
     </div>
 
-    <!-- Long Term -->
+    <!- Long Term ->
     <div class="goal-block long">
       <div class="goal-horizon">
-        <span class="horizon-badge badge-long">3–6 Months</span>
+        <span class="horizon-badge badge-long">3-6 Months</span>
         <span class="horizon-label">Long-term goal</span>
       </div>
       <div class="goal-field">
-        <label>What is your big goal for the next 3–6 months?</label>
+        <label>What is your big goal for the next 3-6 months?</label>
         <textarea id="goal_long" placeholder="e.g. Reach 65 kg and feel energetic every day. Be able to fit into my old clothes."></textarea>
       </div>
       <div class="goal-field">
@@ -227,7 +227,7 @@
     </div>
   </div>
 
-  <!-- Food Changes -->
+  <!- Food Changes ->
   <div class="card">
     <div class="card-title">My Food Changes</div>
     <div class="card-sub">Based on your diary and your conversation with your coach, what will you specifically add or reduce?</div>
@@ -249,22 +249,22 @@
     </div>
   </div>
 
-  <!-- Commitment -->
+  <!- Commitment ->
   <div class="card">
     <div class="card-title">My Commitment Level</div>
     <div class="card-sub">Honest self-assessment helps your coach know where to focus support.</div>
 
     <div class="commit-block">
-      <div class="commit-title">On a scale of 1–10, how confident are you that you'll hit your weekly goal?</div>
+      <div class="commit-title">On a scale of 1-10, how confident are you that you'll hit your weekly goal?</div>
       <div class="scale-row">
         <span class="scale-label">1 = Not confident at all &nbsp;|&nbsp; 10 = Fully committed</span>
         <div class="scale-options" id="confidenceScale">
-          <!-- Built by JS -->
+          <!- Built by JS ->
         </div>
       </div>
       <div class="goal-field" style="margin-top:8px">
         <label>What might get in the way this week?</label>
-        <textarea id="obstacles" placeholder="e.g. Work travel Thursday–Friday. Social dinner on Saturday." style="min-height:60px"></textarea>
+        <textarea id="obstacles" placeholder="e.g. Work travel Thursday-Friday. Social dinner on Saturday." style="min-height:60px"></textarea>
       </div>
       <div class="goal-field">
         <label>How will you handle it if that happens?</label>
@@ -273,7 +273,7 @@
     </div>
   </div>
 
-  <!-- Submit -->
+  <!- Submit ->
   <div class="card">
     <button class="submit-btn" id="submitBtn" onclick="submitForm()">Send Goals to My Coach</button>
     <div class="status-msg" id="statusMsg"></div>
@@ -403,7 +403,7 @@ function submitForm() {
     } else throw new Error();
   })
   .catch(() => {
-    showStatus('Something went wrong — please screenshot this form and send to your coach directly.', 'error');
+    showStatus('Something went wrong - please screenshot this form and send to your coach directly.', 'error');
     btn.disabled = false;
     btn.textContent = 'Send Goals to My Coach';
   });
@@ -415,5 +415,28 @@ function showStatus(msg, type) {
   el.className = 'status-msg ' + type;
 }
 </script>
+  <script>
+  // Pre-fill from portal URL params
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var name  = p.get('name');
+    var email = p.get('email');
+    function fill(ids, val) {
+      if (!val) return;
+      ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = val;
+          el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      fill(['clientName', 'client-name', 'name-input', 'send-name'], name);
+      fill(['clientEmail', 'client-email', 'email-input', 'send-email'], email);
+    });
+  })();
+  </script>
 </body>
 </html>

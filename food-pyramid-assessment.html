@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Current Food Pyramid – GetFit AF</title>
+<title>My Current Food Pyramid - GetFit AF</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7f5; color: #2c2c2c; min-height: 100vh; }
@@ -80,14 +80,14 @@
   <div class="logo">🔥</div>
   <div>
     <h1>My Current Food Pyramid</h1>
-    <p>GetFit AF — Diet Snapshot</p>
+    <p>GetFit AF - Diet Snapshot</p>
   </div>
 </div>
 
 <div class="container">
 
   <div class="note-box">
-    <p>This quick snapshot helps your coach understand your current eating habits. There are no right or wrong answers — be as honest as you can. It takes about 3 minutes to complete.</p>
+    <p>This quick snapshot helps your coach understand your current eating habits. There are no right or wrong answers - be as honest as you can. It takes about 3 minutes to complete.</p>
   </div>
 
   <div class="card">
@@ -118,7 +118,7 @@
 
   <div class="card">
     <div class="card-title">How Much Do You Typically Eat Each Day?</div>
-    <div class="card-sub">For each food group below, enter how many portions you usually have on a typical day. Use your best estimate — even approximate is helpful.</div>
+    <div class="card-sub">For each food group below, enter how many portions you usually have on a typical day. Use your best estimate - even approximate is helpful.</div>
 
     <table class="pyramid-table">
       <thead>
@@ -142,7 +142,7 @@
             <div class="group-name">🥦 Non-Starchy Vegetables</div>
             <div class="group-examples">Spinach, broccoli, cucumber, tomatoes, mushrooms</div>
           </td>
-          <td><span class="target-badge">3–6 portions</span></td>
+          <td><span class="target-badge">3-6 portions</span></td>
           <td class="center"><input class="portion-input" type="number" min="0" step="0.5" id="g2" placeholder="#" /></td>
         </tr>
         <tr>
@@ -150,7 +150,7 @@
             <div class="group-name">🍎 Fruit</div>
             <div class="group-examples">Apples, bananas, berries, oranges</div>
           </td>
-          <td><span class="target-badge">2–4 portions</span></td>
+          <td><span class="target-badge">2-4 portions</span></td>
           <td class="center"><input class="portion-input" type="number" min="0" step="0.5" id="g3" placeholder="#" /></td>
         </tr>
         <tr>
@@ -158,7 +158,7 @@
             <div class="group-name">🍗 Protein-Rich Foods</div>
             <div class="group-examples">Chicken, eggs, fish, paneer, lentils, tofu</div>
           </td>
-          <td><span class="target-badge">2–4 portions</span></td>
+          <td><span class="target-badge">2-4 portions</span></td>
           <td class="center"><input class="portion-input" type="number" min="0" step="0.5" id="g4" placeholder="#" /></td>
         </tr>
         <tr>
@@ -166,7 +166,7 @@
             <div class="group-name">🥛 Calcium-Rich Foods</div>
             <div class="group-examples">Milk, yogurt, cheese, fortified milk alternatives</div>
           </td>
-          <td><span class="target-badge">1–2 portions</span></td>
+          <td><span class="target-badge">1-2 portions</span></td>
           <td class="center"><input class="portion-input" type="number" min="0" step="0.5" id="g5" placeholder="#" /></td>
         </tr>
         <tr>
@@ -174,7 +174,7 @@
             <div class="group-name">🍚 Starches & Grains</div>
             <div class="group-examples">Rice, roti, oats, sweet potato, legumes</div>
           </td>
-          <td><span class="target-badge">1–2 portions</span></td>
+          <td><span class="target-badge">1-2 portions</span></td>
           <td class="center"><input class="portion-input" type="number" min="0" step="0.5" id="g6" placeholder="#" /></td>
         </tr>
         <tr>
@@ -199,7 +199,7 @@
 
   <div class="card">
     <div class="card-title">Your Own Reflection</div>
-    <div class="card-sub">These two questions are just for you — your honest thoughts help your coach have a more useful conversation with you.</div>
+    <div class="card-sub">These two questions are just for you - your honest thoughts help your coach have a more useful conversation with you.</div>
 
     <div class="field" style="margin-bottom:16px">
       <label>What do you think you should eat MORE of?</label>
@@ -249,11 +249,11 @@ function submitForm() {
 
   const groups = [
     { label: 'Water & Zero-Calorie Fluids', id: 'g1', target: 'Min. 2 Litres' },
-    { label: 'Non-Starchy Vegetables', id: 'g2', target: '3–6 portions' },
-    { label: 'Fruit', id: 'g3', target: '2–4 portions' },
-    { label: 'Protein-Rich Foods', id: 'g4', target: '2–4 portions' },
-    { label: 'Calcium-Rich Foods', id: 'g5', target: '1–2 portions' },
-    { label: 'Starches & Grains', id: 'g6', target: '1–2 portions' },
+    { label: 'Non-Starchy Vegetables', id: 'g2', target: '3-6 portions' },
+    { label: 'Fruit', id: 'g3', target: '2-4 portions' },
+    { label: 'Protein-Rich Foods', id: 'g4', target: '2-4 portions' },
+    { label: 'Calcium-Rich Foods', id: 'g5', target: '1-2 portions' },
+    { label: 'Starches & Grains', id: 'g6', target: '1-2 portions' },
     { label: 'Healthy Fats', id: 'g7', target: 'Max. 1 portion' },
     { label: 'Extras', id: 'g8', target: 'Optional' }
   ];
@@ -261,7 +261,7 @@ function submitForm() {
   const portionData = groups.map(g => ({
     group: g.label,
     target: g.target,
-    current: document.getElementById(g.id).value || '—'
+    current: document.getElementById(g.id).value || '-'
   }));
 
   const data = {
@@ -296,7 +296,7 @@ function submitForm() {
     }
   })
   .catch(() => {
-    showStatus('Something went wrong — please screenshot this form and send it to your coach directly.', 'error');
+    showStatus('Something went wrong - please screenshot this form and send it to your coach directly.', 'error');
     btn.disabled = false;
     btn.textContent = 'Send to My Coach';
   });
@@ -308,5 +308,28 @@ function showStatus(msg, type) {
   el.className = 'status-msg ' + type;
 }
 </script>
+  <script>
+  // Pre-fill from portal URL params
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var name  = p.get('name');
+    var email = p.get('email');
+    function fill(ids, val) {
+      if (!val) return;
+      ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = val;
+          el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      fill(['clientName', 'client-name', 'name-input', 'send-name'], name);
+      fill(['clientEmail', 'client-email', 'email-input', 'send-email'], email);
+    });
+  })();
+  </script>
 </body>
 </html>

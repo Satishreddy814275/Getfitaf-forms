@@ -3,39 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calorie & Macro Planner – GetFit AF</title>
+  <title>Calorie & Macro Planner - GetFit AF</title>
   <style>
     :root {
-      --green:       #4a7c59;
-      --green-dark:  #3a6147;
-      --green-light: #e8f2ec;
-      --green-mid:   #c8e0d0;
-      --amber:       #e8a838;
-      --amber-light: #fdf5e6;
-      --red:         #d64045;
-      --blue:        #3a7abf;
-      --blue-light:  #e8f0fb;
-      --purple:      #7c4fa0;
-      --purple-light:#f0e8f8;
-      --text:        #222;
-      --muted:       #666;
-      --border:      #dde6e2;
-      --white:       #fff;
-      --shadow:      0 2px 12px rgba(0,0,0,.08);
+      -green:       #4a7c59;
+      -green-dark:  #3a6147;
+      -green-light: #e8f2ec;
+      -green-mid:   #c8e0d0;
+      -amber:       #e8a838;
+      -amber-light: #fdf5e6;
+      -red:         #d64045;
+      -blue:        #3a7abf;
+      -blue-light:  #e8f0fb;
+      -purple:      #7c4fa0;
+      -purple-light:#f0e8f8;
+      -text:        #222;
+      -muted:       #666;
+      -border:      #dde6e2;
+      -white:       #fff;
+      -shadow:      0 2px 12px rgba(0,0,0,.08);
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #f4f7f5;
-      color: var(--text);
+      color: var(-text);
       line-height: 1.6;
       min-height: 100vh;
     }
 
     /* ── HEADER ── */
     header {
-      background: var(--green);
+      background: var(-green);
       color: #fff;
       text-align: center;
       padding: 36px 20px 28px;
@@ -65,16 +65,16 @@
 
     /* ── CARDS ── */
     .card {
-      background: var(--white);
+      background: var(-white);
       border-radius: 14px;
-      box-shadow: var(--shadow);
+      box-shadow: var(-shadow);
       padding: 28px;
       margin-bottom: 24px;
     }
     .card h2 {
       font-size: 17px;
       font-weight: 700;
-      color: var(--green-dark);
+      color: var(-green-dark);
       margin-bottom: 20px;
       display: flex;
       align-items: center;
@@ -92,26 +92,26 @@
     .form-group label {
       font-size: 13px;
       font-weight: 600;
-      color: var(--muted);
+      color: var(-muted);
       text-transform: uppercase;
       letter-spacing: .5px;
     }
     .form-group input,
     .form-group select {
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(-border);
       border-radius: 8px;
       padding: 10px 14px;
       font-size: 15px;
-      color: var(--text);
+      color: var(-text);
       outline: none;
       transition: border-color .2s;
       background: #fafcfa;
     }
     .form-group input:focus,
-    .form-group select:focus { border-color: var(--green); background: #fff; }
+    .form-group select:focus { border-color: var(-green); background: #fff; }
     .form-group .hint {
       font-size: 12px;
-      color: var(--muted);
+      color: var(-muted);
     }
 
     /* ── GENDER TOGGLE ── */
@@ -128,18 +128,18 @@
       display: block;
       text-align: center;
       padding: 10px;
-      border: 2px solid var(--border);
+      border: 2px solid var(-border);
       border-radius: 8px;
       font-size: 15px;
       font-weight: 600;
-      color: var(--muted);
+      color: var(-muted);
       transition: all .2s;
       background: #fafcfa;
     }
     .gender-toggle input[type="radio"]:checked + .btn-gender {
-      border-color: var(--green);
-      background: var(--green-light);
-      color: var(--green-dark);
+      border-color: var(-green);
+      background: var(-green-light);
+      color: var(-green-dark);
     }
 
     /* ── ACTIVITY LEVEL ── */
@@ -152,18 +152,18 @@
     .activity-option input[type="radio"] { display: none; }
     .activity-option .ac-card {
       flex: 1;
-      border: 2px solid var(--border);
+      border: 2px solid var(-border);
       border-radius: 10px;
       padding: 12px 14px;
       transition: all .2s;
       background: #fafcfa;
     }
     .activity-option input[type="radio"]:checked + .ac-card {
-      border-color: var(--green);
-      background: var(--green-light);
+      border-color: var(-green);
+      background: var(-green-light);
     }
-    .ac-card .ac-title { font-weight: 700; font-size: 14px; color: var(--text); }
-    .ac-card .ac-desc  { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .ac-card .ac-title { font-weight: 700; font-size: 14px; color: var(-text); }
+    .ac-card .ac-desc  { font-size: 13px; color: var(-muted); margin-top: 2px; }
     .ac-card .ac-tag {
       display: inline-block;
       margin-top: 4px;
@@ -174,13 +174,13 @@
       text-transform: uppercase;
       letter-spacing: .4px;
     }
-    .ac-tag.cr30 { background: var(--amber-light); color: #a06010; }
-    .ac-tag.cr20 { background: var(--green-light);  color: var(--green-dark); }
+    .ac-tag.cr30 { background: var(-amber-light); color: #a06010; }
+    .ac-tag.cr20 { background: var(-green-light);  color: var(-green-dark); }
 
     /* ── CALCULATE BUTTON ── */
     .calc-btn {
       width: 100%;
-      background: var(--green);
+      background: var(-green);
       color: #fff;
       border: none;
       border-radius: 10px;
@@ -191,7 +191,7 @@
       transition: background .2s, transform .1s;
       margin-top: 8px;
     }
-    .calc-btn:hover  { background: var(--green-dark); }
+    .calc-btn:hover  { background: var(-green-dark); }
     .calc-btn:active { transform: scale(.99); }
 
     /* ── RESULTS ── */
@@ -211,10 +211,10 @@
     .stat-box .sb-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; opacity: .7; margin-bottom: 4px; }
     .stat-box .sb-value { font-size: 28px; font-weight: 800; }
     .stat-box .sb-unit  { font-size: 13px; opacity: .75; margin-top: 2px; }
-    .stat-box.green  { background: var(--green-light);  color: var(--green-dark); }
-    .stat-box.amber  { background: var(--amber-light);  color: #8a5800; }
-    .stat-box.blue   { background: var(--blue-light);   color: #1a4a80; }
-    .stat-box.purple { background: var(--purple-light); color: #4a2060; }
+    .stat-box.green  { background: var(-green-light);  color: var(-green-dark); }
+    .stat-box.amber  { background: var(-amber-light);  color: #8a5800; }
+    .stat-box.blue   { background: var(-blue-light);   color: #1a4a80; }
+    .stat-box.purple { background: var(-purple-light); color: #4a2060; }
 
     /* ── RECOMMENDATION BANNER ── */
     .reco-banner {
@@ -226,11 +226,11 @@
       align-items: flex-start;
       gap: 12px;
     }
-    .reco-banner.cr30 { background: var(--amber-light); border-color: var(--amber); }
-    .reco-banner.cr20 { background: var(--green-light); border-color: var(--green);  }
+    .reco-banner.cr30 { background: var(-amber-light); border-color: var(-amber); }
+    .reco-banner.cr20 { background: var(-green-light); border-color: var(-green);  }
     .reco-banner .reco-icon { font-size: 24px; flex-shrink: 0; margin-top: 1px; }
     .reco-banner .reco-title { font-weight: 700; font-size: 15px; }
-    .reco-banner .reco-text  { font-size: 13.5px; color: var(--muted); margin-top: 3px; }
+    .reco-banner .reco-text  { font-size: 13.5px; color: var(-muted); margin-top: 3px; }
 
     /* ── MACRO TABLE ── */
     .macro-tabs {
@@ -244,12 +244,12 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      border: 2px solid var(--border);
+      border: 2px solid var(-border);
       background: #fafcfa;
-      color: var(--muted);
+      color: var(-muted);
       transition: all .2s;
     }
-    .macro-tab.active { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+    .macro-tab.active { border-color: var(-green); background: var(-green-light); color: var(-green-dark); }
 
     .macro-panel { display: none; }
     .macro-panel.active { display: block; }
@@ -303,7 +303,7 @@
 
     /* ── TIMELINE ── */
     .timeline-box {
-      background: var(--green-light);
+      background: var(-green-light);
       border-radius: 10px;
       padding: 18px 20px;
       display: flex;
@@ -312,25 +312,25 @@
       flex-wrap: wrap;
     }
     .timeline-box .tl-icon { font-size: 32px; }
-    .timeline-box .tl-text h3 { font-size: 16px; font-weight: 700; color: var(--green-dark); }
-    .timeline-box .tl-text p  { font-size: 14px; color: var(--muted); margin-top: 3px; }
+    .timeline-box .tl-text h3 { font-size: 16px; font-weight: 700; color: var(-green-dark); }
+    .timeline-box .tl-text p  { font-size: 14px; color: var(-muted); margin-top: 3px; }
     .timeline-hidden { display: none; }
 
     /* ── WEEKLY TARGETS BOX ── */
     .weekly-targets {
       background: #f8fbf9;
-      border: 1.5px solid var(--border);
+      border: 1.5px solid var(-border);
       border-radius: 10px;
       padding: 16px 18px;
       margin-top: 16px;
     }
-    .weekly-targets h4 { font-size: 14px; font-weight: 700; color: var(--green-dark); margin-bottom: 10px; }
+    .weekly-targets h4 { font-size: 14px; font-weight: 700; color: var(-green-dark); margin-bottom: 10px; }
     .wt-row {
       display: flex;
       justify-content: space-between;
       font-size: 13.5px;
       padding: 5px 0;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(-border);
     }
     .wt-row:last-child { border-bottom: none; }
     .wt-row .wt-val { font-weight: 700; }
@@ -338,7 +338,7 @@
     /* ── TIPS SECTION ── */
     .tips-intro {
       font-size: 14.5px;
-      color: var(--muted);
+      color: var(-muted);
       margin-bottom: 20px;
       line-height: 1.7;
     }
@@ -347,10 +347,10 @@
     .tips-section h3 {
       font-size: 15px;
       font-weight: 700;
-      color: var(--green-dark);
+      color: var(-green-dark);
       margin-bottom: 14px;
       padding-bottom: 6px;
-      border-bottom: 2px solid var(--green-mid);
+      border-bottom: 2px solid var(-green-mid);
     }
     .tip-item {
       display: flex;
@@ -361,7 +361,7 @@
     .tip-num {
       width: 26px;
       height: 26px;
-      background: var(--green);
+      background: var(-green);
       color: #fff;
       border-radius: 50%;
       font-size: 12px;
@@ -376,23 +376,23 @@
       font-size: 14px;
       line-height: 1.6;
     }
-    .tip-item p strong { color: var(--green-dark); }
+    .tip-item p strong { color: var(-green-dark); }
 
     /* Protein callout */
     .protein-callout {
-      background: var(--blue-light);
+      background: var(-blue-light);
       border-radius: 10px;
       padding: 18px 20px;
       margin-top: 10px;
       margin-bottom: 20px;
     }
-    .protein-callout h4 { font-size: 14px; font-weight: 700; color: var(--blue); margin-bottom: 8px; }
+    .protein-callout h4 { font-size: 14px; font-weight: 700; color: var(-blue); margin-bottom: 8px; }
     .protein-callout p  { font-size: 14px; color: #2a4a70; line-height: 1.65; }
 
     /* Speed note */
     .speed-note {
-      background: var(--amber-light);
-      border-left: 4px solid var(--amber);
+      background: var(-amber-light);
+      border-left: 4px solid var(-amber);
       border-radius: 0 8px 8px 0;
       padding: 12px 16px;
       font-size: 14px;
@@ -404,7 +404,7 @@
     /* ── BEYOND THE SCALE BOX ── */
     .beyond-scale-box {
       background: #f0f7f4;
-      border: 1.5px solid var(--green-mid);
+      border: 1.5px solid var(-green-mid);
       border-radius: 12px;
       padding: 18px 20px;
       margin-top: 18px;
@@ -413,7 +413,7 @@
       align-items: flex-start;
     }
     .beyond-scale-box .bs-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
-    .beyond-scale-box h4 { font-size: 15px; font-weight: 700; color: var(--green-dark); margin-bottom: 8px; }
+    .beyond-scale-box h4 { font-size: 15px; font-weight: 700; color: var(-green-dark); margin-bottom: 8px; }
     .beyond-scale-box p  { font-size: 13.5px; color: #3a5a47; line-height: 1.65; }
     .beyond-scale-box p + p { margin-top: 8px; }
     .bs-measures {
@@ -423,7 +423,7 @@
       margin-top: 10px;
     }
     .bs-tag {
-      background: var(--green);
+      background: var(-green);
       color: #fff;
       border-radius: 20px;
       padding: 3px 12px;
@@ -440,13 +440,13 @@
       font-size: 13.5px;
       font-weight: 600;
       cursor: pointer;
-      border: 2px solid var(--border);
+      border: 2px solid var(-border);
       background: #fafcfa;
-      color: var(--muted);
+      color: var(-muted);
       transition: all .2s;
     }
-    .pf-preset:hover         { border-color: var(--green); color: var(--green-dark); }
-    .pf-preset.active        { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+    .pf-preset:hover         { border-color: var(-green); color: var(-green-dark); }
+    .pf-preset.active        { border-color: var(-green); background: var(-green-light); color: var(-green-dark); }
     .pf-input-row {
       display: flex;
       align-items: center;
@@ -457,7 +457,7 @@
     .pf-input-row .form-group { flex: 0 0 150px; }
     .pf-per-kg {
       font-size: 13px;
-      color: var(--muted);
+      color: var(-muted);
       padding-top: 22px;
     }
     .pf-warning {
@@ -467,12 +467,12 @@
       line-height: 1.55;
       margin-bottom: 12px;
     }
-    .pf-warning.warn-red { background: #fdecea; color: #9a1a1a; border-left: 4px solid var(--red); }
-    .pf-warning.warn-amber { background: var(--amber-light); color: #7a4800; border-left: 4px solid var(--amber); }
-    .pf-warning.warn-green { background: var(--green-light); color: var(--green-dark); border-left: 4px solid var(--green); }
+    .pf-warning.warn-red { background: #fdecea; color: #9a1a1a; border-left: 4px solid var(-red); }
+    .pf-warning.warn-amber { background: var(-amber-light); color: #7a4800; border-left: 4px solid var(-amber); }
+    .pf-warning.warn-green { background: var(-green-light); color: var(-green-dark); border-left: 4px solid var(-green); }
     .pf-intro {
       font-size: 14px;
-      color: var(--muted);
+      color: var(-muted);
       line-height: 1.65;
       margin-bottom: 18px;
     }
@@ -482,8 +482,8 @@
       display: block;
       width: 100%;
       background: #fff;
-      color: var(--green);
-      border: 2px solid var(--green);
+      color: var(-green);
+      border: 2px solid var(-green);
       border-radius: 10px;
       padding: 12px;
       font-size: 15px;
@@ -493,20 +493,20 @@
       text-align: center;
       margin-top: 10px;
     }
-    .print-btn:hover { background: var(--green-light); }
+    .print-btn:hover { background: var(-green-light); }
 
     /* ── SEND PLAN CARD ── */
     .send-success {
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      background: var(--green-light);
-      border: 1.5px solid var(--green-mid);
+      background: var(-green-light);
+      border: 1.5px solid var(-green-mid);
       border-radius: 10px;
       padding: 16px 18px;
       margin-top: 12px;
       font-size: 14px;
-      color: var(--green-dark);
+      color: var(-green-dark);
     }
     .send-success .ss-icon { font-size: 22px; flex-shrink: 0; }
     .send-success strong   { font-weight: 700; display: block; margin-bottom: 2px; }
@@ -514,7 +514,7 @@
     /* ── FOOTER ── */
     footer {
       text-align: center;
-      color: var(--muted);
+      color: var(-muted);
       font-size: 12.5px;
       margin-top: 40px;
       line-height: 1.8;
@@ -539,7 +539,7 @@
 </head>
 <body>
 
-<!-- ────────────────── HEADER ────────────────── -->
+<!- ────────────────── HEADER ────────────────── ->
 <header>
   <div class="logo-line">GetFit AF</div>
   <h1>🥗 Calorie &amp; Macro Planner</h1>
@@ -548,13 +548,13 @@
 
 <div class="page">
 
-  <!-- ────────── CALCULATOR CARD ────────── -->
+  <!- ────────── CALCULATOR CARD ────────── ->
   <div class="card" id="calculator-card">
     <h2><span class="icon">📋</span> Your Details</h2>
 
     <div class="form-grid" style="margin-bottom:20px;">
 
-      <!-- Gender -->
+      <!- Gender ->
       <div class="form-group">
         <label>Biological sex</label>
         <div class="gender-toggle">
@@ -569,28 +569,28 @@
         </div>
       </div>
 
-      <!-- Age -->
+      <!- Age ->
       <div class="form-group">
         <label>Age</label>
         <input type="number" id="age" placeholder="e.g. 32" min="14" max="100" />
         <span class="hint">Years</span>
       </div>
 
-      <!-- Weight -->
+      <!- Weight ->
       <div class="form-group">
         <label>Current weight</label>
         <input type="number" id="weight" placeholder="e.g. 72" min="30" max="300" step="0.1" />
         <span class="hint">Kilograms (kg)</span>
       </div>
 
-      <!-- Height -->
+      <!- Height ->
       <div class="form-group">
         <label>Height</label>
         <input type="number" id="height" placeholder="e.g. 165" min="100" max="250" />
         <span class="hint">Centimetres (cm)</span>
       </div>
 
-      <!-- Goal Weight -->
+      <!- Goal Weight ->
       <div class="form-group">
         <label>Goal weight <span style="font-weight:400;color:#aaa;">(optional)</span></label>
         <input type="number" id="goalWeight" placeholder="e.g. 62" min="30" max="300" step="0.1" />
@@ -599,7 +599,7 @@
 
     </div>
 
-    <!-- Activity level -->
+    <!- Activity level ->
     <div class="form-group" style="margin-bottom:22px;">
       <label style="margin-bottom:10px;display:block;">Activity level</label>
       <div class="activity-cards">
@@ -608,7 +608,7 @@
           <input type="radio" name="activity" value="1.2" data-cr="30" />
           <div class="ac-card">
             <div class="ac-title">Sedentary</div>
-            <div class="ac-desc">Mostly sitting — desk job, minimal daily movement, no structured exercise.</div>
+            <div class="ac-desc">Mostly sitting - desk job, minimal daily movement, no structured exercise.</div>
             <span class="ac-tag cr30">30% calorie reduction recommended</span>
           </div>
         </label>
@@ -617,7 +617,7 @@
           <input type="radio" name="activity" value="1.375" data-cr="30" />
           <div class="ac-card">
             <div class="ac-title">Lightly Active</div>
-            <div class="ac-desc">Light daily movement (walking, household chores) or exercise 1–2 times per week.</div>
+            <div class="ac-desc">Light daily movement (walking, household chores) or exercise 1-2 times per week.</div>
             <span class="ac-tag cr30">30% calorie reduction recommended</span>
           </div>
         </label>
@@ -626,7 +626,7 @@
           <input type="radio" name="activity" value="1.55" data-cr="20" />
           <div class="ac-card">
             <div class="ac-title">Moderately Active</div>
-            <div class="ac-desc">Structured exercise or training sessions 3–5 times per week at moderate intensity.</div>
+            <div class="ac-desc">Structured exercise or training sessions 3-5 times per week at moderate intensity.</div>
             <span class="ac-tag cr20">20% calorie reduction recommended</span>
           </div>
         </label>
@@ -635,7 +635,7 @@
           <input type="radio" name="activity" value="1.725" data-cr="20" />
           <div class="ac-card">
             <div class="ac-title">Very Active</div>
-            <div class="ac-desc">Intense training 6–7 days per week, or moderately active job plus regular exercise.</div>
+            <div class="ac-desc">Intense training 6-7 days per week, or moderately active job plus regular exercise.</div>
             <span class="ac-tag cr20">20% calorie reduction recommended</span>
           </div>
         </label>
@@ -653,35 +653,35 @@
     </div>
 
     <button class="calc-btn" onclick="calculate()">Calculate My Targets →</button>
-    <p id="form-error" style="color:var(--red);font-size:13px;margin-top:10px;display:none;"></p>
+    <p id="form-error" style="color:var(-red);font-size:13px;margin-top:10px;display:none;"></p>
   </div>
 
-  <!-- ────────── RESULTS ────────── -->
+  <!- ────────── RESULTS ────────── ->
   <div id="results">
 
-    <!-- ── Core Numbers ── -->
+    <!- ── Core Numbers ── ->
     <div class="card">
       <h2><span class="icon">📊</span> Your Calorie Breakdown</h2>
 
       <div class="stats-row">
         <div class="stat-box blue">
           <div class="sb-label">Resting Rate (BMR)</div>
-          <div class="sb-value" id="r-bmr">—</div>
+          <div class="sb-value" id="r-bmr">-</div>
           <div class="sb-unit">kcal / day</div>
         </div>
         <div class="stat-box green">
           <div class="sb-label">Maintenance (DMC)</div>
-          <div class="sb-value" id="r-dmc">—</div>
+          <div class="sb-value" id="r-dmc">-</div>
           <div class="sb-unit">kcal / day</div>
         </div>
         <div class="stat-box amber">
           <div class="sb-label">Fat-Loss Target</div>
-          <div class="sb-value" id="r-wlcg">—</div>
+          <div class="sb-value" id="r-wlcg">-</div>
           <div class="sb-unit">kcal / day</div>
         </div>
         <div class="stat-box purple">
           <div class="sb-label">Calorie Deficit</div>
-          <div class="sb-value" id="r-deficit">—</div>
+          <div class="sb-value" id="r-deficit">-</div>
           <div class="sb-unit">kcal / day</div>
         </div>
       </div>
@@ -689,14 +689,14 @@
       <div class="reco-banner" id="reco-banner">
         <div class="reco-icon" id="reco-icon">💡</div>
         <div>
-          <div class="reco-title" id="reco-title">—</div>
-          <div class="reco-text" id="reco-text">—</div>
+          <div class="reco-title" id="reco-title">-</div>
+          <div class="reco-text" id="reco-text">-</div>
         </div>
       </div>
 
     </div>
 
-    <!-- ── Macro Breakdown ── -->
+    <!- ── Macro Breakdown ── ->
     <div class="card">
       <h2><span class="icon">🍽️</span> Your Daily Macro Targets</h2>
 
@@ -705,26 +705,26 @@
         <div class="macro-tab" onclick="switchTab('alt')" id="tab-alt">Alternative</div>
       </div>
 
-      <!-- RECOMMENDED PANEL -->
+      <!- RECOMMENDED PANEL ->
       <div class="macro-panel active" id="panel-recommended">
         <div class="macro-grid">
           <div class="macro-box carbs">
             <div class="mb-label">Carbohydrates</div>
-            <div class="mb-pct" id="carbs-pct-r">—</div>
-            <div class="mb-cals" id="carbs-cal-r">— kcal</div>
-            <div class="mb-grams" id="carbs-g-r">— g per day</div>
+            <div class="mb-pct" id="carbs-pct-r">-</div>
+            <div class="mb-cals" id="carbs-cal-r">- kcal</div>
+            <div class="mb-grams" id="carbs-g-r">- g per day</div>
           </div>
           <div class="macro-box protein">
             <div class="mb-label">Protein</div>
-            <div class="mb-pct" id="prot-pct-r">—</div>
-            <div class="mb-cals" id="prot-cal-r">— kcal</div>
-            <div class="mb-grams" id="prot-g-r">— g per day</div>
+            <div class="mb-pct" id="prot-pct-r">-</div>
+            <div class="mb-cals" id="prot-cal-r">- kcal</div>
+            <div class="mb-grams" id="prot-g-r">- g per day</div>
           </div>
           <div class="macro-box fat">
             <div class="mb-label">Fats</div>
             <div class="mb-pct" id="fat-pct-r">20%</div>
-            <div class="mb-cals" id="fat-cal-r">— kcal</div>
-            <div class="mb-grams" id="fat-g-r">— g per day</div>
+            <div class="mb-cals" id="fat-cal-r">- kcal</div>
+            <div class="mb-grams" id="fat-g-r">- g per day</div>
           </div>
         </div>
 
@@ -733,41 +733,41 @@
             <circle cx="50" cy="50" r="40" fill="none" stroke="#f0e8e8" stroke-width="18"/>
           </svg>
           <div class="legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#f59c30"></div><div><strong id="leg-carbs-r">—g</strong> Carbohydrates</div></div>
-            <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div><div><strong id="leg-prot-r">—g</strong> Protein</div></div>
-            <div class="legend-item"><div class="legend-dot" style="background:#9b59b6"></div><div><strong id="leg-fat-r">—g</strong> Fats</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59c30"></div><div><strong id="leg-carbs-r">-g</strong> Carbohydrates</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div><div><strong id="leg-prot-r">-g</strong> Protein</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#9b59b6"></div><div><strong id="leg-fat-r">-g</strong> Fats</div></div>
           </div>
         </div>
 
         <div class="weekly-targets">
           <h4>📅 Weekly Totals</h4>
-          <div class="wt-row"><span>Total calories (7 days)</span><span class="wt-val" id="wt-cals-r">—</span></div>
-          <div class="wt-row"><span>Total carbohydrates</span><span class="wt-val" id="wt-carbs-r">—</span></div>
-          <div class="wt-row"><span>Total protein</span><span class="wt-val" id="wt-prot-r">—</span></div>
-          <div class="wt-row"><span>Total fats</span><span class="wt-val" id="wt-fat-r">—</span></div>
+          <div class="wt-row"><span>Total calories (7 days)</span><span class="wt-val" id="wt-cals-r">-</span></div>
+          <div class="wt-row"><span>Total carbohydrates</span><span class="wt-val" id="wt-carbs-r">-</span></div>
+          <div class="wt-row"><span>Total protein</span><span class="wt-val" id="wt-prot-r">-</span></div>
+          <div class="wt-row"><span>Total fats</span><span class="wt-val" id="wt-fat-r">-</span></div>
         </div>
       </div>
 
-      <!-- ALTERNATIVE PANEL -->
+      <!- ALTERNATIVE PANEL ->
       <div class="macro-panel" id="panel-alt">
         <div class="macro-grid">
           <div class="macro-box carbs">
             <div class="mb-label">Carbohydrates</div>
-            <div class="mb-pct" id="carbs-pct-a">—</div>
-            <div class="mb-cals" id="carbs-cal-a">— kcal</div>
-            <div class="mb-grams" id="carbs-g-a">— g per day</div>
+            <div class="mb-pct" id="carbs-pct-a">-</div>
+            <div class="mb-cals" id="carbs-cal-a">- kcal</div>
+            <div class="mb-grams" id="carbs-g-a">- g per day</div>
           </div>
           <div class="macro-box protein">
             <div class="mb-label">Protein</div>
-            <div class="mb-pct" id="prot-pct-a">—</div>
-            <div class="mb-cals" id="prot-cal-a">— kcal</div>
-            <div class="mb-grams" id="prot-g-a">— g per day</div>
+            <div class="mb-pct" id="prot-pct-a">-</div>
+            <div class="mb-cals" id="prot-cal-a">- kcal</div>
+            <div class="mb-grams" id="prot-g-a">- g per day</div>
           </div>
           <div class="macro-box fat">
             <div class="mb-label">Fats</div>
             <div class="mb-pct" id="fat-pct-a">20%</div>
-            <div class="mb-cals" id="fat-cal-a">— kcal</div>
-            <div class="mb-grams" id="fat-g-a">— g per day</div>
+            <div class="mb-cals" id="fat-cal-a">- kcal</div>
+            <div class="mb-grams" id="fat-g-a">- g per day</div>
           </div>
         </div>
 
@@ -776,41 +776,41 @@
             <circle cx="50" cy="50" r="40" fill="none" stroke="#f0e8e8" stroke-width="18"/>
           </svg>
           <div class="legend">
-            <div class="legend-item"><div class="legend-dot" style="background:#f59c30"></div><div><strong id="leg-carbs-a">—g</strong> Carbohydrates</div></div>
-            <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div><div><strong id="leg-prot-a">—g</strong> Protein</div></div>
-            <div class="legend-item"><div class="legend-dot" style="background:#9b59b6"></div><div><strong id="leg-fat-a">—g</strong> Fats</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#f59c30"></div><div><strong id="leg-carbs-a">-g</strong> Carbohydrates</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div><div><strong id="leg-prot-a">-g</strong> Protein</div></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#9b59b6"></div><div><strong id="leg-fat-a">-g</strong> Fats</div></div>
           </div>
         </div>
 
         <div class="weekly-targets">
           <h4>📅 Weekly Totals</h4>
-          <div class="wt-row"><span>Total calories (7 days)</span><span class="wt-val" id="wt-cals-a">—</span></div>
-          <div class="wt-row"><span>Total carbohydrates</span><span class="wt-val" id="wt-carbs-a">—</span></div>
-          <div class="wt-row"><span>Total protein</span><span class="wt-val" id="wt-prot-a">—</span></div>
-          <div class="wt-row"><span>Total fats</span><span class="wt-val" id="wt-fat-a">—</span></div>
+          <div class="wt-row"><span>Total calories (7 days)</span><span class="wt-val" id="wt-cals-a">-</span></div>
+          <div class="wt-row"><span>Total carbohydrates</span><span class="wt-val" id="wt-carbs-a">-</span></div>
+          <div class="wt-row"><span>Total protein</span><span class="wt-val" id="wt-prot-a">-</span></div>
+          <div class="wt-row"><span>Total fats</span><span class="wt-val" id="wt-fat-a">-</span></div>
         </div>
       </div>
 
     </div>
 
-    <!-- ── Protein Flexibility ── -->
+    <!- ── Protein Flexibility ── ->
     <div class="card" id="protein-flex-card">
       <h2><span class="icon">⚙️</span> Struggling to Hit the Protein Target?</h2>
       <p class="pf-intro">
-        The protein target above is the ideal amount to preserve muscle while losing fat. But if it feels like a lot to hit consistently — whether because of your diet style, appetite, or budget — don't ignore it and hope for the best. Use this instead.
+        The protein target above is the ideal amount to preserve muscle while losing fat. But if it feels like a lot to hit consistently - whether because of your diet style, appetite, or budget - don't ignore it and hope for the best. Use this instead.
         <br><br>
         Set a protein amount you can realistically commit to every day. We'll keep fat fixed at 20% of your calories and redistribute the rest to carbohydrates. A slightly lower protein target that you actually hit every day will always beat a perfect target you miss half the time.
       </p>
 
-      <!-- Preset quick-select -->
-      <p style="font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Quick options</p>
+      <!- Preset quick-select ->
+      <p style="font-size:12px;font-weight:700;color:var(-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">Quick options</p>
       <div class="pf-preset-row">
         <button class="pf-preset" id="pf-btn-100" onclick="setProteinPct(100, this)">Full target (recommended)</button>
         <button class="pf-preset" id="pf-btn-75"  onclick="setProteinPct(75, this)">75% of target</button>
         <button class="pf-preset" id="pf-btn-60"  onclick="setProteinPct(60, this)">60% of target</button>
       </div>
 
-      <!-- Custom g input -->
+      <!- Custom g input ->
       <div class="pf-input-row">
         <div class="form-group">
           <label>Or enter grams</label>
@@ -819,67 +819,67 @@
         <div class="pf-per-kg" id="pf-per-kg"></div>
       </div>
 
-      <!-- Warning / status -->
+      <!- Warning / status ->
       <div class="pf-warning" id="pf-warning" style="display:none;"></div>
 
-      <!-- Adjusted macro breakdown -->
+      <!- Adjusted macro breakdown ->
       <div id="pf-result" style="display:none;">
-        <p style="font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Your Adjusted Daily Targets</p>
+        <p style="font-size:13px;font-weight:600;color:var(-muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">Your Adjusted Daily Targets</p>
         <div class="macro-grid">
           <div class="macro-box carbs">
             <div class="mb-label">Carbohydrates</div>
-            <div class="mb-pct" id="pf-carbs-pct">—</div>
-            <div class="mb-cals" id="pf-carbs-cal">—</div>
-            <div class="mb-grams" id="pf-carbs-g">—</div>
+            <div class="mb-pct" id="pf-carbs-pct">-</div>
+            <div class="mb-cals" id="pf-carbs-cal">-</div>
+            <div class="mb-grams" id="pf-carbs-g">-</div>
           </div>
           <div class="macro-box protein">
             <div class="mb-label">Protein</div>
-            <div class="mb-pct" id="pf-prot-pct">—</div>
-            <div class="mb-cals" id="pf-prot-cal">—</div>
-            <div class="mb-grams" id="pf-prot-g">—</div>
+            <div class="mb-pct" id="pf-prot-pct">-</div>
+            <div class="mb-cals" id="pf-prot-cal">-</div>
+            <div class="mb-grams" id="pf-prot-g">-</div>
           </div>
           <div class="macro-box fat">
             <div class="mb-label">Fats (fixed)</div>
             <div class="mb-pct">20%</div>
-            <div class="mb-cals" id="pf-fat-cal">—</div>
-            <div class="mb-grams" id="pf-fat-g">—</div>
+            <div class="mb-cals" id="pf-fat-cal">-</div>
+            <div class="mb-grams" id="pf-fat-g">-</div>
           </div>
         </div>
-        <p style="font-size:13px;color:var(--muted);margin-top:10px;text-align:center;" id="pf-note"></p>
+        <p style="font-size:13px;color:var(-muted);margin-top:10px;text-align:center;" id="pf-note"></p>
       </div>
     </div>
 
-    <!-- ── Weight Loss Timeline ── -->
+    <!- ── Weight Loss Timeline ── ->
     <div class="card">
       <h2><span class="icon">📅</span> Your Weight Loss Timeline</h2>
 
       <div class="timeline-box" id="timeline-box">
         <div class="tl-icon">🎯</div>
         <div class="tl-text">
-          <h3 id="tl-title">—</h3>
-          <p id="tl-body">—</p>
+          <h3 id="tl-title">-</h3>
+          <p id="tl-body">-</p>
         </div>
       </div>
 
       <div class="speed-note" style="margin-top:16px;">
-        <strong>What to expect:</strong> During the first week, many people see a larger drop on the scale — sometimes 2 kg or more. This is mostly water weight and stored glycogen releasing, not fat. After that, a steady loss of 0.5–1 kg per week is a healthy, realistic target. Slow and steady means you're preserving muscle while shedding fat.
+        <strong>What to expect:</strong> During the first week, many people see a larger drop on the scale - sometimes 2 kg or more. This is mostly water weight and stored glycogen releasing, not fat. After that, a steady loss of 0.5-1 kg per week is a healthy, realistic target. Slow and steady means you're preserving muscle while shedding fat.
       </div>
 
-      <!-- ── Beyond the Scale ── -->
+      <!- ── Beyond the Scale ── ->
       <div class="beyond-scale-box">
         <div class="bs-icon">📏</div>
         <div>
           <h4>Weight isn't the only way to measure progress</h4>
           <p>
-            Here's something most people don't realise when they start strength training: you can be losing fat and gaining muscle at the same time. Because muscle is denser than fat, it takes up less space in your body — which means your clothes get looser, your measurements go down, and you look and feel different, even if the number on the scale barely moves.
+            Here's something most people don't realise when they start strength training: you can be losing fat and gaining muscle at the same time. Because muscle is denser than fat, it takes up less space in your body - which means your clothes get looser, your measurements go down, and you look and feel different, even if the number on the scale barely moves.
           </p>
           <p>
             This is a real result. It counts. Don't let a stubborn scale reading make you think nothing is working.
           </p>
           <p>
-            <strong>The rule is simple: if either your weight is going down, or your measurements are going down — you are making progress.</strong> Both count equally. In fact, losing inches while weight holds steady often means your body is doing something even better than pure fat loss.
+            <strong>The rule is simple: if either your weight is going down, or your measurements are going down - you are making progress.</strong> Both count equally. In fact, losing inches while weight holds steady often means your body is doing something even better than pure fat loss.
           </p>
-          <p style="margin-top:10px;font-weight:600;color:var(--green-dark);">Track these measurements every 2–4 weeks alongside your weight:</p>
+          <p style="margin-top:10px;font-weight:600;color:var(-green-dark);">Track these measurements every 2-4 weeks alongside your weight:</p>
           <div class="bs-measures">
             <span class="bs-tag">Waist</span>
             <span class="bs-tag">Hips</span>
@@ -888,7 +888,7 @@
             <span class="bs-tag">Thighs</span>
           </div>
           <p style="margin-top:10px;">
-            Take each measurement at the same spot, at the same time of day. Even a 1–2 cm drop in your waist over a month is meaningful fat loss — celebrate it.
+            Take each measurement at the same spot, at the same time of day. Even a 1-2 cm drop in your waist over a month is meaningful fat loss - celebrate it.
           </p>
         </div>
       </div>
@@ -896,11 +896,11 @@
       <button class="print-btn" onclick="window.print()">🖨️ Print / Save My Plan</button>
     </div>
 
-    <!-- ── Send My Plan ── -->
+    <!- ── Send My Plan ── ->
     <div class="card" id="send-plan-card" style="display:none;">
       <h2><span class="icon">📧</span> Send My Plan</h2>
       <p class="pf-intro">
-        Get a copy of your personalised calorie and macro plan emailed straight to you — so you always have it to hand.
+        Get a copy of your personalised calorie and macro plan emailed straight to you - so you always have it to hand.
         You can also share it with your coach so they can review it before your next session.
       </p>
 
@@ -927,39 +927,39 @@
       </div>
 
       <button class="calc-btn" id="send-btn" onclick="sendPlan()" style="margin-top:0;">📧 Send My Plan</button>
-      <p id="send-error" style="color:var(--red);font-size:13px;margin-top:8px;display:none;"></p>
+      <p id="send-error" style="color:var(-red);font-size:13px;margin-top:8px;display:none;"></p>
 
       <div class="send-success" id="send-success" style="display:none;">
         <div class="ss-icon">✅</div>
         <div>
           <strong>Plan sent!</strong>
-          Check your inbox — your full calorie and macro plan is on its way.
+          Check your inbox - your full calorie and macro plan is on its way.
           <span id="send-coach-confirm"></span>
         </div>
       </div>
     </div>
 
   </div>
-  <!-- end #results -->
+  <!- end #results ->
 
-  <!-- ────────── TIPS & EDUCATION ────────── -->
+  <!- ────────── TIPS & EDUCATION ────────── ->
   <div class="card">
     <h2><span class="icon">💡</span> How to Eat for Fat Loss</h2>
     <p class="tips-intro">
-      Hitting your calorie target is the foundation — but <em>what</em> you eat matters too.
+      Hitting your calorie target is the foundation - but <em>what</em> you eat matters too.
       These evidence-based eating guidelines will help you stay full, maintain stable energy, and preserve muscle while you're in a calorie deficit.
     </p>
 
-    <!-- Low GI -->
+    <!- Low GI ->
     <div class="tips-section">
       <h3>🌾 Choosing Carbohydrates Wisely (Low-GI Eating)</h3>
-      <p style="font-size:14px;color:var(--muted);margin-bottom:14px;">
+      <p style="font-size:14px;color:var(-muted);margin-bottom:14px;">
         Not all carbohydrates affect your blood sugar the same way. Low-glycaemic foods release energy gradually, keeping hunger and cravings in check.
       </p>
 
       <div class="tip-item">
         <div class="tip-num">1</div>
-        <p><strong>Fill at least half your plate with non-starchy vegetables.</strong> Spinach, broccoli, cauliflower, cabbage, cucumber, lettuce, and capsicum are all excellent choices — they add volume and nutrients without a significant calorie load.</p>
+        <p><strong>Fill at least half your plate with non-starchy vegetables.</strong> Spinach, broccoli, cauliflower, cabbage, cucumber, lettuce, and capsicum are all excellent choices - they add volume and nutrients without a significant calorie load.</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">2</div>
@@ -979,7 +979,7 @@
       </div>
       <div class="tip-item">
         <div class="tip-num">6</div>
-        <p><strong>Replace table sugar with lower-impact sweeteners where needed.</strong> Stevia, xylitol, and similar alternatives provide sweetness with far less blood sugar impact — useful in coffee, cooking, or baking.</p>
+        <p><strong>Replace table sugar with lower-impact sweeteners where needed.</strong> Stevia, xylitol, and similar alternatives provide sweetness with far less blood sugar impact - useful in coffee, cooking, or baking.</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">7</div>
@@ -991,20 +991,20 @@
       </div>
       <div class="tip-item">
         <div class="tip-num">9</div>
-        <p><strong>Avoid grazing between meals — sit down and eat slowly.</strong> Allowing proper digestion time between meals helps your body regulate hunger signals correctly. Eating slowly also gives your brain time to register fullness before you over-eat.</p>
+        <p><strong>Avoid grazing between meals - sit down and eat slowly.</strong> Allowing proper digestion time between meals helps your body regulate hunger signals correctly. Eating slowly also gives your brain time to register fullness before you over-eat.</p>
       </div>
     </div>
 
-    <!-- Low Fat -->
+    <!- Low Fat ->
     <div class="tips-section">
       <h3>🫒 Managing Dietary Fat</h3>
-      <p style="font-size:14px;color:var(--muted);margin-bottom:14px;">
-        Fat is essential — your body needs it for hormones, brain function, and vitamin absorption. The goal is to favour the right kinds of fat while limiting those that work against you.
+      <p style="font-size:14px;color:var(-muted);margin-bottom:14px;">
+        Fat is essential - your body needs it for hormones, brain function, and vitamin absorption. The goal is to favour the right kinds of fat while limiting those that work against you.
       </p>
 
       <div class="tip-item">
         <div class="tip-num">1</div>
-        <p><strong>Prioritise healthful fats in modest amounts.</strong> Extra-virgin olive oil, a small handful of nuts or seeds, avocado — these provide essential fatty acids and support satiety. Keep portions controlled, as fat is calorie-dense.</p>
+        <p><strong>Prioritise healthful fats in modest amounts.</strong> Extra-virgin olive oil, a small handful of nuts or seeds, avocado - these provide essential fatty acids and support satiety. Keep portions controlled, as fat is calorie-dense.</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">2</div>
@@ -1012,7 +1012,7 @@
       </div>
       <div class="tip-item">
         <div class="tip-num">3</div>
-        <p><strong>Eliminate trans fats completely.</strong> Found in many fast foods, commercial pastries, and packaged snacks, trans fats are the most harmful type — they interfere with metabolism and inflammation. Check labels for "partially hydrogenated oils."</p>
+        <p><strong>Eliminate trans fats completely.</strong> Found in many fast foods, commercial pastries, and packaged snacks, trans fats are the most harmful type - they interfere with metabolism and inflammation. Check labels for "partially hydrogenated oils."</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">4</div>
@@ -1020,33 +1020,33 @@
       </div>
       <div class="tip-item">
         <div class="tip-num">5</div>
-        <p><strong>Choose leaner cuts of meat and remove visible fat before cooking.</strong> Remove the skin from poultry, trim fat from red meat, and minimise red meat in general. Fish — especially oily fish like salmon — is an excellent substitute that also provides beneficial omega-3 fatty acids.</p>
+        <p><strong>Choose leaner cuts of meat and remove visible fat before cooking.</strong> Remove the skin from poultry, trim fat from red meat, and minimise red meat in general. Fish - especially oily fish like salmon - is an excellent substitute that also provides beneficial omega-3 fatty acids.</p>
       </div>
     </div>
 
-    <!-- Protein benefits -->
+    <!- Protein benefits ->
     <div class="protein-callout">
       <h4>💪 Why Protein Is Your Most Important Macro During Fat Loss</h4>
       <p>
         When you're in a calorie deficit, your body can break down muscle as well as fat for energy.
-        Adequate protein intake helps prevent this — meaning you lose fat, not muscle.
+        Adequate protein intake helps prevent this - meaning you lose fat, not muscle.
         Protein also has a much higher thermic effect than other macronutrients: your body burns significantly more energy just digesting it.
         On top of that, protein stimulates hormones that signal fullness and encourage your body to mobilise stored fat for fuel.
         Make protein a non-negotiable priority at every meal.
       </p>
     </div>
 
-    <!-- General tips -->
+    <!- General tips ->
     <div class="tips-section">
       <h3>🧠 Mindset &amp; Consistency Tips</h3>
 
       <div class="tip-item">
         <div class="tip-num">1</div>
-        <p><strong>Track your intake honestly — at least to begin.</strong> Most people significantly underestimate how much they're eating. Even tracking for 2–4 weeks builds strong awareness that you can use indefinitely without an app.</p>
+        <p><strong>Track your intake honestly - at least to begin.</strong> Most people significantly underestimate how much they're eating. Even tracking for 2-4 weeks builds strong awareness that you can use indefinitely without an app.</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">2</div>
-        <p><strong>Weigh yourself at the same time each day (or week).</strong> Daily fluctuations of 1–2 kg are normal and reflect hydration, digestion, and hormones — not real fat change. Look at the weekly average trend, not single readings.</p>
+        <p><strong>Weigh yourself at the same time each day (or week).</strong> Daily fluctuations of 1-2 kg are normal and reflect hydration, digestion, and hormones - not real fat change. Look at the weekly average trend, not single readings.</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">3</div>
@@ -1054,11 +1054,11 @@
       </div>
       <div class="tip-item">
         <div class="tip-num">4</div>
-        <p><strong>Stay well hydrated throughout the day.</strong> Thirst is often mistaken for hunger. Aim for at least 2 litres of water daily — more if you're training.</p>
+        <p><strong>Stay well hydrated throughout the day.</strong> Thirst is often mistaken for hunger. Aim for at least 2 litres of water daily - more if you're training.</p>
       </div>
       <div class="tip-item">
         <div class="tip-num">5</div>
-        <p><strong>Expect plateaus — they are normal.</strong> After several weeks of consistent loss, weight may stall. This happens because your body adapts. When it does, reassess your activity level and review whether portion sizes have crept up.</p>
+        <p><strong>Expect plateaus - they are normal.</strong> After several weeks of consistent loss, weight may stall. This happens because your body adapts. When it does, reassess your activity level and review whether portion sizes have crept up.</p>
       </div>
     </div>
 
@@ -1067,10 +1067,10 @@
   <footer>
     <p>This tool provides general nutrition guidance based on widely accepted principles.</p>
     <p>It is not a substitute for personalised advice from a qualified coach or dietitian.</p>
-    <p style="margin-top:6px;font-weight:600;color:var(--green);">GetFit AF · getfitaf.fitness</p>
+    <p style="margin-top:6px;font-weight:600;color:var(-green);">GetFit AF · getfitaf.fitness</p>
   </footer>
 
-</div><!-- .page -->
+</div><!- .page ->
 
 <script>
   // ═══════════════════════════════════════════
@@ -1194,7 +1194,7 @@
     const issues = [];
     if (!genderEl)   issues.push('Please select your biological sex.');
     if (!activityEl) issues.push('Please select your activity level.');
-    if (!age    || age < 14 || age > 100) issues.push('Please enter a valid age (14–100).');
+    if (!age    || age < 14 || age > 100) issues.push('Please enter a valid age (14-100).');
     if (!weight || weight < 30)           issues.push('Please enter your current weight.');
     if (!height || height < 100)          issues.push('Please enter your height.');
     if (goalWeight && goalWeight >= weight) issues.push('Goal weight should be less than your current weight.');
@@ -1231,12 +1231,12 @@
     document.getElementById('reco-icon').textContent = recoCR === 20 ? '🏃' : '🪑';
     document.getElementById('reco-title').textContent =
       recoCR === 20
-        ? `20% Calorie Reduction Recommended — Your Fat-Loss Target: ${Math.round(wlcg).toLocaleString()} kcal/day`
-        : `30% Calorie Reduction Recommended — Your Fat-Loss Target: ${Math.round(wlcg).toLocaleString()} kcal/day`;
+        ? `20% Calorie Reduction Recommended - Your Fat-Loss Target: ${Math.round(wlcg).toLocaleString()} kcal/day`
+        : `30% Calorie Reduction Recommended - Your Fat-Loss Target: ${Math.round(wlcg).toLocaleString()} kcal/day`;
     document.getElementById('reco-text').textContent =
       recoCR === 20
-        ? `Because you're moderately to very active, a 20% reduction preserves performance and muscle while still creating a meaningful fat-loss deficit. Your maintenance is ${Math.round(dmc).toLocaleString()} kcal — you'll be eating ${Math.round(deficit).toLocaleString()} kcal less each day.`
-        : `A 30% reduction is recommended for your activity level. This creates a strong deficit while remaining safe and sustainable. Your maintenance is ${Math.round(dmc).toLocaleString()} kcal — you'll be eating ${Math.round(deficit).toLocaleString()} kcal less each day.`;
+        ? `Because you're moderately to very active, a 20% reduction preserves performance and muscle while still creating a meaningful fat-loss deficit. Your maintenance is ${Math.round(dmc).toLocaleString()} kcal - you'll be eating ${Math.round(deficit).toLocaleString()} kcal less each day.`
+        : `A 30% reduction is recommended for your activity level. This creates a strong deficit while remaining safe and sustainable. Your maintenance is ${Math.round(dmc).toLocaleString()} kcal - you'll be eating ${Math.round(deficit).toLocaleString()} kcal less each day.`;
 
     // ── Macro panels ──
     fillPanel('r', wlcg, recoCR);
@@ -1258,12 +1258,12 @@
 
       tlTitle.textContent = `${kgToLose.toFixed(1)} kg to your goal`;
       tlBody.textContent  =
-        `At a steady pace of 0.5–1 kg per week, you could reach your goal weight of ${goalWeight} kg in roughly ${weeksMin}–${weeksMax} weeks (${(weeksMin/4.3).toFixed(1)}–${(weeksMax/4.3).toFixed(1)} months). ` +
+        `At a steady pace of 0.5-1 kg per week, you could reach your goal weight of ${goalWeight} kg in roughly ${weeksMin}-${weeksMax} weeks (${(weeksMin/4.3).toFixed(1)}-${(weeksMax/4.3).toFixed(1)} months). ` +
         `Results vary depending on adherence, hormones, and training. Stay consistent and trust the process.`;
     } else {
       tlTitle.textContent = 'Set a goal weight above to see your timeline';
       tlBody.textContent  =
-        'A steady, sustainable fat loss rate is 0.5–1 kg per week. In the first week you may see a larger drop due to water and glycogen changes — this is normal.';
+        'A steady, sustainable fat loss rate is 0.5-1 kg per week. In the first week you may see a larger drop due to water and glycogen changes - this is normal.';
     }
 
     // ── Store state for protein flex ──
@@ -1349,7 +1349,7 @@
     // Can't have negative carbs
     if (carbCal < 50) {
       warning.className     = 'pf-warning warn-red';
-      warning.innerHTML     = '⚠️ That protein amount is too high for your calorie budget — not enough room left for carbohydrates. Try reducing it.';
+      warning.innerHTML     = '⚠️ That protein amount is too high for your calorie budget - not enough room left for carbohydrates. Try reducing it.';
       warning.style.display = 'block';
       result.style.display  = 'none';
       return;
@@ -1363,7 +1363,7 @@
       warning.style.display = 'block';
     } else if (ratio < 1.2) {
       warning.className = 'pf-warning warn-amber';
-      warning.innerHTML = `⚠️ <strong>Acceptable, but not optimal.</strong> At ${perKg} g/kg, you'll retain most of your muscle — but you may lose a little more than at the full target. This is a workable starting point if the full target feels out of reach right now.`;
+      warning.innerHTML = `⚠️ <strong>Acceptable, but not optimal.</strong> At ${perKg} g/kg, you'll retain most of your muscle - but you may lose a little more than at the full target. This is a workable starting point if the full target feels out of reach right now.`;
       warning.style.display = 'block';
     } else {
       warning.className = 'pf-warning warn-green';
@@ -1465,12 +1465,35 @@
         throw new Error(json.message || 'Unknown error');
       }
     } catch (e) {
-      errEl.textContent = 'Something went wrong — please try again or message your coach directly.';
+      errEl.textContent = 'Something went wrong - please try again or message your coach directly.';
       errEl.style.display  = 'block';
       btn.textContent = '📧 Send My Plan';
       btn.disabled    = false;
     }
   }
 </script>
+  <script>
+  // Pre-fill from portal URL params
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var name  = p.get('name');
+    var email = p.get('email');
+    function fill(ids, val) {
+      if (!val) return;
+      ids.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.value = val;
+          el.dispatchEvent(new Event('input'));
+          el.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      fill(['clientName', 'client-name', 'name-input', 'send-name'], name);
+      fill(['clientEmail', 'client-email', 'email-input', 'send-email'], email);
+    });
+  })();
+  </script>
 </body>
 </html>
