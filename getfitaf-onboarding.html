@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GetFit AF — Client Onboarding</title>
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f7;
+    color: #1d1d1f;
+    padding: 28px 20px 48px;
+    font-size: 14px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .brand    { font-size: 13px; font-weight: 700; color: #007aff; letter-spacing: 0.3px; margin-bottom: 4px; }
+  h1        { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #6e6e73; margin-bottom: 24px; }
+
+  /* ── Cards ── */
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px 20px 20px;
+    border: 1px solid #e5e5ea;
+    margin-bottom: 14px;
+  }
+  .card-title {
+    font-size: 11px; font-weight: 700; color: #6e6e73;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 14px;
+  }
+
+  /* ── Form ── */
+  label {
+    display: block; font-size: 11px; font-weight: 600;
+    color: #6e6e73; text-transform: uppercase; letter-spacing: 0.4px;
+    margin: 14px 0 5px;
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input, select {
+    width: 100%; padding: 10px 12px;
+    border: 1px solid #d1d1d6; border-radius: 9px;
+    font-size: 14px; color: #1d1d1f; background: white; outline: none;
+    transition: border-color 0.15s;
+  }
+  input:focus, select:focus { border-color: #007aff; }
+
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row2 label { margin-top: 0; }
+
+  /* ── Action rows ── */
+  .action {
+    background: white; border: 1px solid #e5e5ea; border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 10px;
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .action-icon { font-size: 30px; margin-top: 2px; flex-shrink: 0; }
+  .action-body { flex: 1; min-width: 0; }
+  .action-title { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+  .action-desc  { font-size: 12px; color: #6e6e73; line-height: 1.45; }
+  .action-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+  .go-btn {
+    padding: 9px 18px; border-radius: 9px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: filter 0.15s; white-space: nowrap;
+    min-width: 72px; text-align: center;
+  }
+  .go-btn:not(:disabled):hover { filter: brightness(0.9); }
+  .go-btn:disabled { opacity: 0.65; cursor: default; }
+
+  .c-green  { background: #25D366; color: white; }
+  .c-blue   { background: #007aff; color: white; }
+  .c-purple { background: #af52de; color: white; }
+  .c-orange { background: #ff9500; color: white; }
+  .c-done   { background: #34c759; color: white; }
+  .c-err    { background: #ff3b30; color: white; }
+
+  .feedback {
+    font-size: 12px; line-height: 1.4; max-width: 160px; text-align: right;
+    min-height: 14px;
+  }
+  .feedback.ok  { color: #34c759; }
+  .feedback.err { color: #ff3b30; }
+
+  /* Fallback textarea for clipboard copy */
+  .msg-box {
+    display: none; margin-top: 10px; width: 100%; height: 130px;
+    border: 1px solid #e5e5ea; border-radius: 8px;
+    padding: 10px; font-size: 12px; font-family: inherit;
+    resize: none; background: #f5f5f7; color: #1d1d1f;
+  }
+  .msg-box-hint { font-size: 11px; color: #6e6e73; margin-top: 5px; }
+
+  .section-label {
+    font-size: 13px; font-weight: 700; color: #1d1d1f;
+    margin: 22px 0 10px; padding-left: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div class="brand">💪 GetFit AF</div>
+<h1>Client Onboarding</h1>
+<p class="subtitle">Fill in the details below, then fire each action independently.</p>
+
+<!-- ── Client Details ── -->
+<div class="card">
+  <div class="card-title">Client Details</div>
+
+  <label>Client Name *</label>
+  <input id="f-name" type="text" placeholder="Full name" autocomplete="off">
+
+  <label>WhatsApp Number * (with country code)</label>
+  <input id="f-phone" type="tel" placeholder="+91 98765 43210">
+
+  <label>Client Email</label>
+  <input id="f-email" type="email" placeholder="client@email.com">
+
+  <div class="row2" style="margin-top:14px">
+    <div>
+      <label>Coach *</label>
+      <select id="f-coach">
+        <option value="">Select coach…</option>
+        <option value="Kangna|+919999344870">Kangna</option>
+        <option value="Rishita|+917021283003">Rishita</option>
+        <option value="Janavi|+919019802521">Janavi</option>
+        <option value="Naresh|+918179860915">Naresh</option>
+        <option value="Anmol|+919945245233">Anmol</option>
+      </select>
+    </div>
+    <div>
+      <label>Program</label>
+      <select id="f-program">
+        <option value="Accountability">Accountability</option>
+        <option value="Full Coaching">Full Coaching</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- ── Renewals Extra Fields ── -->
+<div class="card">
+  <div class="card-title">Renewals Info <span style="font-weight:400;text-transform:none;letter-spacing:0">(used by Add to Renewals only)</span></div>
+  <div class="row2">
+    <div>
+      <label>Renewal Date</label>
+      <input id="f-renewal-date" type="date">
+    </div>
+    <div>
+      <label>Plan</label>
+      <input id="f-plan" type="text" placeholder="e.g. 3 months">
+    </div>
+  </div>
+</div>
+
+<!-- ── Actions ── -->
+<div class="section-label">Actions</div>
+
+<!-- 1. Welcome Message -->
+<div class="action">
+  <div class="action-icon">💬</div>
+  <div class="action-body">
+    <div class="action-title">Send Welcome Message</div>
+    <div class="action-desc">Copies the welcome message and opens WhatsApp to the client</div>
+    <textarea id="msg-box" class="msg-box" readonly onclick="this.select()"></textarea>
+    <div id="msg-box-hint" class="msg-box-hint"></div>
+  </div>
+  <div class="action-right">
+    <button class="go-btn c-green" id="btn-welcome" onclick="doWelcome()">Send</button>
+    <div class="feedback" id="fb-welcome"></div>
+  </div>
+</div>
+
+<!-- 2. Notify Coach -->
+<div class="action">
+  <div class="action-icon">👋</div>
+  <div class="action-body">
+    <div class="action-title">Notify Coach</div>
+    <div class="action-desc">Sends WhatsApp to coach, emails you, and logs the onboarding</div>
+  </div>
+  <div class="action-right">
+    <button class="go-btn c-blue" id="btn-coach" onclick="doCoach()">Send</button>
+    <div class="feedback" id="fb-coach"></div>
+  </div>
+</div>
+
+<!-- 3. Drip Sequence -->
+<div class="action">
+  <div class="action-icon">📩</div>
+  <div class="action-body">
+    <div class="action-title">Add to Drip Sequence</div>
+    <div class="action-desc">Enrolls client in Daily Lessons with the correct IST start date</div>
+  </div>
+  <div class="action-right">
+    <button class="go-btn c-purple" id="btn-drip" onclick="doDrip()">Add</button>
+    <div class="feedback" id="fb-drip"></div>
+  </div>
+</div>
+
+<!-- 4. Add to Renewals -->
+<div class="action">
+  <div class="action-icon">📅</div>
+  <div class="action-body">
+    <div class="action-title">Add to Renewals</div>
+    <div class="action-desc">Adds client to GetFit AF – Renewals sheet with renewal date and plan</div>
+  </div>
+  <div class="action-right">
+    <button class="go-btn c-orange" id="btn-renewals" onclick="doRenewals()">Add</button>
+    <div class="feedback" id="fb-renewals"></div>
+  </div>
+</div>
+
+<script>
+// ── Config ────────────────────────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbylBtWtNmW4SWvwFloxJq-W-Xidr1DIEJ9J1-WK5x9CZGSRmCrMaVC3wxdYiKNHfI_2/exec';
+
+// ── Pre-fill from URL params (for future dashboard integration) ───────────────
+(function() {
+  const p = new URLSearchParams(window.location.search);
+  const set = (id, key) => { if (p.get(key)) document.getElementById(id).value = p.get(key); };
+  set('f-name',   'name');
+  set('f-phone',  'phone');
+  set('f-email',  'email');
+  set('f-coach',  'coach');
+  set('f-program','program');
+})();
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const val  = id => document.getElementById(id).value.trim();
+const enc  = s  => encodeURIComponent(s);
+
+function setFb(id, type, msg) {
+  const el = document.getElementById('fb-' + id);
+  el.className   = 'feedback' + (type ? ' ' + type : '');
+  el.textContent = msg;
+}
+
+function setBtn(id, text, colorClass, disabled) {
+  const btn = document.getElementById('btn-' + id);
+  btn.textContent = text;
+  btn.disabled    = disabled;
+  if (colorClass) {
+    btn.className = 'go-btn ' + colorClass;
+  }
+}
+
+function require(fields, fbId) {
+  const names = { name: 'Client Name', phone: 'WhatsApp Number', coach: 'Coach', 'renewal-date': 'Renewal Date' };
+  for (const f of fields) {
+    if (!val('f-' + f)) {
+      setFb(fbId, 'err', names[f] + ' required.');
+      return false;
+    }
+  }
+  return true;
+}
+
+async function callScript(action, params) {
+  const qs = Object.entries(params)
+    .filter(([, v]) => v)
+    .map(([k, v]) => '&' + k + '=' + enc(v))
+    .join('');
+  const url = SCRIPT_URL + '?action=' + action + qs;
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 20000);
+    let r;
+    try {
+      r = await fetch(url, { signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+    if (!r.ok) throw new Error('Script returned error ' + r.status + '. Make sure you re-deployed after the last code change.');
+    const data = await r.json();
+    if (data && data.error) throw new Error(data.error);
+    return data;
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('Request timed out. Check your internet connection.');
+    // Fire no-cors as best-effort, then throw so caller can show the URL
+    try { fetch(url, { mode: 'no-cors' }); } catch (_) {}
+    const err = new Error(e.message || 'Could not confirm — request may have been sent');
+    err.fallbackUrl = url;
+    throw err;
+  }
+}
+
+// ── Fallback URL display ──────────────────────────────────────────────────────
+// When fetch() can't confirm delivery (CORS/network), show the URL so the
+// user can paste it in their browser. Opening it will trigger the Apps Script.
+function showFallbackUrl(actionId, url, hint) {
+  setFb(actionId, 'err', '⚠️ Could not confirm. ' + hint);
+
+  // Build a small URL box under the action row
+  const existingBox = document.getElementById('fallback-url-' + actionId);
+  if (existingBox) { existingBox.querySelector('textarea').value = url; return; }
+
+  const wrap = document.createElement('div');
+  wrap.id = 'fallback-url-' + actionId;
+  wrap.style.cssText = 'margin-top:10px;width:100%';
+
+  const ta = document.createElement('textarea');
+  ta.value = url;
+  ta.readOnly = true;
+  ta.rows = 3;
+  ta.style.cssText = 'width:100%;font-size:11px;padding:8px;border:1px solid #e5e5ea;border-radius:8px;resize:none;background:#f5f5f7;color:#1d1d1f;font-family:monospace;cursor:text';
+  ta.onclick = function() { this.select(); try { document.execCommand('copy'); } catch(_) {} };
+
+  const note = document.createElement('p');
+  note.textContent = 'Tap the box above to copy, then paste it in your browser — the action will complete.';
+  note.style.cssText = 'font-size:11px;color:#6e6e73;margin-top:5px';
+
+  wrap.appendChild(ta);
+  wrap.appendChild(note);
+
+  // Insert inside the action-body of the clicked action
+  const btn = document.getElementById('btn-' + actionId);
+  const actionRow = btn.closest('.action');
+  actionRow.querySelector('.action-body').appendChild(wrap);
+}
+
+// ── 1. Welcome Message ────────────────────────────────────────────────────────
+function doWelcome() {
+  if (!require(['name', 'phone'], 'welcome')) return;
+
+  const name      = val('f-name');
+  const phone     = val('f-phone').replace(/\D/g, '');
+  const firstName = name.split(' ')[0];
+
+  const msg =
+    'Hi ' + firstName + '! 👋\n\n'
+    + 'Welcome to GetFit AF 🎉 We are really excited to have you on this journey with us!\n\n'
+    + 'Over the next few days, we\'ll be giving you all the instructions you need to get started. '
+    + 'First things first, keep an eye out for a WhatsApp group we are going to add you to shortly. '
+    + 'Pin the chat on your WhatsApp so that you don\'t miss any of the communication. '
+    + 'That\'s going to be our main line of communication.\n\n'
+    + 'Talk to you soon. 💪\n'
+    + 'Satish | GetFit AF';
+
+  const openWa = () => {
+    if (phone) window.open('https://wa.me/' + phone, '_blank');
+  };
+
+  const showFallback = () => {
+    const box  = document.getElementById('msg-box');
+    const hint = document.getElementById('msg-box-hint');
+    box.value        = msg;
+    box.style.display = 'block';
+    box.select();
+    try { document.execCommand('copy'); } catch (_) {}
+    hint.textContent = 'Select all text above and press Cmd+C if not auto-copied.';
+    openWa();
+    setFb('welcome', 'ok', '✅ WhatsApp opened!\nPaste the message.');
+  };
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg)
+      .then(() => { openWa(); setFb('welcome', 'ok', '✅ Copied! Paste in WhatsApp.'); })
+      .catch(showFallback);
+  } else {
+    showFallback();
+  }
+}
+
+// ── 2. Notify Coach ───────────────────────────────────────────────────────────
+async function doCoach() {
+  if (!require(['name', 'phone', 'coach'], 'coach')) return;
+
+  const [coachName, coachPhone] = val('f-coach').split('|');
+
+  setBtn('coach', 'Sending…', 'c-blue', true);
+  setFb('coach', '', '');
+
+  try {
+    await callScript('onboard', {
+      clientName:  val('f-name'),
+      clientEmail: val('f-email'),
+      clientPhone: val('f-phone'),
+      coachName,
+      coachPhone,
+      program: val('f-program'),
+    });
+    setBtn('coach', '✓ Sent', 'c-done', false);
+    setFb('coach', 'ok', '✅ Coach notified + email sent!');
+  } catch (e) {
+    setBtn('coach', 'Retry', 'c-blue', false);
+    if (e.fallbackUrl) {
+      showFallbackUrl('coach', e.fallbackUrl, 'Open this URL in your browser to notify the coach:');
+    } else {
+      setFb('coach', 'err', '⚠️ ' + e.message);
+    }
+  }
+}
+
+// ── 3. Drip Sequence ──────────────────────────────────────────────────────────
+async function doDrip() {
+  if (!require(['name', 'phone'], 'drip')) return;
+
+  const coachName = val('f-coach').split('|')[0] || '';
+
+  setBtn('drip', 'Adding…', 'c-purple', true);
+  setFb('drip', '', '');
+
+  try {
+    const data = await callScript('addToDrip', {
+      clientName: val('f-name'),
+      phone:      val('f-phone'),
+      coach:      coachName,
+    });
+    if (data.alreadyEnrolled) {
+      setBtn('drip', 'Add', 'c-purple', false);
+      setFb('drip', 'err', '⚠️ Already enrolled.');
+    } else {
+      setBtn('drip', '✓ Done', 'c-done', false);
+      setFb('drip', 'ok', '✅ Starts ' + (data.startDate || 'check sheet') + '.');
+    }
+  } catch (e) {
+    setBtn('drip', 'Retry', 'c-purple', false);
+    if (e.fallbackUrl) {
+      showFallbackUrl('drip', e.fallbackUrl, 'Open this URL in your browser to add to drip:');
+    } else {
+      setFb('drip', 'err', '⚠️ ' + e.message);
+    }
+  }
+}
+
+// ── 4. Add to Renewals ────────────────────────────────────────────────────────
+async function doRenewals() {
+  if (!require(['name', 'renewal-date'], 'renewals')) return;
+
+  setBtn('renewals', 'Adding…', 'c-orange', true);
+  setFb('renewals', '', '');
+
+  try {
+    await callScript('addToRenewals', {
+      clientName:  val('f-name'),
+      phone:       val('f-phone'),
+      email:       val('f-email'),
+      renewalDate: val('f-renewal-date'),
+      plan:        val('f-plan'),
+    });
+    setBtn('renewals', '✓ Done', 'c-done', false);
+    setFb('renewals', 'ok', '✅ Added to renewals!');
+  } catch (e) {
+    setBtn('renewals', 'Retry', 'c-orange', false);
+    if (e.fallbackUrl) {
+      showFallbackUrl('renewals', e.fallbackUrl, 'Open this URL in your browser to add to renewals:');
+    } else {
+      setFb('renewals', 'err', '⚠️ ' + e.message);
+    }
+  }
+}
+</script>
+</body>
+</html>
