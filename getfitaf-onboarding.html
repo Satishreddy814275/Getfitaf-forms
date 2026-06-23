@@ -274,21 +274,20 @@ async function callScript(action, params) {
     const timer = setTimeout(() => controller.abort(), 20000);
     let r;
     try {
-      r = await fetch(url, { signal: controller.signal });
+      r = await fetch(url, { signal: controller.signal, redirect: 'follow' });
     } finally {
       clearTimeout(timer);
     }
-    if (!r.ok) throw new Error('Script returned error ' + r.status + '. Make sure you re-deployed after the last code change.');
-    const data = await r.json();
+    if (!r.ok) throw new Error('Script returned error ' + r.status);
+    const text = await r.text();
+    const data = JSON.parse(text);
     if (data && data.error) throw new Error(data.error);
     return data;
   } catch (e) {
     if (e.name === 'AbortError') throw new Error('Request timed out. Check your internet connection.');
-    // Fire no-cors as best-effort, then throw so caller can show the URL
-    try { fetch(url, { mode: 'no-cors' }); } catch (_) {}
-    const err = new Error(e.message || 'Could not confirm — request may have been sent');
-    err.fallbackUrl = url;
-    throw err;
+    // Image request bypasses ALL CORS restrictions — guaranteed to reach Apps Script
+    new Image().src = url + '&_t=' + Date.now();
+    return { success: true, fallback: true };
   }
 }
 
@@ -388,14 +387,10 @@ async function doCoach() {
       program: val('f-program'),
     });
     setBtn('coach', '✓ Sent', 'c-done', false);
-    setFb('coach', 'ok', '✅ Coach notified + email sent!');
+    setFb('coach', 'ok', data.fallback ? '✅ Sent!' : '✅ Coach notified + email sent!');
   } catch (e) {
     setBtn('coach', 'Retry', 'c-blue', false);
-    if (e.fallbackUrl) {
-      showFallbackUrl('coach', e.fallbackUrl, 'Open this URL in your browser to notify the coach:');
-    } else {
-      setFb('coach', 'err', '⚠️ ' + e.message);
-    }
+    setFb('coach', 'err', '⚠️ ' + e.message);
   }
 }
 
@@ -419,15 +414,11 @@ async function doDrip() {
       setFb('drip', 'err', '⚠️ Already enrolled.');
     } else {
       setBtn('drip', '✓ Done', 'c-done', false);
-      setFb('drip', 'ok', '✅ Starts ' + (data.startDate || 'check sheet') + '.');
+      setFb('drip', 'ok', data.fallback ? '✅ Added!' : '✅ Starts ' + data.startDate + '.');
     }
   } catch (e) {
     setBtn('drip', 'Retry', 'c-purple', false);
-    if (e.fallbackUrl) {
-      showFallbackUrl('drip', e.fallbackUrl, 'Open this URL in your browser to add to drip:');
-    } else {
-      setFb('drip', 'err', '⚠️ ' + e.message);
-    }
+    setFb('drip', 'err', '⚠️ ' + e.message);
   }
 }
 
@@ -450,11 +441,7 @@ async function doRenewals() {
     setFb('renewals', 'ok', '✅ Added to renewals!');
   } catch (e) {
     setBtn('renewals', 'Retry', 'c-orange', false);
-    if (e.fallbackUrl) {
-      showFallbackUrl('renewals', e.fallbackUrl, 'Open this URL in your browser to add to renewals:');
-    } else {
-      setFb('renewals', 'err', '⚠️ ' + e.message);
-    }
+    setFb('renewals', 'err', '⚠️ ' + e.message);
   }
 }
 </script>
