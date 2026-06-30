@@ -329,16 +329,28 @@
 </head>
 <body>
 
-<div id="portal-back-bar" style="display:none;background:#111;border-bottom:1px solid rgba(255,255,255,0.06);padding:8px 16px;">
-  <a href="https://learn.getfitaf.fitness/dashboard.html"
-     style="color:#F97316;font-size:0.78rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+<div id="portal-back-bar" style="display:none;background:#1a1012;border-bottom:2px solid rgba(249,115,22,0.4);padding:10px 20px;align-items:center;justify-content:space-between;">
+  <span style="color:#F97316;font-size:1rem;font-weight:800;letter-spacing:-0.3px;">GET<span style="color:#fff;">FIT</span> AF</span>
+  <a id="portal-back-btn" href="https://learn.getfitaf.fitness/dashboard.html"
+     style="color:#fff;font-size:0.85rem;font-weight:700;text-decoration:none;background:#F97316;padding:8px 18px;border-radius:20px;display:inline-flex;align-items:center;gap:6px;">
     &#8592; Back to Dashboard
   </a>
 </div>
 <script>
 (function() {
   if (new URLSearchParams(window.location.search).get('token')) {
-    document.getElementById('portal-back-bar').style.display = 'block';
+    var bar = document.getElementById('portal-back-bar');
+    bar.style.display = 'flex';
+    // Also make the form header GetFit AF text a link
+    var headerH1 = document.querySelector('header h1, .header h1');
+    if (headerH1 && headerH1.textContent.trim() === 'GetFit AF') {
+      var a = document.createElement('a');
+      a.href = 'https://learn.getfitaf.fitness/dashboard.html';
+      a.style.cssText = 'color:inherit;text-decoration:none;cursor:pointer;';
+      a.title = 'Back to Dashboard';
+      headerH1.parentNode.insertBefore(a, headerH1);
+      a.appendChild(headerH1);
+    }
   }
 })();
 </script>
