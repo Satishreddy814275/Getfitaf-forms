@@ -1136,34 +1136,34 @@ updateProgress(0);
   })();
   </script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 // ─── Save to GetFit AF portal (injected) ──────────────────────────────────
 (function() {
+  var __SB_URL__  = 'https://zxuuyzhbryelekousbsw.supabase.co';
+  var __SB_ANON__ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4dXV5emhicnllbGVrb3VzYnN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NDE1MTcsImV4cCI6MjA5NzExNzUxN30.JPwlX_8KQ6DmQFur0B7jn8HUbrY9o0m43N4MGJgjdJY';
+
   window.saveToPortal = async function(formName, formTitle, responses) {
     try {
-      var token = new URLSearchParams(window.location.search).get('token');
+      var params  = new URLSearchParams(window.location.search);
+      var token   = params.get('token');
+      var refresh = params.get('refresh') || '';
       if (!token) return;
-      var parts = token.split('.');
-      if (parts.length < 2) return;
-      var b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-      while (b64.length % 4) b64 += '=';
-      var jwtPayload = JSON.parse(atob(b64));
-      var userId = jwtPayload.sub;
-      if (!userId) return;
-      await fetch('https://zxuuyzhbryelekousbsw.supabase.co/rest/v1/form_submissions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4dXV5emhicnllbGVrb3VzYnN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NDE1MTcsImV4cCI6MjA5NzExNzUxN30.JPwlX_8KQ6DmQFur0B7jn8HUbrY9o0m43N4MGJgjdJY',
-          'Authorization': 'Bearer ' + token,
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          form_name: formName,
-          form_title: formTitle,
-          responses: responses
-        })
+
+      // Use Supabase SDK so it can auto-refresh if token is expired
+      var _db = window.supabase.createClient(__SB_URL__, __SB_ANON__);
+      var { error: sessErr } = await _db.auth.setSession({ access_token: token, refresh_token: refresh });
+      if (sessErr) return;
+
+      var { data: { user }, error: userErr } = await _db.auth.getUser();
+      if (userErr || !user) return;
+
+      await _db.from('form_submissions').insert({
+        user_id:      user.id,
+        form_name:    formName,
+        form_title:   formTitle,
+        responses:    responses,
+        submitted_at: new Date().toISOString()
       });
     } catch(e) { /* silent fail — form already submitted via email */ }
   };
