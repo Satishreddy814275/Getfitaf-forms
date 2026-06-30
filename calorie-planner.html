@@ -540,6 +540,19 @@
 <body>
 
 <!- ────────────────── HEADER ────────────────── ->
+<div id="portal-back-bar" style="display:none;background:#111;border-bottom:1px solid rgba(255,255,255,0.06);padding:8px 16px;">
+  <a href="https://learn.getfitaf.fitness/dashboard.html"
+     style="color:#F97316;font-size:0.78rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;">
+    &#8592; Back to Dashboard
+  </a>
+</div>
+<script>
+(function() {
+  if (new URLSearchParams(window.location.search).get('token')) {
+    document.getElementById('portal-back-bar').style.display = 'block';
+  }
+})();
+</script>
 <header>
   <div class="logo-line">GetFit AF</div>
   <h1>🥗 Calorie &amp; Macro Planner</h1>
