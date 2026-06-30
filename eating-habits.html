@@ -568,6 +568,9 @@
       yesQuestions
     };
 
+    // Save to portal
+    saveToPortal('eating-habits', 'Eating Habits Questionnaire', payload);
+
     // Send to Apps Script (fire-and-forget, no-cors)
     fetch(APPS_SCRIPT_URL, {
       method:  'POST',
@@ -633,5 +636,39 @@
     });
   })();
   </script>
+
+<script>
+// ─── Save to GetFit AF portal (injected) ──────────────────────────────────
+(function() {
+  window.saveToPortal = async function(formName, formTitle, responses) {
+    try {
+      var token = new URLSearchParams(window.location.search).get('token');
+      if (!token) return;
+      var parts = token.split('.');
+      if (parts.length < 2) return;
+      var b64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      while (b64.length % 4) b64 += '=';
+      var jwtPayload = JSON.parse(atob(b64));
+      var userId = jwtPayload.sub;
+      if (!userId) return;
+      await fetch('https://zxuuyzhbryelekousbsw.supabase.co/rest/v1/form_submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4dXV5emhicnllbGVrb3VzYnN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NDE1MTcsImV4cCI6MjA5NzExNzUxN30.JPwlX_8KQ6DmQFur0B7jn8HUbrY9o0m43N4MGJgjdJY',
+          'Authorization': 'Bearer ' + token,
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({
+          user_id: userId,
+          form_name: formName,
+          form_title: formTitle,
+          responses: responses
+        })
+      });
+    } catch(e) { /* silent fail — form already submitted via email */ }
+  };
+})();
+</script>
 </body>
 </html>
